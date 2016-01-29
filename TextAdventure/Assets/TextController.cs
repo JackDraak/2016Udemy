@@ -49,7 +49,7 @@ public class TextController : MonoBehaviour {
 			"the alarm is growing louder and faster the longer you ignore it (because " +
 			"You needed the *special* one!). Re-considering your options, you...\n\n" +
 			"<A>void the broken glass, and go to turn off the alarm clock\n" +
-			"<D>ouble-down and throw a show at the alarm clock";
+			"<D>ouble-down and throw a shoe at the alarm clock";
 			if (Input.GetKeyDown(KeyCode.A)) { bBedSceneExit = true; MyState = States.Dresser; }
 			else if (Input.GetKeyDown(KeyCode.D)) { cBedDouble++; bBedDouble = true;}	
 		}
@@ -73,7 +73,7 @@ public class TextController : MonoBehaviour {
 			"side of the room. Yet another part of you decides to actually, you know, " +
 			"do something, like...\n\n" +
 			"<A>void the broken glass, and go to turn off the alarm clock\n" +
-			"<T>riple-down? and throw a show at the alarm clock";
+			"<T>riple-down? and throw a shoe at the alarm clock";
 			if (Input.GetKeyDown(KeyCode.A)) { bBedSceneExit = true; MyState = States.Dresser; }
 			else if (Input.GetKeyDown(KeyCode.T)) { cBedDouble++; bBedDouble = true; }
 		}
