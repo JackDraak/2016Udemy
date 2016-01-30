@@ -122,9 +122,10 @@ public class TextController : MonoBehaviour {
 				bBedSleep = false;
 				cBedDouble = 0;
 				bBedSceneExit = false; 
-				MyState = States.Bed;
+				Debug.Log ("this line executed: bDresserThinking = " + bDresserThinking );
+				MyState = States.Bed; // note this does not prevent following lines from executing
 				bDresserThinking = false;
-				Debug.Log ("this line executed");
+				Debug.Log ("this line executed: bDresserThinking = " + bDresserThinking );
 			}
 		}
 	}
