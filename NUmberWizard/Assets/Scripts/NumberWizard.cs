@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class NumberWizard : MonoBehaviour {
@@ -6,6 +7,8 @@ public class NumberWizard : MonoBehaviour {
 	int RangeBottom;
 	bool bGameOver;
 	int CurrentGuess;
+
+	public Text text;
 
 	void Start () {
         	StartNWGame ();
@@ -17,28 +20,28 @@ public class NumberWizard : MonoBehaviour {
 		RangeBottom = 1;
 		bGameOver = false;
 		
-		print ("=========================");
-		print ("Welcome to Number Wizard!");
-		print ("Please take a moment to think of a 'sceret' number, which I will try to ascertain.");
-		print ("the highest numer in the range is " + RangeTop);
-		print ("the lowest numer in the range is " + RangeBottom);
+		text.text ="=========================";
+		text.text ="Welcome to Number Wizard!";
+		text.text ="Please take a moment to think of a 'sceret' number, which I will try to ascertain.";
+		text.text ="the highest numer in the range is " + RangeTop;
+		text.text ="the lowest numer in the range is " + RangeBottom;
 		RangeTop ++;
 		NW_Guess();
 	}
 	
 	void Update () {
        		if (Input.GetKeyDown(KeyCode.UpArrow)) { 
-       			print ("Up Cusror pressed"); 
+       			text.text ="Up Cusror pressed"; 
        			RangeBottom = CurrentGuess;
 			NW_Guess ();
      		}
 		else if (Input.GetKeyDown(KeyCode.DownArrow)) { 
-			print ("Down Cusror pressed"); 
+			text.text ="Down Cusror pressed"; 
 			RangeTop = CurrentGuess;
 			NW_Guess ();
 			}
 		else if (Input.GetKeyDown(KeyCode.Space)) { 
-			print ("Space bar pressed");
+			text.text ="Space bar pressed";
 			bGameOver = true;
 			NW_GameOver();
 			}
@@ -48,13 +51,13 @@ public class NumberWizard : MonoBehaviour {
 		// CurrentGuess = (RangeTop + RangeBottom)/ 2;
 		CurrentGuess = Random.Range (RangeBottom, RangeTop);
 		
-		print ("My guess is " + CurrentGuess +".");
-		print ("If you number is higher than my guess tap the Up arrow, if it's lower the Down arrow, and if it's a Match please tap the Space bar.");
+		text.text ="My guess is " + CurrentGuess +".";
+		text.text ="If you number is higher than my guess tap the Up arrow, if it's lower the Down arrow, and if it's a Match please tap the Space bar.";
 	}
 	
 	void NW_GameOver () {
 		if (bGameOver) {
-			print ("I'll always win! But feel free to play again!");
+			text.text ="I'll always win! But feel free to play again!";
 			StartNWGame();
 		}
 	}
