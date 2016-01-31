@@ -20,39 +20,51 @@ public class NumberWizard : MonoBehaviour {
 		RangeBottom = 1;
 		bGameOver = false;
 		
-		text.text ="=========================";
-		text.text ="Welcome to Number Wizard!";
-		text.text ="Please take a moment to think of a 'sceret' number, which I will try to ascertain.";
-		text.text ="the highest numer in the range is " + RangeTop;
-		text.text ="the lowest numer in the range is " + RangeBottom;
+		text.text ="=========================\n" + 
+			"Welcome to Number Wizard!\n" +
+			"Please take a moment to think of a 'sceret' number, which I will try to ascertain.\n" +
+			"the highest numer in the range is " + RangeTop + "\n" +
+			"the lowest numer in the range is " + RangeBottom;
 		RangeTop ++;
 		NW_Guess();
 	}
 	
 	void Update () {
        		if (Input.GetKeyDown(KeyCode.UpArrow)) { 
-       			text.text ="Up Cusror pressed"; 
-       			RangeBottom = CurrentGuess;
-			NW_Guess ();
+       			Bu_Up();
      		}
 		else if (Input.GetKeyDown(KeyCode.DownArrow)) { 
-			text.text ="Down Cusror pressed"; 
-			RangeTop = CurrentGuess;
-			NW_Guess ();
+			Bu_Down();
 			}
 		else if (Input.GetKeyDown(KeyCode.Space)) { 
-			text.text ="Space bar pressed";
-			bGameOver = true;
-			NW_GameOver();
+			Bu_Match();
 			}
 	}
+	
+	public void Bu_Up () { 
+		RangeBottom = CurrentGuess;
+		Debug.Log ("Up Arrow Button");
+		NW_Guess ();
+	}
+	
+	public void Bu_Down () { 
+		RangeTop = CurrentGuess;
+		Debug.Log ("Down Arrow Button");
+		NW_Guess ();
+	}
+	
+	public void Bu_Match () { 
+		Debug.Log ("Space Bar Button");
+		NW_GameOver ();
+	}
+	
 	
 	void NW_Guess () {
 		// CurrentGuess = (RangeTop + RangeBottom)/ 2;
 		CurrentGuess = Random.Range (RangeBottom, RangeTop);
 		
-		text.text ="My guess is " + CurrentGuess +".";
-		text.text ="If you number is higher than my guess tap the Up arrow, if it's lower the Down arrow, and if it's a Match please tap the Space bar.";
+		text.text ="My guess is " + CurrentGuess +".\n" +
+			"If your number is higher than my guess tap the Up arrow, if it's lower the Down arrow, and if it's a Match please tap the Space bar.";
 	}
 	
 	void NW_GameOver () {
