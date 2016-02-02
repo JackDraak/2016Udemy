@@ -19,3 +19,5 @@ public class MusicManager : MonoBehaviour {
 		Debug.Log ("This instance : Start : MusicManager : " + this.GetInstanceID());
 	}
 }
+
+// pickup at lecture 71
