@@ -2,14 +2,14 @@
 using System.Collections;
 
 public class Paddle : MonoBehaviour {
-	float MouseXPosInGameUnits;
-	float PaddleXPosInGameUnits;
+	float MouseXPos;
+	float PaddleXPos;
 
 	void Update () {
-		MouseXPosInGameUnits = Input.mousePosition.x / Screen.width *16f -6f;
-		PaddleXPosInGameUnits = Mathf.Clamp(MouseXPosInGameUnits, -8.5f, 7.2f);
-		Vector3 PaddlePosition = new Vector3 (PaddleXPosInGameUnits, this.transform.position.y, 0f);
-		Debug.Log (this + " " + PaddleXPosInGameUnits);
+		MouseXPos = (Input.mousePosition.x / Screen.width * 16); // in game units, 16 grid units wide
+		PaddleXPos = Mathf.Clamp (MouseXPos, 0.8f, 15.2f);
+		Vector3 PaddlePosition = new Vector3 (PaddleXPos -8, this.transform.position.y, 0f);
+		Debug.Log (this + " " + MouseXPos);
 		this.transform.position = PaddlePosition;
 	}
 }
