@@ -5,10 +5,10 @@ public class MusicManager : MonoBehaviour {
 	static MusicManager instance = null;
 	
 	void Awake () {
-		Debug.Log ("This instance: Awake : MusicManager : " + this.GetInstanceID());
+//		Debug.Log ("This instance: Awake : MusicManager : " + this.GetInstanceID());
 		if (instance != null) {
 			Destroy (gameObject);
-			Debug.Log ("destroy duplicate MusicManager -executed-");
+//			Debug.Log ("destroy duplicate MusicManager -executed-");
 		} else {
 			instance = this;
 			GameObject.DontDestroyOnLoad(gameObject);
@@ -16,8 +16,8 @@ public class MusicManager : MonoBehaviour {
 	}
 	
 	void Start () {
-		Debug.Log ("This instance : Start : MusicManager : " + this.GetInstanceID());
+//		Debug.Log ("This instance : Start : MusicManager : " + this.GetInstanceID());
 	}
 }
 
-// pickup at lecture 71
+// pickup at lecture 75
