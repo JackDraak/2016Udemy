@@ -32,10 +32,10 @@ public class Ball : MonoBehaviour {
 		Vector2 tweak = new Vector2 (Random.Range(-0.25f, 0.25f), Random.Range(-0.15f, 0.15f));
 		if (bInPlay) {
 			AudioSource.PlayClipAtPoint (ball, transform.position); // optional 3rd float value for volume
-			preClampVelocity = (rigidbody2D.velocity += tweak);
+			preClampVelocity = (GetComponent<Rigidbody2D>().velocity += tweak);
 			currentVelocityX = Mathf.Clamp (preClampVelocity.x, -maxVelocityX, maxVelocityX);
 			currentVelocityY = Mathf.Clamp (preClampVelocity.y, -maxVelocityY, maxVelocityY);
-			rigidbody2D.velocity = new Vector2 (currentVelocityX, currentVelocityY);
+			GetComponent<Rigidbody2D>().velocity = new Vector2 (currentVelocityX, currentVelocityY);
 		}
 	}
 
