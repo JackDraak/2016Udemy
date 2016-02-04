@@ -3,28 +3,31 @@ using System.Collections;
 
 public class Brick : MonoBehaviour {
 
-	public int cMaxHits;
+	public Sprite[] hitSprites;
+
 	private int cTimesHit;
-	private LevelManager levelManager;
-//	private Brick brick;
+//	private LevelManager levelManager;
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-//		brick = GameObject.FindObjectOfType<Brick>();
+//		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		cTimesHit = 0;
 	}
 
 	void OnCollisionEnter2D (Collision2D collision) {
-		cTimesHit++;
-		if (cTimesHit >= cMaxHits) Destroy(gameObject);
+		bool bBreakable = (this.tag == "breakable");
+		if (bBreakable) HandleHits();
 	} 
 
-	void Update () {
-		// if no bricks: levelManager.LoadNextLevel();
-	//	if (!brick) Debug.Log ("bricks gone?");
+	void HandleHits () {
+		int cMaxHits = hitSprites.Length +1;
+		cTimesHit++;
+		if (cTimesHit >= cMaxHits) { Destroy(gameObject); }
+		else { LoadSprite(); }
 	}
 
-	void SimulateWin () {
-		levelManager.LoadNextLevel();
+	void LoadSprite () {
+		int spriteIndex = cTimesHit -1;
+		Debug.Log (this + " " + spriteIndex);
+		this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
 	}
 }
