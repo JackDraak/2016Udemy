@@ -9,14 +9,14 @@ public class Ball : MonoBehaviour {
 
 	private float currentVelocityX;
 	private float currentVelocityY;
-	private float maxVelocityX = 13f;
+	private float maxVelocityX = 12f;
 	private float maxVelocityY = 19f;
 	private Paddle paddle;
 	private Vector3 PaddleToBallVector;
 	private Vector2 preClampVelocity;
 
 	void Start () {
-		cBallsRemaining = 3;
+		cBallsRemaining = 3; // do we want LevelManager to be responsible for this variable? probably....
 		paddle = GameObject.FindObjectOfType<Paddle>();
 		PaddleToBallVector = this.transform.position - paddle.transform.position;
 	}
@@ -36,7 +36,7 @@ public class Ball : MonoBehaviour {
 
 		// this is here (mostly) for two purposes. 1: clamp velocity. 2: prevent bounce-looping with some random bounce jarring
 	void OnCollisionEnter2D(Collision2D collision) {
-		Vector2 tweak = new Vector2 (Random.Range(-0.25f, 0.25f), Random.Range(-0.15f, 0.15f));
+		Vector2 tweak = new Vector2 (Random.Range(-0.15f, 0.15f), Random.Range(-0.25f, 0.25f));
 		if (bInPlay) {
 			CueAudio(); // the "other" thing that happens here
 			preClampVelocity = (GetComponent<Rigidbody2D>().velocity += tweak);
