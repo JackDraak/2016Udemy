@@ -4,7 +4,7 @@ using System.Collections;
 public class Ball : MonoBehaviour {
 
 	public AudioClip ball;
-	public bool bInPlay = false;
+	public bool bInPlay = false; // maybe levelManager should control this too?
 	public int cBallsRemaining;
 
 	private float currentVelocityX;
@@ -16,7 +16,11 @@ public class Ball : MonoBehaviour {
 	private Vector2 preClampVelocity;
 
 	void Start () {
-		cBallsRemaining = 3; // do we want LevelManager to be responsible for this variable? probably....
+		// TODO bug testing and architechture descision
+		// do we want LevelManager to be responsible for this variable? probably.... 
+		// I suspect here it resets to 3 balls each level, 
+		// while if it were in the level-manager it should be persistent(?)
+		cBallsRemaining = 3; 
 		paddle = GameObject.FindObjectOfType<Paddle>();
 		PaddleToBallVector = this.transform.position - paddle.transform.position;
 	}
