@@ -23,11 +23,13 @@ public class Ball : MonoBehaviour {
 	void Update () {
 		if (!levelManager.ReturnInPlay() && Input.GetMouseButtonDown(0)) { LaunchBall(); }
 		else if (!levelManager.ReturnInPlay() && !levelManager.AutoplayReturn()) { this.transform.position = paddle.transform.position + PaddleToBallVector; }
-		else if (!levelManager.ReturnInPlay()&& levelManager.AutoplayReturn()) { LaunchBall(); }
+		else if (!levelManager.ReturnInPlay() && levelManager.AutoplayReturn()) { LaunchBall(); }
+		else if (!levelManager.LaunchedReturn() && levelManager.AutoplayReturn()) { LaunchBall(); }
 	}
 
 	void LaunchBall () {
 		levelManager.SetInPlay();
+		levelManager.LaunchedToggle();
 		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (2f, 10f);
 	}
 
