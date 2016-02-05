@@ -13,9 +13,9 @@ public class LevelManager : MonoBehaviour {
 	public void LoadNextLevel () {
 	//	Scene thisScene = SceneManager.GetActiveScene();
 	//	SceneManager.LoadScene(Scene.buildIndex +1);
-		Brick.bricksRemaining = 0;
+		Brick.cBricksRemaining = 0;
 		Application.LoadLevel(Application.loadedLevel +1);
 	}
 }
 
-// pickup at lecture 82
+// pickup at lecture 86

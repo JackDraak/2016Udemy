@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Brick : MonoBehaviour {
 
-	public static int bricksRemaining = 0;
+	public AudioClip brick;
+	public static int cBricksRemaining = 0;
 	public Sprite[] hitSprites;
 
 	private int cTimesHit;
@@ -12,8 +13,7 @@ public class Brick : MonoBehaviour {
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		cTimesHit = 0;
-		if (this.tag == "breakable") bricksRemaining++;
-		Debug.Log (this + " -bricks remaining- " + bricksRemaining);
+		if (this.tag == "breakable") cBricksRemaining++;
 	}
 
 	void OnCollisionEnter2D (Collision2D collision) {
@@ -23,18 +23,24 @@ public class Brick : MonoBehaviour {
 	void HandleHits () {
 		int cMaxHits = hitSprites.Length +1;
 		cTimesHit++;
-		if (cTimesHit >= cMaxHits) {
-			bricksRemaining--;
-			Debug.Log (this + " -bricks remaining- " + bricksRemaining);
+		CueAudio();
+
+		if (cTimesHit >= cMaxHits) 
+		{
+			cBricksRemaining--;
 			Destroy(gameObject);
-			if (bricksRemaining <= 0) levelManager.LoadNextLevel(); 
+			if (cBricksRemaining <= 0) levelManager.LoadNextLevel(); 
 		}
 		else { LoadSprite(); }
 	}
 
 	void LoadSprite () {
 		int spriteIndex = cTimesHit -1;
-		Debug.Log (this + " -spriteindex- " + spriteIndex);
 		this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+	}
+
+	void CueAudio () {
+		// GetComponent<AudioSource>().Play();
+		AudioSource.PlayClipAtPoint(brick, transform.position);
 	}
 }
