@@ -4,18 +4,19 @@ using System.Collections;
 public class Boundary : MonoBehaviour {
 
 	private LevelManager levelManager;
+	private Ball ball;
 
-void Start () {
-	levelManager = GameObject.FindObjectOfType<LevelManager>();
-}
-
-void OnTriggerEnter2D (Collider2D trigger) {
-//	Debug.Log (this + " trigger " + trigger);
-	levelManager.LoadLevel("Lose");
+	void Start () {
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		ball = GameObject.FindObjectOfType<Ball>();
 	}
 
-void OnCollisionEnter2D (Collision2D collision) {
-//	Debug.Log (this + " collision " + collision);
+	void OnTriggerEnter2D (Collider2D trigger) {
+		ball.cBallsRemaining--;
+		if (ball.cBallsRemaining <= 0) {
+			levelManager.LoadLevel("Lose");
+		} else {
+			ball.bInPlay = false;
+		}
 	}
-	
 }

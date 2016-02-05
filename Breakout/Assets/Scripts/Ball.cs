@@ -4,8 +4,9 @@ using System.Collections;
 public class Ball : MonoBehaviour {
 
 	public AudioClip ball;
+	public bool bInPlay = false;
+	public int cBallsRemaining;
 
-	private bool bInPlay = false;
 	private float currentVelocityX;
 	private float currentVelocityY;
 	private float maxVelocityX = 13f;
@@ -15,6 +16,7 @@ public class Ball : MonoBehaviour {
 	private Vector2 preClampVelocity;
 
 	void Start () {
+		cBallsRemaining = 3;
 		paddle = GameObject.FindObjectOfType<Paddle>();
 		PaddleToBallVector = this.transform.position - paddle.transform.position;
 	}
