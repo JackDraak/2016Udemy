@@ -3,16 +3,17 @@ using System.Collections;
 
 public class Paddle : MonoBehaviour {
 
-	private bool bAutoplay = false;
+	private LevelManager levelManager;
 	private Ball ball;
 
 	void Start () {
 		ball = GameObject.FindObjectOfType<Ball>();
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
 	}
 
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.A)) bAutoplay = !bAutoplay;
-		if (bAutoplay) ComputerPaddle();
+		if (Input.GetKeyDown(KeyCode.A)) levelManager.AutoplayToggle();
+		if (levelManager.AutoplayReturn()) ComputerPaddle();
 		else MousePaddle();
 	}
 

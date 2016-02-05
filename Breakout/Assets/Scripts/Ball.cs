@@ -21,11 +21,14 @@ public class Ball : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetMouseButtonDown(0)) {
-			levelManager.SetInPlay();
-			this.GetComponent<Rigidbody2D>().velocity = new Vector2 (2f, 10f);
-		}
-		else if (!levelManager.ReturnInPlay()) this.transform.position = paddle.transform.position + PaddleToBallVector;
+		if (!levelManager.ReturnInPlay() && Input.GetMouseButtonDown(0)) { LaunchBall(); }
+		else if (!levelManager.ReturnInPlay() && !levelManager.AutoplayReturn()) { this.transform.position = paddle.transform.position + PaddleToBallVector; }
+		else if (!levelManager.ReturnInPlay()&& levelManager.AutoplayReturn()) { LaunchBall(); }
+	}
+
+	void LaunchBall () {
+		levelManager.SetInPlay();
+		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (2f, 10f);
 	}
 
 	void CueAudio () {
