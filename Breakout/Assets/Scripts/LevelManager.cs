@@ -3,18 +3,36 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
+	public static bool bInPlay = false;
+	public static int cBallsRemaining = 3;
+	public int cBricksRemaining = 0;
+
+	void Update () {
+		if (cBricksRemaining <= 0) {
+			LoadNextLevel();
+		}
+	}
 
 	public void LoadLevel(string LevelName){
-	// depreciated in 5.3: Application.LoadLevel(LevelName);
-		SceneManager.LoadScene(LevelName); // req.: using UnityEngine.SceneManagement;
+		SceneManager.LoadScene(LevelName);
 		Debug.Log("LOG : Level Manager : Load Level : " + LevelName );
 	}
 
+	public void BallsMinus ()	{ cBallsRemaining--; }
+	public void BallsPlus ()	{ cBallsRemaining++; }
+	public int BallsReturn ()	{ return cBallsRemaining; }
+	public bool ReturnInPlay ()	{ return bInPlay; }
+	public void SetInPlay ()	{ bInPlay = true; }
+	public void UnsetInPlay ()	{ bInPlay = false; }
+
 	public void LoadNextLevel () {
-	//	Scene thisScene = SceneManager.GetActiveScene();
-	//	SceneManager.LoadScene(Scene.buildIndex +1);
-		Brick.cBricksRemaining = 0;
+		cBricksRemaining = 0;
+		bInPlay = false;
+
+		// depreciated in Unity 5.3... some failed attempts to replace it below:
 		Application.LoadLevel(Application.loadedLevel +1);
+		//	SceneManager.LoadScene(Scene.buildIndex +1);
+		//	Scene thisScene = SceneManager.GetActiveScene();
 	}
 }
 

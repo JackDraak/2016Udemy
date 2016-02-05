@@ -25,7 +25,6 @@ public class Paddle : MonoBehaviour {
 
 	void ComputerPaddle() {
 		float BallXPos = Mathf.Clamp (ball.transform.position.x, -7.2f, 7.2f);
-	//	float BallXPos = ball.transform.position.x;
 		Vector3 PaddlePosition = new Vector3 (BallXPos, this.transform.position.y, 0f);
 		this.transform.position = PaddlePosition;
 	}

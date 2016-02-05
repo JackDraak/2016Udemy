@@ -4,16 +4,15 @@ using System.Collections;
 public class Brick : MonoBehaviour {
 
 	public AudioClip brick;
-	public static int cBricksRemaining = 0;
 	public Sprite[] hitSprites;
 
 	private int cTimesHit;
 	private LevelManager levelManager;
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		cTimesHit = 0;
-		if (this.tag == "breakable") cBricksRemaining++;
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		if (this.tag == "breakable") levelManager.cBricksRemaining++;
 	}
 
 	void OnCollisionEnter2D (Collision2D collision) {
@@ -21,15 +20,14 @@ public class Brick : MonoBehaviour {
 	} 
 
 	void HandleHits () {
-		int cMaxHits = hitSprites.Length +1;
-		cTimesHit++;
 		CueAudio();
 
+		int cMaxHits = hitSprites.Length +1;
+		cTimesHit++;
 		if (cTimesHit >= cMaxHits) 
 		{
-			cBricksRemaining--;
+			levelManager.cBricksRemaining--;
 			Destroy(gameObject);
-			if (cBricksRemaining <= 0) levelManager.LoadNextLevel(); 
 		}
 		else { LoadSprite(); }
 	}
@@ -40,7 +38,6 @@ public class Brick : MonoBehaviour {
 	}
 
 	void CueAudio () {
-		// GetComponent<AudioSource>().Play();
 		AudioSource.PlayClipAtPoint(brick, transform.position);
 	}
 }
