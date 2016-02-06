@@ -8,8 +8,8 @@ public class Ball : MonoBehaviour {
 	private float currentVelocityX;
 	private float currentVelocityY;
 	private LevelManager levelManager;
-	private float maxVelocityX = 12f;
-	private float maxVelocityY = 19f;
+	private float maxVelocityX = 14f;
+	private float maxVelocityY = 20f;
 	private Paddle paddle;
 	private Vector3 PaddleToBallVector;
 	private Vector2 preClampVelocity;
