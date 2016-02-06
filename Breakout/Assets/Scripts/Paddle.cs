@@ -39,7 +39,7 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void TestDriftDirection (float span) {
-		if (span > 0.59f || span < -0.59f ) bWindowDrift = !bWindowDrift;
+		if (span > 0.52f || span < -0.52f ) bWindowDrift = !bWindowDrift;
 	}
 
 	void AutoMove (float jitter) {

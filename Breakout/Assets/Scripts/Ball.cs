@@ -8,8 +8,8 @@ public class Ball : MonoBehaviour {
 	private float currentVelocityX;
 	private float currentVelocityY;
 	private LevelManager levelManager;
-	private float maxVelocityX = 14f;
-	private float maxVelocityY = 20f;
+	private float maxVelocityX = 16f;
+	private float maxVelocityY = 21f;
 	private Paddle paddle;
 	private Vector3 paddleToBallVector;
 	private Vector2 preClampVelocity;
@@ -29,7 +29,7 @@ public class Ball : MonoBehaviour {
 
 	void LaunchBall () {
 		levelManager.LaunchedSet();
-		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (2f, 10f);
+		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (Random.Range(-2f, 2f), Random.Range(8f, 12f));
 	}
 
 	void CueAudio () {
@@ -38,7 +38,7 @@ public class Ball : MonoBehaviour {
 
 		// this is here (mostly) for two purposes. 1: clamp velocity. 2: prevent bounce-looping with some random bounce jarring
 	void OnCollisionEnter2D(Collision2D collision) {
-		Vector2 jitter = new Vector2 (Random.Range(-0.13f, 0.13f), Random.Range(-0.28f, 0.28f));
+		Vector2 jitter = new Vector2 (Random.Range(-0.14f, 0.14f), Random.Range(-0.26f, 0.26f));
 		if (levelManager.LaunchedReturn()) {
 			CueAudio(); // the "other" thing that happens here
 			preClampVelocity = (GetComponent<Rigidbody2D>().velocity += jitter);
