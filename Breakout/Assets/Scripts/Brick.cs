@@ -12,7 +12,7 @@ public class Brick : MonoBehaviour {
 	void Start () {
 		cTimesHit = 0;
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		if (this.tag == "breakable") levelManager.cBricksRemaining++;
+		if (this.tag == "breakable") levelManager.BricksPlus();
 	}
 
 	void OnCollisionEnter2D (Collision2D collision) {
@@ -26,7 +26,7 @@ public class Brick : MonoBehaviour {
 		cTimesHit++;
 		if (cTimesHit >= cMaxHits) 
 		{
-			levelManager.cBricksRemaining--;
+			levelManager.BricksMinus();
 			Destroy(gameObject);
 		}
 		else { LoadSprite(); }
