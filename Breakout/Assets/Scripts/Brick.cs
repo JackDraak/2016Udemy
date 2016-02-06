@@ -19,6 +19,7 @@ public class Brick : MonoBehaviour {
 		if (this.tag == "breakable") HandleHits();
 	} 
 
+	// cue audio & swap sprite or destroy
 	void HandleHits () {
 		CueAudio();
 

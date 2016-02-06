@@ -3,10 +3,10 @@ using System.Collections;
 
 public class Paddle : MonoBehaviour {
 
-	private LevelManager levelManager;
 	private Ball ball;
-	private float windowDrift;
 	private bool bWindowDrift;
+	private float windowDrift;
+	private LevelManager levelManager;
 
 	void Start () {
 		ball = GameObject.FindObjectOfType<Ball>();
@@ -39,7 +39,7 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void TestDriftDirection (float span) {
-		if (span > 0.5f || span < -0.5f ) bWindowDrift = !bWindowDrift;
+		if (span > 0.59f || span < -0.59f ) bWindowDrift = !bWindowDrift;
 	}
 
 	void AutoMove (float jitter) {

@@ -9,22 +9,19 @@ public class LevelManager : MonoBehaviour {
 	public static int cBallsRemaining = 3;
 	public static int cBricksRemaining = 0;
 
-	public bool AutoplayReturn()	{ return bAutoPlay; }
-	public void AutoplayToggle()	{ bAutoPlay = !bAutoPlay; }
-	public void BallsMinus ()		{ cBallsRemaining--; }
-	public void BallsPlus ()		{ cBallsRemaining++; }
-	public int BallsReturn ()		{ return cBallsRemaining; }
-	public void BricksMinus ()		{ cBricksRemaining--; }
-	public void BricksPlus ()		{ cBricksRemaining++; }
-	public int BricksReturn ()		{ return cBricksRemaining; }
-	public bool LaunchedReturn()	{ return bLaunched; }
-	public void LaunchedSet()		{ bLaunched = true; }
-	public void LaunchedToggle()	{ bLaunched = !bLaunched; }
-	public void LaunchedUnset()		{ bLaunched = false; }
+	public bool AutoplayReturn()	{ return bAutoPlay; }			// users: Ball, Paddle
+	public void AutoplayToggle()	{ bAutoPlay = !bAutoPlay; }		// users: Paddle
+	public void BallsMinus ()		{ cBallsRemaining--; }			// users: Boundary
+	public int BallsReturn ()		{ return cBallsRemaining; }		// users: Boundary
+	public void BricksMinus ()		{ cBricksRemaining--; }			// users: Brick
+	public void BricksPlus ()		{ cBricksRemaining++; }			// users: Brick
+	public bool LaunchedReturn()	{ return bLaunched; }			// users: Ball
+	public void LaunchedSet()		{ bLaunched = true; }			// users: Ball
+	public void LaunchedUnset()		{ bLaunched = false; }			// users: Boundary
 	
 	void Update () {
 		if (cBricksRemaining <= 0) {
-			LoadNextLevel(); // need a breakable brick off-scene in Menu and Win scenes to prevent autoskip
+			LoadNextLevel(); // need a breakable brick (preferably off-screen) in Menu and Win scenes to prevent autoskip
 		}
 	}
 
