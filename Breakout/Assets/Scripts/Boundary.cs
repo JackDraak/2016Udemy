@@ -14,7 +14,7 @@ public class Boundary : MonoBehaviour {
 		if (levelManager.BallsReturn() <= 0) {
 			levelManager.LoadLevel("Lose");
 		} else {
-			levelManager.UnsetInPlay();
+			levelManager.LaunchedUnset();
 		}
 	}
 }

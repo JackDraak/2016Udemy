@@ -18,18 +18,17 @@ public class Ball : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		paddle = GameObject.FindObjectOfType<Paddle>();
 		PaddleToBallVector = this.transform.position - paddle.transform.position;
+		if (levelManager.AutoplayReturn()) { LaunchBall(); }
 	}
 
 	void Update () {
-		if (!levelManager.ReturnInPlay() && Input.GetMouseButtonDown(0)) { LaunchBall(); }
-		else if (!levelManager.ReturnInPlay() && !levelManager.AutoplayReturn()) { this.transform.position = paddle.transform.position + PaddleToBallVector; }
-		else if (!levelManager.ReturnInPlay() && levelManager.AutoplayReturn()) { LaunchBall(); }
+		if (!levelManager.LaunchedReturn() && Input.GetMouseButtonDown(0)) { LaunchBall(); }
+		else if (!levelManager.LaunchedReturn() && !levelManager.AutoplayReturn()) { this.transform.position = paddle.transform.position + PaddleToBallVector; }
 		else if (!levelManager.LaunchedReturn() && levelManager.AutoplayReturn()) { LaunchBall(); }
 	}
 
 	void LaunchBall () {
-		levelManager.SetInPlay();
-		levelManager.LaunchedToggle();
+		levelManager.LaunchedSet();
 		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (2f, 10f);
 	}
 
@@ -40,7 +39,7 @@ public class Ball : MonoBehaviour {
 		// this is here (mostly) for two purposes. 1: clamp velocity. 2: prevent bounce-looping with some random bounce jarring
 	void OnCollisionEnter2D(Collision2D collision) {
 		Vector2 tweak = new Vector2 (Random.Range(-0.15f, 0.15f), Random.Range(-0.25f, 0.25f));
-		if (levelManager.ReturnInPlay()) {
+		if (levelManager.LaunchedReturn()) {
 			CueAudio(); // the "other" thing that happens here
 			preClampVelocity = (GetComponent<Rigidbody2D>().velocity += tweak);
 			currentVelocityX = Mathf.Clamp (preClampVelocity.x, -maxVelocityX, maxVelocityX);

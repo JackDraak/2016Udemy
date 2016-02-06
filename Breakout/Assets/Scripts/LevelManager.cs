@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
-	public static bool bInPlay = false;
 	public static bool bLaunched = false;
 	public static bool bAutoPlay = false;
 	public static int cBallsRemaining = 3;
@@ -26,14 +25,14 @@ public class LevelManager : MonoBehaviour {
 	public void BallsPlus ()		{ cBallsRemaining++; }
 	public int BallsReturn ()		{ return cBallsRemaining; }
 	public bool LaunchedReturn()	{ return bLaunched; }
+	public void LaunchedSet()		{ bLaunched = true; }
+	public void LaunchedUnset()		{ bLaunched = false; }
 	public void LaunchedToggle()	{ bLaunched = !bLaunched; }
-	public bool ReturnInPlay ()		{ return bInPlay; }
-	public void SetInPlay ()		{ bInPlay = true; }
-	public void UnsetInPlay ()		{ bInPlay = false; }
 
 	public void LoadNextLevel () {
 		cBricksRemaining = 0;
-		if (!bAutoPlay) { bInPlay = false; } // TODO something buggin trying to implement full autoplay (from level to level)
+		if (!bAutoPlay) { bLaunched = false; } // TODO something buggin trying to implement full autoplay (from level to level)
+	//	bLaunched = false;
 
 		// depreciated in Unity 5.3... some failed attempts to replace it below:
 		Application.LoadLevel(Application.loadedLevel +1);
