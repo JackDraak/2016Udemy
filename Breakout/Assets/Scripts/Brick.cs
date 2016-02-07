@@ -5,6 +5,7 @@ public class Brick : MonoBehaviour {
 
 	public AudioClip brick;
 	public Sprite[] hitSprites;
+	public GameObject brickEffect;
 
 	private int cTimesHit;
 	private LevelManager levelManager;
@@ -28,9 +29,10 @@ public class Brick : MonoBehaviour {
 		if (cTimesHit >= cMaxHits) 
 		{
 			levelManager.BricksMinus();
+			DoBrickEffect();
 			Destroy(gameObject);
 		}
-		else { LoadSprite(); }
+		else { LoadSprite(); DoBrickEffect(); }
 	}
 
 	void LoadSprite () {
@@ -40,6 +42,13 @@ public class Brick : MonoBehaviour {
 		} else {
 			Debug.LogError ("Brick.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch.");
 		}
+	}
+
+	// TODO getting strange errors on the console after adding this
+	void DoBrickEffect () {
+		GameObject effect = Instantiate(brickEffect, this.transform.position, Quaternion.identity) as GameObject;
+		effect.GetComponent<ParticleSystem>().startColor = this.GetComponent<SpriteRenderer>().color;
+		Destroy(effect, 1.2f); // partially working.. need to add them to array and recycle them?
 	}
 
 	void CueAudio () {
