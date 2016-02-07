@@ -35,7 +35,11 @@ public class Brick : MonoBehaviour {
 
 	void LoadSprite () {
 		int spriteIndex = cTimesHit -1;
-		this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+		if (hitSprites[spriteIndex]) {
+			this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+		} else {
+			Debug.LogError ("Brick.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch.");
+		}
 	}
 
 	void CueAudio () {
