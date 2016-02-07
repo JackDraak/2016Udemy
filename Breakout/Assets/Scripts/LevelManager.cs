@@ -21,9 +21,7 @@ public class LevelManager : MonoBehaviour {
 	
 	public void BricksMinus () { 
 		cBricksRemaining--;
-		if (cBricksRemaining <= 0) {
-			LoadNextLevel();
-		}
+		if (cBricksRemaining <= 0) { LoadNextLevel(); }
 	}
 
 	public void LoadLevel(string LevelName){
@@ -34,7 +32,7 @@ public class LevelManager : MonoBehaviour {
 		cBricksRemaining = 0;
 		if (!bAutoPlay) { bLaunched = false; }
 
-		// TODO depreciated in Unity 5.3
+		// TODO depreciated in Unity 5.3, find alternative
 		Application.LoadLevel(Application.loadedLevel +1);
 	}
 }

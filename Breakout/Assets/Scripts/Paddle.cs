@@ -20,10 +20,14 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void MousePaddle () {
-		float mouseXPos = (Input.mousePosition.x / Screen.width * 16); // in game units, 16 grid units wide
-		float paddleXPos = Mathf.Clamp (mouseXPos, 0.8f, 15.2f);
-		Vector3 paddlePosition = new Vector3 (paddleXPos -8, this.transform.position.y, 0f);
+		float mouseXPos = (Input.mousePosition.x / Screen.width * 16 - 8); // in game units, 16 grid units wide
+		float paddleXPos = PaddleClamp(mouseXPos);
+		Vector3 paddlePosition = new Vector3 (paddleXPos, this.transform.position.y, 0f);
 		this.transform.position = paddlePosition;
+	}
+
+	float PaddleClamp (float xPos) {
+		return Mathf.Clamp (xPos, -7.2f, 7.2f);
 	}
 
 	void ComputerPaddle() {
@@ -45,7 +49,7 @@ public class Paddle : MonoBehaviour {
 	void AutoMove (float jitter) {
 		float ballXPosition = ball.transform.position.x;
 		float window = ballXPosition + jitter; 
-		float paddleXPosition = Mathf.Clamp (window, -7.2f, 7.2f);
+		float paddleXPosition = PaddleClamp(window);
 		Vector3 paddlePosition = new Vector3 (paddleXPosition, this.transform.position.y, 0f);
 		this.transform.position = paddlePosition;
 	}

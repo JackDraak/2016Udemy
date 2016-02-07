@@ -14,8 +14,6 @@ public class Boundary : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D trigger) {
 		levelManager.BallsMinus();
 		if (levelManager.BallsReturn() <= 0) { levelManager.LoadLevel("Lose"); } 
-		else { 
-			ball.ResetBall();
-		}
+		else { ball.ResetBall(); }
 	}
 }
