@@ -14,7 +14,6 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.A)) levelManager.AutoplayToggle();
 		if (levelManager.AutoplayReturn()) ComputerPaddle();
 		else MousePaddle();
 	}

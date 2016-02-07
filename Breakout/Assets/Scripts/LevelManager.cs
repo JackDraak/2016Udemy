@@ -19,6 +19,10 @@ public class LevelManager : MonoBehaviour {
 	public void LaunchedSet()		{ bLaunched = true; }
 	public void LaunchedUnset()		{ bLaunched = false; }
 	
+	void Update () {
+		if (Input.GetKeyDown(KeyCode.A)) bAutoPlay = !bAutoPlay;
+	}
+	
 	public void BricksMinus () { 
 		cBricksRemaining--;
 		if (cBricksRemaining <= 0) { LoadNextLevel(); }
