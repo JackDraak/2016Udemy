@@ -39,5 +39,9 @@ public class LevelManager : MonoBehaviour {
 		// TODO depreciated in Unity 5.3, find alternative
 		Application.LoadLevel(Application.loadedLevel +1);
 	}
+
+	public void CreateNewGame () {
+		cBallsRemaining = 3;
+		LoadNextLevel();
+	}
 }
-// pickup at lecture 86
