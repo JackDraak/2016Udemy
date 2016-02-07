@@ -26,10 +26,6 @@ public class Paddle : MonoBehaviour {
 		this.transform.position = paddlePosition;
 	}
 
-	float PaddleClamp (float xPos) {
-		return Mathf.Clamp (xPos, -7.2f, 7.2f);
-	}
-
 	void ComputerPaddle() {
 		if (bWindowDrift) {
 			windowDrift = windowDrift + .01f;
@@ -42,6 +38,10 @@ public class Paddle : MonoBehaviour {
 		}
 	}
 
+	float PaddleClamp (float xPos) {
+		return Mathf.Clamp (xPos, -7.2f, 7.2f);
+	}
+	
 	void TestDriftDirection (float span) {
 		if (span > 0.52f || span < -0.52f ) bWindowDrift = !bWindowDrift;
 	}

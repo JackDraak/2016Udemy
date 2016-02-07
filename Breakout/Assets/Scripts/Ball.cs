@@ -14,11 +14,6 @@ public class Ball : MonoBehaviour {
 	private Vector3 paddleToBallVector;
 	private Vector2 preClampVelocity;
 
-	public void ResetBall () { 
-		this.transform.position = paddle.transform.position + paddleToBallVector; 
-		levelManager.LaunchedUnset();
-	}
-
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		paddle = GameObject.FindObjectOfType<Paddle>();
@@ -32,6 +27,11 @@ public class Ball : MonoBehaviour {
 		else if (!levelManager.LaunchedReturn() && levelManager.AutoplayReturn()) { LaunchBall(); }
 	}
 
+	public void ResetBall () { 
+		this.transform.position = paddle.transform.position + paddleToBallVector; 
+		levelManager.LaunchedUnset();
+	}
+	
 	void LaunchBall () {
 		levelManager.LaunchedSet();
 		this.GetComponent<Rigidbody2D>().velocity = new Vector2 (Random.Range(-2f, 2f), Random.Range(8f, 12f));

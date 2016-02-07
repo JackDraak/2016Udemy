@@ -9,15 +9,15 @@ public class LevelManager : MonoBehaviour {
 	public static int cBallsRemaining = 3;
 	public static int cBricksRemaining = 0;
 
-	public bool AutoplayReturn()	{ return bAutoPlay; }			// users: Ball, Paddle
-	public void AutoplayToggle()	{ bAutoPlay = !bAutoPlay; }		// users: Paddle
-	public void AutoplayUnset()		{ bAutoPlay = false; }			// users: LevelManager.inspector
-	public void BallsMinus ()		{ cBallsRemaining--; }			// users: Boundary
-	public int BallsReturn ()		{ return cBallsRemaining; }		// users: Boundary
-	public void BricksPlus ()		{ cBricksRemaining++; }			// users: Brick
-	public bool LaunchedReturn()	{ return bLaunched; }			// users: Ball
-	public void LaunchedSet()		{ bLaunched = true; }			// users: Ball
-	public void LaunchedUnset()		{ bLaunched = false; }			// users: Boundary
+	public bool AutoplayReturn()	{ return bAutoPlay; }
+	public void AutoplayToggle()	{ bAutoPlay = !bAutoPlay; }
+	public void AutoplayUnset()		{ bAutoPlay = false; }
+	public void BallsMinus ()		{ cBallsRemaining--; }
+	public int BallsReturn ()		{ return cBallsRemaining; }
+	public void BricksPlus ()		{ cBricksRemaining++; }
+	public bool LaunchedReturn()	{ return bLaunched; }
+	public void LaunchedSet()		{ bLaunched = true; }
+	public void LaunchedUnset()		{ bLaunched = false; }
 	
 	public void BricksMinus () { 
 		cBricksRemaining--;
