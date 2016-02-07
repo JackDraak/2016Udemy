@@ -11,17 +11,18 @@ public class LevelManager : MonoBehaviour {
 
 	public bool AutoplayReturn()	{ return bAutoPlay; }			// users: Ball, Paddle
 	public void AutoplayToggle()	{ bAutoPlay = !bAutoPlay; }		// users: Paddle
+	public void AutoplayUnset()		{ bAutoPlay = false; }			// users: LevelManager.inspector
 	public void BallsMinus ()		{ cBallsRemaining--; }			// users: Boundary
 	public int BallsReturn ()		{ return cBallsRemaining; }		// users: Boundary
-	public void BricksMinus ()		{ cBricksRemaining--; }			// users: Brick
 	public void BricksPlus ()		{ cBricksRemaining++; }			// users: Brick
 	public bool LaunchedReturn()	{ return bLaunched; }			// users: Ball
 	public void LaunchedSet()		{ bLaunched = true; }			// users: Ball
 	public void LaunchedUnset()		{ bLaunched = false; }			// users: Boundary
 	
-	void Update () {
+	public void BricksMinus () { 
+		cBricksRemaining--;
 		if (cBricksRemaining <= 0) {
-			LoadNextLevel(); // need a breakable brick (preferably off-screen) in Menu and Win scenes to prevent autoskip
+			LoadNextLevel();
 		}
 	}
 

@@ -14,6 +14,11 @@ public class Ball : MonoBehaviour {
 	private Vector3 paddleToBallVector;
 	private Vector2 preClampVelocity;
 
+	public void ResetBall () { 
+		this.transform.position = paddle.transform.position + paddleToBallVector; 
+		levelManager.LaunchedUnset();
+	}
+
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		paddle = GameObject.FindObjectOfType<Paddle>();
@@ -23,7 +28,7 @@ public class Ball : MonoBehaviour {
 
 	void Update () {
 		if (!levelManager.LaunchedReturn() && Input.GetMouseButtonDown(0)) { LaunchBall(); }
-		else if (!levelManager.LaunchedReturn() && !levelManager.AutoplayReturn()) { this.transform.position = paddle.transform.position + paddleToBallVector; }
+		else if (!levelManager.LaunchedReturn() && !levelManager.AutoplayReturn()) { ResetBall(); }
 		else if (!levelManager.LaunchedReturn() && levelManager.AutoplayReturn()) { LaunchBall(); }
 	}
 
