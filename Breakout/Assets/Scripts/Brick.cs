@@ -48,7 +48,7 @@ public class Brick : MonoBehaviour {
 	void DoBrickEffect () {
 		GameObject effect = Instantiate(brickEffect, this.transform.position, Quaternion.identity) as GameObject;
 		effect.GetComponent<ParticleSystem>().startColor = this.GetComponent<SpriteRenderer>().color;
-		Destroy(effect, 1.2f); // partially working.. need to add them to array and recycle them?
+		Destroy(effect, 1.2f); // partially working.. need to add them to array and recycle them? looking into object-pooling
 	}
 
 	void CueAudio () {
