@@ -8,20 +8,18 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private GameObject startNote;
+	private LevelManager levelManager;
 	
 	void Start () {
 	// TODO re-enable at some point for release?
 	//	Cursor.visible = false; 
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		ball = GameObject.FindObjectOfType<Ball>();
 		autoplay = PlayerPrefsManager.GetAutoplay ();
 		easy = PlayerPrefsManager.GetEasy ();
 		EasyFlip();
-	}
-
-	void ToggleAuto () {
-		autoplay = !autoplay;
-		PlayerPrefsManager.SetAutoplay (autoplay);
 	}
 	
 	void EasyPlayOn () {
@@ -36,20 +34,17 @@ public class Paddle : MonoBehaviour {
 		this.transform.localScale = new Vector2(1.5f,1);
 	}
 
-	void ToggleEasy () {
+	public void ToggleAuto () {
+		autoplay = !autoplay;
+	}
+
+	public void EasyFlip () {
 		easy = !easy;
-		PlayerPrefsManager.SetEasy (easy);
-		EasyFlip();
-		}
-	
-	void EasyFlip () {
 		if (easy) this.transform.localScale = new Vector2(2.5f,1);
 		else this.transform.localScale = new Vector2(1.5f,1);
 	}
 	
 	void FixedUpdate () {
-		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
-		if (Input.GetKeyDown(KeyCode.E)) {ToggleEasy();}
 
 		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 			if (!autoplay) 	{
@@ -61,11 +56,11 @@ public class Paddle : MonoBehaviour {
 				}
 			} 
 			if (autoplay) 	{
-				if (!ball.hasStarted && !begun) {
+				if (!levelManager.HasStartedTest() && !begun) {
 					begun = true;
 					Invoke ("BeginPlay", 2);
 				}
-				if (ball.hasStarted) {
+				if (!levelManager.HasStartedTest()) {
 					ballPos = ball.transform.position;
 					if (easy) {
 						paddlePos.x = Mathf.Clamp((ballPos.x), 1.916f, 14.086f); // easy paddle
@@ -78,7 +73,7 @@ public class Paddle : MonoBehaviour {
 	}
 	
 	void BeginPlay () {
-		ball.hasStarted = true;
+		levelManager.HasStartedSet();
 		if (startNote) startNote.SetActive (false);
 		ball.GetComponent<Rigidbody2D>().velocity = new Vector2 (Random.Range(-12f, 12f), Random.Range(8f, 10f));
 	}
