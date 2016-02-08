@@ -56,11 +56,11 @@ public class LevelManager : MonoBehaviour {
 
 		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		// adjust scoring relative to difficulty at the begining of each level here
-		if (PlayerPrefsManager.GetTrails() == 1f) scoreFactor = 1.25f;
-		if (PlayerPrefsManager.GetFireBalls() == 1f) scoreFactor = 1.3f;
-		if (PlayerPrefsManager.GetFireBalls() == 1f && PlayerPrefsManager.GetTrails() == 1f) scoreFactor = 2.0f;
-		if (PlayerPrefsManager.GetEasy() == 1f) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay() == 1f) scoreFactor = (scoreFactor * 0.1f);
+		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
+		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
+		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
+		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
+		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
 	}
 
 	void Update () {

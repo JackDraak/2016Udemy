@@ -23,14 +23,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 	public static float GetMasterVolume () {
 		return PlayerPrefs.GetFloat (MASTER_VOLUME_KEY);
 	}
-	
-	public static void SetFireBalls (float yorn) {
-		PlayerPrefs.SetFloat (FIREBALLS_KEY, yorn);
-	}
-	public static float GetFireBalls () {
-		return PlayerPrefs.GetFloat (FIREBALLS_KEY);
-	}
-	
+
 	public static void SetSpeed (float yorn) {
 		PlayerPrefs.SetFloat (SPEED_KEY, yorn);
 	}
@@ -51,33 +44,48 @@ public class PlayerPrefsManager : MonoBehaviour {
 	public static float GetTopscore () {
 		return PlayerPrefs.GetFloat (TOPSCORE_KEY);
 	}
+
+	public static void SetFireBalls (bool set) {
+		if (set) PlayerPrefs.SetInt (FIREBALLS_KEY, 1);
+		else  PlayerPrefs.SetInt (FIREBALLS_KEY, 0);
+	}
+	public static bool GetFireBalls () {
+		if (PlayerPrefs.GetInt (FIREBALLS_KEY) == 1) return true;
+		else return false;
+	}
+
+	public static void SetTrails (bool set) {
+		if (set) PlayerPrefs.SetInt (TRAILS_KEY, 1);
+		else PlayerPrefs.SetInt (TRAILS_KEY, 0);
+	}
+	public static bool GetTrails () {
+		if (PlayerPrefs.GetInt (TRAILS_KEY) == 1) return true;
+		else return false;
+	}
 	
-	public static void SetTrails (float yorn) {
-		PlayerPrefs.SetFloat (TRAILS_KEY, yorn);
+	public static void SetEasy (bool set) {
+		if (set) PlayerPrefs.SetInt (EASYMODE_KEY, 1);
+		else PlayerPrefs.SetInt (EASYMODE_KEY, 0);
 	}
-	public static float GetTrails () {
-		return PlayerPrefs.GetFloat (TRAILS_KEY);
-	}
-	
-	public static void SetEasy (float yorn) {
-		PlayerPrefs.SetFloat (EASYMODE_KEY, yorn);
-	}
-	public static float GetEasy () {
-		return PlayerPrefs.GetFloat (EASYMODE_KEY);
+	public static bool GetEasy () {
+		if (PlayerPrefs.GetInt (EASYMODE_KEY) == 1) return true;
+		else return false; 
 	}
 	
-	public static void SetAutoplay (float yorn) {
-		PlayerPrefs.SetFloat (AUTOPLAY_KEY, yorn);
+	public static void SetAutoplay (bool set) {
+		if (set) PlayerPrefs.SetInt (AUTOPLAY_KEY, 1);
+		else PlayerPrefs.SetInt (AUTOPLAY_KEY, 0);
 	}
-	public static float GetAutoplay () {
-		return PlayerPrefs.GetFloat (AUTOPLAY_KEY);
+	public static bool GetAutoplay () {
+		if (PlayerPrefs.GetInt (AUTOPLAY_KEY) == 1) return true;
+		else return false;
 	}
 	
 	public static void SetUsed () {
 		PlayerPrefs.SetInt (FIRSTUSE_KEY, 1);
 	}
 	public static bool GetUsed () {
-		if (PlayerPrefs.GetInt (FIRSTUSE_KEY) == 0) return false;
-		else return true;
+		if (PlayerPrefs.GetInt (FIRSTUSE_KEY) == 1) return true;
+		else return false;
 	}
 }

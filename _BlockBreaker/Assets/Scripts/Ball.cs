@@ -6,7 +6,7 @@ public class Ball : MonoBehaviour {
 	public AudioClip ball;
 	public bool hasStarted = false;
 	
-	private float fire, trails;
+	private bool fire, trails;
 	private Paddle paddle;
 	private Vector3 paddleToBallVector;
 	private float maxVelocityX = 13f;
@@ -30,9 +30,9 @@ public class Ball : MonoBehaviour {
 		fireBalls = GameObject.FindGameObjectWithTag ("fireball");
 		trippyTrails = GameObject.FindGameObjectWithTag ("trail");
 		sphere = GameObject.FindGameObjectWithTag ("sphere");
-		fireBalls.SetActive (fire != 0);
-		sphere.SetActive (fire != 1);
-		trippyTrails.SetActive (trails != 0);
+		fireBalls.SetActive (fire);
+		sphere.SetActive (!fire);
+		trippyTrails.SetActive (trails);
 	}
 	
 	void Update () {
