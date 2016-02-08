@@ -50,24 +50,24 @@ public class Doobie : MonoBehaviour {
 
 	void ScoreHit () {
 		// small score for small hit
-		LevelManager.score += 50; /* Mathf.Round (
+		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
+								baseScore * levelManager.GetSceneIndex() + 
 								levelManager.BrickGetNumRemaining() * 5
-							); */
-//		aBrick.FreeBallin ();
+							);
+		levelManager.FreeBallin();
 	}
 	
 	void ScoreDoobie () {
 		// larger score for finishing hit
-		LevelManager.score += 500; /* Mathf.Round (
+		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
+								10 * baseScore * levelManager.GetSceneIndex() + 
 								levelManager.BrickGetNumRemaining() * 5
-							); */
-//		aBrick.FreeBallin ();
+							);
+		levelManager.FreeBallin();
 	}
 	
 	void Puff () {

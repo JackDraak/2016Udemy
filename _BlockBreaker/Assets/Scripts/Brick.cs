@@ -10,8 +10,7 @@ public class Brick : MonoBehaviour {
 	public AudioClip brick;
 	public Sprite[] hitSprites;
 	public GameObject dustEffect;
-	
-//	private ArrayList dustPuffs = new ArrayList();
+
 	private int timesHit;
 	private bool isBreakable;
 	private LevelManager levelManager;
@@ -60,66 +59,24 @@ public class Brick : MonoBehaviour {
 	
 	void ScoreHit () {
 		// small score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += 10; /* Mathf.Round (
+		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() * 
 								LevelManager.scoreFactor *
-								baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex)
-							); */
-		FreeBallin();
+								baseScore * levelManager.GetSceneIndex()
+							); 
+		levelManager.FreeBallin();
 	}
 	
 	void ScoreBrick () {
 		// larger score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += 100; /* Mathf.Round (
-								PlayerPrefsManager.GetSpeed() *
-								LevelManager.scoreFactor *
-								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex)
-							); */
-		FreeBallin();
-	}
-
-
-
-	/*
-	void ScoreDoobie () {
-		// larger score for finishing hit
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
-								levelManager.BrickGetNumRemaining() * 5
+								10 * baseScore * levelManager.GetSceneIndex()
 							);
-//		aBrick.FreeBallin ();
+		levelManager.FreeBallin();
 	}
-	*/
-
-
-
-	
-	public void FreeBallin () { // set reward levels where free plays are granted
-		if (PlayerPrefsManager.GetAward() == 0) {
-			if (LevelManager.score > 5000) {
-				LevelManager.ballCount++;
-				levelManager.ShowMyBalls();
-				PlayerPrefsManager.SetAward(1);
-			}
-		}
-		if (PlayerPrefsManager.GetAward() == 1) {
-			if (LevelManager.score > 15000) {
-				LevelManager.ballCount++;
-				levelManager.ShowMyBalls();
-				PlayerPrefsManager.SetAward(2);
-			}
-		}
-		if (PlayerPrefsManager.GetAward() == 2) {
-			if (LevelManager.score > 50000) {
-				LevelManager.ballCount++;
-				levelManager.ShowMyBalls();
-				PlayerPrefsManager.SetAward(3);
-			}
-		}
-	}
-	
+		
 	void Puff () {
 		if (dustEffect) {
 			GameObject dustPuff = Instantiate (dustEffect, this.transform.position, Quaternion.identity) as GameObject;
