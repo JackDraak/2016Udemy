@@ -25,6 +25,7 @@ public class Doobie : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D (Collision2D col) { 
+		levelManager.CalculateScoreFactor();
 		HandleHits();
 		AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
 	}
