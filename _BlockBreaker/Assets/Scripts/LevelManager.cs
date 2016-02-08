@@ -6,19 +6,14 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 
 	static LevelManager instance = null;
-
-	public static bool autoplay;
-	public static bool easy;
-
+	
 	public static int ballCount = 2;
 	public static int brickCount;
-	public static bool hasStarted;
 	public static float score;
 	public static float scoreFactor;
 	
 	private Text scoreBoard;
 //	private Text hintBoard;
-	private Paddle paddle;
 	private SpriteRenderer ball1, ball2, ball3, ball4;
 	private Color onColor = new Color (1f, 1f, 1f, 0.667f), offColor = new Color (0f, 0f, 0f, 0f);
 	
@@ -27,60 +22,6 @@ public class LevelManager : MonoBehaviour {
 	public void EffectAdd (GameObject preDE) {
 		deadEffects.Add (preDE);
 	}
-
-	void Start () {	
-		if (instance != null && instance != this) {	Destroy (gameObject); } 
-		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-
-		ShowMyBalls ();
-		paddle = GameObject.FindObjectOfType<Paddle>();
-		Debug.Log("NOTE: " + this + " paddle: " + paddle);
-		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
-
-		// adjust scoring relative to difficulty at the begining of each level here
-		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
-		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
-		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
-		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
-	}
-
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
-		if (Input.GetKeyDown(KeyCode.E)) {ToggleEasy();}
-
-		foreach (GameObject de in deadEffects) { // more stuff for REE
-			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
-				Destroy (de);
-			}
-		}
-		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
-		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
-
-//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
-//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
-//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
-	}
-
-	public void HasStartedSet () { hasStarted = true; }
-	public void HasStartedUnset() { hasStarted = false; }
-	public void HasStartedToggle () { hasStarted = !hasStarted; }
-	public bool HasStartedTest () { return hasStarted; }
-
-	void ToggleAuto () {
-		autoplay = !autoplay;
-		PlayerPrefsManager.SetAutoplay (autoplay);
-		paddle.ToggleAuto();
-	}
-
-	void ToggleEasy () {
-		easy = !easy;
-		PlayerPrefsManager.SetEasy (easy);
-		paddle.EasyFlip();
-		}
-	
 
 	public void ShowMyBalls () {
 		if (GameObject.FindGameObjectWithTag ("ball1")) {
@@ -103,6 +44,41 @@ public class LevelManager : MonoBehaviour {
 			if (ballCount > 3) ball4.color = onColor;
 			if (ballCount < 4) ball4.color = offColor;
 		}
+	}
+	
+	void Start () {	
+		if (instance != null && instance != this) {
+			Destroy (gameObject);
+		} else {
+			instance = this;
+			GameObject.DontDestroyOnLoad(gameObject);
+		}
+
+		ShowMyBalls ();
+
+		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+		// adjust scoring relative to difficulty at the begining of each level here
+		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
+		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
+		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
+		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
+		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
+	}
+
+	void Update () {
+		foreach (GameObject de in deadEffects) { // more stuff for REE
+			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
+				Destroy (de);
+			}
+		}
+		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
+		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
+
+//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
+//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
 	}
 
 	public void BallDown() {
