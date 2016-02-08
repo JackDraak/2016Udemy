@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 [RequireComponent (typeof (Brick))]
@@ -49,23 +50,23 @@ public class Doobie : MonoBehaviour {
 
 	void ScoreHit () {
 		// small score for small hit
-		LevelManager.score += Mathf.Round (
+		LevelManager.score += 50; /* Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
-								(LevelManager.scoreFactor *
-								(baseScore * Application.loadedLevel) + 
-								levelManager.BrickGetNumRemaining() * 5)
-							);
+								LevelManager.scoreFactor *
+								baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
+								levelManager.BrickGetNumRemaining() * 5
+							); */
 //		aBrick.FreeBallin ();
 	}
 	
 	void ScoreDoobie () {
 		// larger score for finishing hit
-		LevelManager.score += Mathf.Round (
+		LevelManager.score += 500; /* Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
-								(LevelManager.scoreFactor *
-								(10 * baseScore * Application.loadedLevel) + 
-								levelManager.BrickGetNumRemaining() * 5)
-							);
+								LevelManager.scoreFactor *
+								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
+								levelManager.BrickGetNumRemaining() * 5
+							); */
 //		aBrick.FreeBallin ();
 	}
 	

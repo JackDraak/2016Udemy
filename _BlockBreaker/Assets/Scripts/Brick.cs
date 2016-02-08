@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 [RequireComponent (typeof (LevelManager))]
 public class Brick : MonoBehaviour {
@@ -58,23 +60,41 @@ public class Brick : MonoBehaviour {
 	
 	void ScoreHit () {
 		// small score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += Mathf.Round (
+		LevelManager.score += 10; /* Mathf.Round (
 								PlayerPrefsManager.GetSpeed() * 
-								(LevelManager.scoreFactor *
-								(baseScore * (Application.loadedLevel)))
-							);
+								LevelManager.scoreFactor *
+								baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex)
+							); */
 		FreeBallin();
 	}
 	
 	void ScoreBrick () {
 		// larger score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += Mathf.Round (
+		LevelManager.score += 100; /* Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
-								(LevelManager.scoreFactor *
-								(10 * baseScore * Application.loadedLevel))
-							);
+								LevelManager.scoreFactor *
+								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex)
+							); */
 		FreeBallin();
 	}
+
+
+
+	/*
+	void ScoreDoobie () {
+		// larger score for finishing hit
+		LevelManager.score += Mathf.Round (
+								PlayerPrefsManager.GetSpeed() *
+								LevelManager.scoreFactor *
+								10 * baseScore * SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex) + 
+								levelManager.BrickGetNumRemaining() * 5
+							);
+//		aBrick.FreeBallin ();
+	}
+	*/
+
+
+
 	
 	public void FreeBallin () { // set reward levels where free plays are granted
 		if (PlayerPrefsManager.GetAward() == 0) {
