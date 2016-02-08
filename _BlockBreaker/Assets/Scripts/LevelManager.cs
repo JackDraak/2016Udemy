@@ -11,6 +11,8 @@ public class LevelManager : MonoBehaviour {
 	public static int brickCount;
 	public static float score;
 	public static float scoreFactor;
+	public static int sceneIndex = 1;
+	public static bool hasStarted;
 	
 	private Text scoreBoard;
 //	private Text hintBoard;
@@ -53,13 +55,12 @@ public class LevelManager : MonoBehaviour {
 			instance = this;
 			GameObject.DontDestroyOnLoad(gameObject);
 		}
-
 		ShowMyBalls ();
-
 		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
+	}
 
-		// adjust scoring relative to difficulty at the begining of each level here
+	public void  CalculateScoreFactor () {
 		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
 		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
 		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
@@ -73,6 +74,7 @@ public class LevelManager : MonoBehaviour {
 				Destroy (de);
 			}
 		}
+
 		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
 		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
@@ -82,38 +84,33 @@ public class LevelManager : MonoBehaviour {
 //		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
 	}
 
+	public int GetSceneIndex () { return sceneIndex; }
+	public bool HasStartedReturn () { return hasStarted; }
+	public void HasStartedTrue() { hasStarted = true; }
+	public void HasStartedFalse() { hasStarted = false; }
+	public void HasStartedToggle() { hasStarted = !hasStarted; }
+
 	public void BallDown() {
 		if (ballCount-- <= 0) {
 			brickCount = 0;
 			if (PlayerPrefsManager.GetTopscore () < LevelManager.score) PlayerPrefsManager.SetTopscore (LevelManager.score);
 			LoadLevel("Game Over");
 		}
-		ShowMyBalls (); // call after decrement in IF of BallDown
+		ShowMyBalls ();
 	}
-
-
-//	StartCoroutine(ShortPause());
-
-
-	IEnumerator ShortPause() {
-        print(Time.time);
-        yield return new WaitForSeconds(0.5f);
-        print(Time.time);
-    }
-
 
 	void LoadNextLevel() {
+		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		int activeScene = SceneManager.GetActiveScene().buildIndex;
-		ShortPause();
-		SceneManager.LoadScene(activeScene +1);
+		sceneIndex++;
+		hasStarted = false; // fix autolaunch? seems so!
+		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
-	
 
+	public int BrickGetNumRemaining () { return brickCount; } 
 	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
-	public void BrickCountPlus () {
-		brickCount++;
-	}
+	public void BrickCountPlus () {	brickCount++; }
 	public void BrickCountMinus () {
 		brickCount--;
 		BrickDestroyed();
@@ -124,10 +121,35 @@ public class LevelManager : MonoBehaviour {
 		if (name == "_Start Menu" || name == "Level_01") {
 			ballCount = 2;
 			score = 0;
+			sceneIndex = 1;
 		}
 		brickCount = 0;
-// DEP:		Application.LoadLevel(name);
+		hasStarted = false;
 		SceneManager.LoadScene(name);
+	}
+
+	public void FreeBallin () { // set reward levels where free plays are granted
+		if (PlayerPrefsManager.GetAward() == 0) {
+			if (score > 5000) {
+				ballCount++;
+				ShowMyBalls();
+				PlayerPrefsManager.SetAward(1);
+			}
+		}
+		if (PlayerPrefsManager.GetAward() == 1) {
+			if (score > 15000) {
+				ballCount++;
+				ShowMyBalls();
+				PlayerPrefsManager.SetAward(2);
+			}
+		}
+		if (PlayerPrefsManager.GetAward() == 2) {
+			if (score > 50000) {
+				ballCount++;
+				ShowMyBalls();
+				PlayerPrefsManager.SetAward(3);
+			}
+		}
 	}
 	
 //	public void QuitRequest() {
