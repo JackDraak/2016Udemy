@@ -4,7 +4,6 @@ using System.Collections;
 public class Ball : MonoBehaviour {
 
 	public AudioClip ball;
-//	public bool hasStarted = false;
 	
 	private bool fire, trails;
 	private Paddle paddle;
@@ -22,12 +21,10 @@ public class Ball : MonoBehaviour {
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		
 		paddle = GameObject.FindObjectOfType<Paddle>();
 		paddleToBallVector = this.transform.position - paddle.transform.position;
 		maxVelocityY = (1.18f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityY);
 		maxVelocityX = (0.7f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityX); // less variance than in Y
-		
 		fire = PlayerPrefsManager.GetFireBalls ();
 		trails = PlayerPrefsManager.GetTrails ();
 		fireBalls = GameObject.FindGameObjectWithTag ("fireball");

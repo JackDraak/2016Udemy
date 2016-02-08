@@ -103,7 +103,7 @@ public class LevelManager : MonoBehaviour {
 		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 		sceneIndex++;
-		hasStarted = false; // fix autolaunch? seems so!
+		hasStarted = false;
 		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
@@ -122,6 +122,7 @@ public class LevelManager : MonoBehaviour {
 			ballCount = 2;
 			score = 0;
 			sceneIndex = 1;
+			PlayerPrefsManager.SetAward(0);
 		}
 		brickCount = 0;
 		hasStarted = false;
@@ -129,22 +130,23 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void FreeBallin () { // set reward levels where free plays are granted
+		Debug.Log(this + " score: " + score + " and Award: " + PlayerPrefsManager.GetAward());
 		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 5000) {
+			if (score > 100 && score < 500) { // TODO reset these score thresholds for release
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(1);
 			}
 		}
-		if (PlayerPrefsManager.GetAward() == 1) {
-			if (score > 15000) {
+		else if (PlayerPrefsManager.GetAward() == 1) {
+			if (score > 500 && score < 1000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(2);
 			}
 		}
-		if (PlayerPrefsManager.GetAward() == 2) {
-			if (score > 50000) {
+		else if (PlayerPrefsManager.GetAward() == 2) {
+			if (score > 1000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(3);

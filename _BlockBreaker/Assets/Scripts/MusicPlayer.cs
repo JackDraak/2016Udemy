@@ -19,9 +19,7 @@ public class MusicPlayer : MonoBehaviour {
 			if (GameObject.Find ("MusicPlayer")) {
 				music = GameObject.Find ("MusicPlayer").GetComponent<AudioSource>();
 			}
-			//		music.clip = startClip;
 			music.loop = true;
-			//		music.Play();
 		}
 	}
 	
@@ -29,7 +27,7 @@ public class MusicPlayer : MonoBehaviour {
 		if (music) {
 			music.Stop();
 			music.clip = level_[level];
-			Debug.Log (music + " | " + music.clip + " | " + level);
+//			Debug.Log (music + " | " + music.clip + " | " + level);
 //			if (level == 0) music.clip = null; // splash
 //			if (level == 1) music.clip = startClip;
 //			if (level == 2) music.clip = level1Clip;

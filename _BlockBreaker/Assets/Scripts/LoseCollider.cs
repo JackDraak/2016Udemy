@@ -2,14 +2,12 @@
 using System.Collections;
 
 public class LoseCollider : MonoBehaviour {
-
 	public AudioClip loser;
 	private LevelManager levelManager;
-//	private Ball ball;
 	
 	void Start () {
-	//	ball = GameObject.FindObjectOfType<Ball>();
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 	}
 	
 	void OnTriggerEnter2D (Collider2D trigger) { 

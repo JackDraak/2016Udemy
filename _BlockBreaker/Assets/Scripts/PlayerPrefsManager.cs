@@ -20,29 +20,18 @@ public class PlayerPrefsManager : MonoBehaviour {
 			Debug.LogError ("Master volume out of range");
 		}
 	}
-	public static float GetMasterVolume () {
-		return PlayerPrefs.GetFloat (MASTER_VOLUME_KEY);
-	}
+	public static float GetMasterVolume () 			{ return PlayerPrefs.GetFloat (MASTER_VOLUME_KEY); }
+	public static void SetSpeed (float yorn) 		{ PlayerPrefs.SetFloat (SPEED_KEY, yorn); }
+	public static float GetSpeed () 				{ return PlayerPrefs.GetFloat (SPEED_KEY); }
+	public static void SetAward (int award) 		{ PlayerPrefs.SetInt (AWARD_KEY, award); }
+	public static int GetAward () 					{ return PlayerPrefs.GetInt (AWARD_KEY); }
+	public static void SetTopscore (float yorn) 	{ PlayerPrefs.SetFloat (TOPSCORE_KEY, yorn); }
+	public static float GetTopscore () 				{ return PlayerPrefs.GetFloat (TOPSCORE_KEY); }
 
-	public static void SetSpeed (float yorn) {
-		PlayerPrefs.SetFloat (SPEED_KEY, yorn);
-	}
-	public static float GetSpeed () {
-		return PlayerPrefs.GetFloat (SPEED_KEY);
-	}
-	
-	public static void SetAward (float yorn) {
-		PlayerPrefs.SetFloat (AWARD_KEY, yorn);
-	}
-	public static float GetAward () {
-		return PlayerPrefs.GetFloat (AWARD_KEY);
-	}
-	
-	public static void SetTopscore (float yorn) {
-		PlayerPrefs.SetFloat (TOPSCORE_KEY, yorn);
-	}
-	public static float GetTopscore () {
-		return PlayerPrefs.GetFloat (TOPSCORE_KEY);
+	public static void SetUsed () 					{ PlayerPrefs.SetInt (FIRSTUSE_KEY, 1); }
+	public static bool GetUsed () {
+		if (PlayerPrefs.GetInt (FIRSTUSE_KEY) == 1) return true;
+		else return false;
 	}
 
 	public static void SetFireBalls (bool set) {
@@ -78,14 +67,6 @@ public class PlayerPrefsManager : MonoBehaviour {
 	}
 	public static bool GetAutoplay () {
 		if (PlayerPrefs.GetInt (AUTOPLAY_KEY) == 1) return true;
-		else return false;
-	}
-	
-	public static void SetUsed () {
-		PlayerPrefs.SetInt (FIRSTUSE_KEY, 1);
-	}
-	public static bool GetUsed () {
-		if (PlayerPrefs.GetInt (FIRSTUSE_KEY) == 1) return true;
 		else return false;
 	}
 }
