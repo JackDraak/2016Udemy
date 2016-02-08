@@ -87,32 +87,18 @@ public class LevelManager : MonoBehaviour {
 			if (PlayerPrefsManager.GetTopscore () < LevelManager.score) PlayerPrefsManager.SetTopscore (LevelManager.score);
 			LoadLevel("Game Over");
 		}
-		ShowMyBalls (); // call after decrement in IF of BallDown
+		ShowMyBalls ();
 	}
-
-
-//	StartCoroutine(ShortPause());
-
-
-	IEnumerator ShortPause() {
-        print(Time.time);
-        yield return new WaitForSeconds(0.5f);
-        print(Time.time);
-    }
-
 
 	void LoadNextLevel() {
+		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		int activeScene = SceneManager.GetActiveScene().buildIndex;
-		ShortPause();
-		SceneManager.LoadScene(activeScene +1);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
-	
 
-	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
-	public void BrickCountPlus () {
-		brickCount++;
-	}
+	public int BrickGetNumRemaining () { return brickCount; } 
+	public void BrickDestroyed() { if (brickCount <= 0) Invoke ("LoadNextLevel", 0.5f); }
+	public void BrickCountPlus () {	brickCount++; }
 	public void BrickCountMinus () {
 		brickCount--;
 		BrickDestroyed();
@@ -125,7 +111,6 @@ public class LevelManager : MonoBehaviour {
 			score = 0;
 		}
 		brickCount = 0;
-// DEP:		Application.LoadLevel(name);
 		SceneManager.LoadScene(name);
 	}
 	

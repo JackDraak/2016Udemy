@@ -7,7 +7,6 @@ public class Brick : MonoBehaviour {
 	public int baseScore = 4;
 	public AudioClip brick;
 	public Sprite[] hitSprites;
-	public static int breakableCount = 0;
 	public GameObject dustEffect;
 	
 //	private ArrayList dustPuffs = new ArrayList();
@@ -18,15 +17,12 @@ public class Brick : MonoBehaviour {
 	
 	void Start () {
 		timesHit = 0;
-		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
+		parent = GameObject.Find ("Effects");
+		if (!parent) parent = new GameObject ("Effects");
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		else Debug.Log (this + ": found: " + levelManager);
 		isBreakable = (this.tag == "breakable");
-		
-		//increment static breakable-brick-count for each breakable object of the class created
 		if (isBreakable) {
-			breakableCount ++;
 			levelManager.BrickCountPlus();
 		}
 	}
@@ -49,11 +45,6 @@ public class Brick : MonoBehaviour {
 		if (timesHit >= maxHits) {
 			Puff();
 			ScoreBrick();
-		// not fixing the problem:	levelManager.BrickDestroyed();
-//			if (breakableCount == 0) {
-//				levelManager.LoadNextLevel();
-//			}
-			breakableCount --;
 			levelManager.BrickCountMinus();
 			Destroy(gameObject);
 			

@@ -53,7 +53,7 @@ public class Doobie : MonoBehaviour {
 								PlayerPrefsManager.GetSpeed() *
 								(LevelManager.scoreFactor *
 								(baseScore * Application.loadedLevel) + 
-								Brick.breakableCount * 5)
+								levelManager.BrickGetNumRemaining() * 5)
 							);
 //		aBrick.FreeBallin ();
 	}
@@ -64,7 +64,7 @@ public class Doobie : MonoBehaviour {
 								PlayerPrefsManager.GetSpeed() *
 								(LevelManager.scoreFactor *
 								(10 * baseScore * Application.loadedLevel) + 
-								Brick.breakableCount * 5)
+								levelManager.BrickGetNumRemaining() * 5)
 							);
 //		aBrick.FreeBallin ();
 	}
