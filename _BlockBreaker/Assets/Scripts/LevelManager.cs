@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour {
 	
 	private Text scoreBoard;
 //	private Text hintBoard;
-	private SpriteRenderer ball1, ball2, ball3, ball4;
+	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
 	private Color onColor = new Color (1f, 1f, 1f, 0.667f), offColor = new Color (0f, 0f, 0f, 0f);
 	
 	// working on structure to expunge relic effects REE
@@ -45,6 +45,11 @@ public class LevelManager : MonoBehaviour {
 			ball4 = GameObject.FindGameObjectWithTag ("ball4").GetComponent<SpriteRenderer>();
 			if (ballCount > 3) ball4.color = onColor;
 			if (ballCount < 4) ball4.color = offColor;
+		}
+		if (GameObject.FindGameObjectWithTag ("ball5")) {
+			ball5 = GameObject.FindGameObjectWithTag ("ball5").GetComponent<SpriteRenderer>();
+			if (ballCount > 4) ball5.color = onColor;
+			if (ballCount < 5) ball5.color = offColor;
 		}
 	}
 	
@@ -130,23 +135,23 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void FreeBallin () { // set reward levels where free plays are granted
-		Debug.Log(this + " score: " + score + " and Award: " + PlayerPrefsManager.GetAward());
+//		Debug.Log(this + " score: " + score + " and Award: " + PlayerPrefsManager.GetAward());
 		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 100 && score < 500) { // TODO reset these score thresholds for release
+			if (score > 10000 && score < 50000) { // TODO tweak these score thresholds for release
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(1);
 			}
 		}
 		else if (PlayerPrefsManager.GetAward() == 1) {
-			if (score > 500 && score < 1000) {
+			if (score > 50000 && score < 250000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(2);
 			}
 		}
 		else if (PlayerPrefsManager.GetAward() == 2) {
-			if (score > 1000) {
+			if (score > 250000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(3);

@@ -7,12 +7,12 @@ public class SplashManager : MonoBehaviour {
 	private OptionsController optionsController;
 	
 	void Start () {
-//		Screen.showCursor = false;
+//		Screen.showCursor = false; // save for release... PITA while testing
 		optionsController = GameObject.FindObjectOfType<OptionsController>();
 		if (!optionsController) Debug.LogError (this + ": unable to attach to OptionsController");
 		optionsController.SetDefaults();
 		optionsController.Save ();
-		PlayerPrefsManager.SetUsed();
+		PlayerPrefsManager.SetUsed(); // relic? was working on resetting state between session if I recall
 		Invoke("LoadNextLevel", autoLoadNextLevelDelay);
 	}
 	
