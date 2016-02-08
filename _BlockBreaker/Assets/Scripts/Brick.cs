@@ -29,7 +29,6 @@ public class Brick : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D (Collision2D col) { 
-		levelManager.CalculateScoreFactor();
 		if (isBreakable) {
 			HandleHits();
 			AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
@@ -46,8 +45,8 @@ public class Brick : MonoBehaviour {
 		// if a brick has taken it's final hit
 		if (timesHit >= maxHits) {
 			Puff();
-			levelManager.BrickCountMinus();
 			ScoreBrick();
+			levelManager.BrickCountMinus();
 			Destroy(gameObject);
 			
 		// if a brick can take a hit and stick around for more
@@ -61,12 +60,10 @@ public class Brick : MonoBehaviour {
 	void ScoreHit () {
 		// small score, multiply by level# & dynamic scoreFactor
 		LevelManager.score += Mathf.Round (
-								PlayerPrefsManager.GetSpeed() *
+								PlayerPrefsManager.GetSpeed() * 
 								LevelManager.scoreFactor *
-								0.1f * baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
-							);
-
+								baseScore * levelManager.GetSceneIndex()
+							); 
 		levelManager.FreeBallin();
 	}
 	
@@ -75,8 +72,7 @@ public class Brick : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								0.5f * baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
+								10 * baseScore * levelManager.GetSceneIndex()
 							);
 		levelManager.FreeBallin();
 	}

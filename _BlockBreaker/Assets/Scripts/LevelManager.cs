@@ -11,7 +11,7 @@ public class LevelManager : MonoBehaviour {
 	public static int brickCount;
 	public static float score;
 	public static float scoreFactor;
-	public static int sceneIndex = 1;
+	public static int sceneIndex =1;
 	public static bool hasStarted;
 	
 	private Text scoreBoard;
@@ -55,12 +55,13 @@ public class LevelManager : MonoBehaviour {
 			instance = this;
 			GameObject.DontDestroyOnLoad(gameObject);
 		}
-		ShowMyBalls ();
-		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
-	}
 
-	public void  CalculateScoreFactor () {
+		ShowMyBalls ();
+
+		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+
+		// adjust scoring relative to difficulty at the begining of each level here
 		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
 		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
 		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
@@ -74,7 +75,6 @@ public class LevelManager : MonoBehaviour {
 				Destroy (de);
 			}
 		}
-
 		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
 		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
@@ -103,9 +103,8 @@ public class LevelManager : MonoBehaviour {
 		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 		sceneIndex++;
-		hasStarted = false; // fix autolaunch? seems so!
-		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+		hasStarted = false;
 	}
 
 	public int BrickGetNumRemaining () { return brickCount; } 
@@ -122,9 +121,9 @@ public class LevelManager : MonoBehaviour {
 			ballCount = 2;
 			score = 0;
 			sceneIndex = 1;
+			hasStarted = false;
 		}
 		brickCount = 0;
-		hasStarted = false;
 		SceneManager.LoadScene(name);
 	}
 
