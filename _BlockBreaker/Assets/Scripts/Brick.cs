@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 [RequireComponent (typeof (LevelManager))]
 public class Brick : MonoBehaviour {
@@ -20,11 +20,14 @@ public class Brick : MonoBehaviour {
 		timesHit = 0;
 		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		else Debug.Log (this + ": found: " + levelManager);
 		isBreakable = (this.tag == "breakable");
 		
 		//increment static breakable-brick-count for each breakable object of the class created
 		if (isBreakable) {
 			breakableCount ++;
+			levelManager.BrickCountPlus();
 		}
 	}
 	
@@ -44,13 +47,15 @@ public class Brick : MonoBehaviour {
 		
 		// if a brick has taken it's final hit
 		if (timesHit >= maxHits) {
-			breakableCount --;
 			Puff();
 			ScoreBrick();
+		// not fixing the problem:	levelManager.BrickDestroyed();
+//			if (breakableCount == 0) {
+//				levelManager.LoadNextLevel();
+//			}
+			breakableCount --;
+			levelManager.BrickCountMinus();
 			Destroy(gameObject);
-			if (breakableCount == 0) {
-				levelManager.LoadNextLevel();
-			}
 			
 		// if a brick can take a hit and stick around for more
 		} else {

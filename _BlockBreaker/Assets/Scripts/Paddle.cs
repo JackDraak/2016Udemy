@@ -3,31 +3,20 @@ using System.Collections;
 
 public class Paddle : MonoBehaviour {
 	public AudioClip paddle;
-	
-	private bool autoplay;
+
+	private bool autoplay, easy, begun;
 	private Ball ball;
 	private Vector3 ballPos;
-	private bool easy, begun;
 	private GameObject startNote;
 	
 	void Start () {
-		Cursor.visible = false;
+	// TODO re-enable at some point for release?
+	//	Cursor.visible = false; 
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		ball = GameObject.FindObjectOfType<Ball>();
 		autoplay = PlayerPrefsManager.GetAutoplay ();
 		easy = PlayerPrefsManager.GetEasy ();
-		if (easy) EasyPlayOn ();
-		else EasyPlayOff ();
-	}
-
-	void AutoplayOn () {
-		autoplay = true;
-		PlayerPrefsManager.SetAutoplay (autoplay);
-	}
-	
-	void AutoplayOff () {
-		autoplay = false;
-		PlayerPrefsManager.SetAutoplay (autoplay);
+		EasyFlip();
 	}
 
 	void ToggleAuto () {
@@ -50,6 +39,10 @@ public class Paddle : MonoBehaviour {
 	void ToggleEasy () {
 		easy = !easy;
 		PlayerPrefsManager.SetEasy (easy);
+		EasyFlip();
+		}
+	
+	void EasyFlip () {
 		if (easy) this.transform.localScale = new Vector2(2.5f,1);
 		else this.transform.localScale = new Vector2(1.5f,1);
 	}
@@ -57,10 +50,6 @@ public class Paddle : MonoBehaviour {
 	void FixedUpdate () {
 		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
 		if (Input.GetKeyDown(KeyCode.E)) {ToggleEasy();}
-		if (Input.GetKeyDown(KeyCode.O)) {AutoplayOff();}
-		if (Input.GetKeyDown(KeyCode.P)) {AutoplayOn();}
-		if (Input.GetKeyDown(KeyCode.L)) {EasyPlayOn();}
-		if (Input.GetKeyDown(KeyCode.K)) {EasyPlayOff();}
 
 		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 			if (!autoplay) 	{

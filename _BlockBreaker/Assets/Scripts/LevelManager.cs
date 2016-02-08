@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -12,6 +13,7 @@ public class LevelManager : MonoBehaviour {
 	public static float scoreFactor;
 	
 	private Text scoreBoard;
+//	private Text hintBoard;
 	private SpriteRenderer ball1, ball2, ball3, ball4;
 	private Color onColor = new Color (1f, 1f, 1f, 0.667f), offColor = new Color (0f, 0f, 0f, 0f);
 	
@@ -55,6 +57,7 @@ public class LevelManager : MonoBehaviour {
 		ShowMyBalls ();
 
 		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
 		// adjust scoring relative to difficulty at the begining of each level here
 		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
 		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
@@ -72,28 +75,47 @@ public class LevelManager : MonoBehaviour {
 		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
 		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
+
+//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
+//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
 	}
 
 	public void BallDown() {
 		if (ballCount-- <= 0) {
-			Brick.breakableCount = 0;
+			brickCount = 0;
 			if (PlayerPrefsManager.GetTopscore () < LevelManager.score) PlayerPrefsManager.SetTopscore (LevelManager.score);
 			LoadLevel("Game Over");
 		}
 		ShowMyBalls (); // call after decrement in IF of BallDown
 	}
-	
-	public void LoadNextLevel() {
-		if (PlayerPrefsManager.GetTopscore () < LevelManager.score) {
-			PlayerPrefsManager.SetTopscore (LevelManager.score);
-		}
-		Application.LoadLevel(Application.loadedLevel + 1);
+
+
+//	StartCoroutine(ShortPause());
+
+
+	IEnumerator ShortPause() {
+        print(Time.time);
+        yield return new WaitForSeconds(0.5f);
+        print(Time.time);
+    }
+
+
+	void LoadNextLevel() {
+		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
+		int activeScene = SceneManager.GetActiveScene().buildIndex;
+		ShortPause();
+		SceneManager.LoadScene(activeScene +1);
 	}
 	
-	public void BrickDestroyed() {
-		if (Brick.breakableCount <= 0) {
-			Invoke ("LoadNextLevel()", .5f);
-		}
+
+	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
+	public void BrickCountPlus () {
+		brickCount++;
+	}
+	public void BrickCountMinus () {
+		brickCount--;
+		BrickDestroyed();
 	}
 	
 	public void LoadLevel(string name){
@@ -102,11 +124,12 @@ public class LevelManager : MonoBehaviour {
 			ballCount = 2;
 			score = 0;
 		}
-		Brick.breakableCount = 0;
-		Application.LoadLevel(name);
+		brickCount = 0;
+// DEP:		Application.LoadLevel(name);
+		SceneManager.LoadScene(name);
 	}
 	
-	public void QuitRequest() {
-		Application.Quit();
-	}
+//	public void QuitRequest() {
+//		Application.Quit();
+//	}
 }

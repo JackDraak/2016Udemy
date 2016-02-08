@@ -14,14 +14,12 @@ public class Doobie : MonoBehaviour {
 	private GameObject parent;
 	private GameObject smoke;
 	private int timesHit;
-	private Brick aBrick;
 	
 	void Start () {
-		aBrick = GameObject.FindObjectOfType<Brick>();
 		timesHit = 0;
-		Brick.breakableCount ++;
 		smoke = GameObject.Find("DoobieSmoke");
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		levelManager.BrickCountPlus();
 		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
 	}
 	
@@ -38,12 +36,9 @@ public class Doobie : MonoBehaviour {
 		if (timesHit >= maxHits) {
 			ScoreDoobie ();
 			Puff();
-			Brick.breakableCount --;
-			levelManager.BrickDestroyed();
+			levelManager.BrickCountMinus();
 			Destroy(gameObject);
-			if (Brick.breakableCount == 0) {
-				levelManager.LoadNextLevel();			
-			}
+
 		// if a brick can take a hit and stick around for more
 		} else {
 			ScoreHit ();
@@ -51,6 +46,7 @@ public class Doobie : MonoBehaviour {
 			LoadSprites();
 		}
 	}
+
 	void ScoreHit () {
 		// small score for small hit
 		LevelManager.score += Mathf.Round (
@@ -59,7 +55,7 @@ public class Doobie : MonoBehaviour {
 								(baseScore * Application.loadedLevel) + 
 								Brick.breakableCount * 5)
 							);
-		aBrick.FreeBallin ();
+//		aBrick.FreeBallin ();
 	}
 	
 	void ScoreDoobie () {
@@ -70,7 +66,7 @@ public class Doobie : MonoBehaviour {
 								(10 * baseScore * Application.loadedLevel) + 
 								Brick.breakableCount * 5)
 							);
-		aBrick.FreeBallin ();
+//		aBrick.FreeBallin ();
 	}
 	
 	void Puff () {
