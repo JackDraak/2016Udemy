@@ -11,8 +11,6 @@ public class LevelManager : MonoBehaviour {
 	public static int brickCount;
 	public static float score;
 	public static float scoreFactor;
-	public static int sceneIndex =1;
-	public static bool hasStarted;
 	
 	private Text scoreBoard;
 //	private Text hintBoard;
@@ -60,7 +58,6 @@ public class LevelManager : MonoBehaviour {
 
 		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 //		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
-
 		// adjust scoring relative to difficulty at the begining of each level here
 		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
 		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
@@ -84,32 +81,38 @@ public class LevelManager : MonoBehaviour {
 //		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
 	}
 
-	public int GetSceneIndex () { return sceneIndex; }
-	public bool HasStartedReturn () { return hasStarted; }
-	public void HasStartedTrue() { hasStarted = true; }
-	public void HasStartedFalse() { hasStarted = false; }
-	public void HasStartedToggle() { hasStarted = !hasStarted; }
-
 	public void BallDown() {
 		if (ballCount-- <= 0) {
 			brickCount = 0;
 			if (PlayerPrefsManager.GetTopscore () < LevelManager.score) PlayerPrefsManager.SetTopscore (LevelManager.score);
 			LoadLevel("Game Over");
 		}
-		ShowMyBalls ();
+		ShowMyBalls (); // call after decrement in IF of BallDown
 	}
+
+
+//	StartCoroutine(ShortPause());
+
+
+	IEnumerator ShortPause() {
+        print(Time.time);
+        yield return new WaitForSeconds(0.5f);
+        print(Time.time);
+    }
+
 
 	void LoadNextLevel() {
-		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		sceneIndex++;
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
-		hasStarted = false;
+		int activeScene = SceneManager.GetActiveScene().buildIndex;
+		ShortPause();
+		SceneManager.LoadScene(activeScene +1);
 	}
+	
 
-	public int BrickGetNumRemaining () { return brickCount; } 
-	public void BrickDestroyed() { if (brickCount <= 0) Invoke ("LoadNextLevel", 0.5f); }
-	public void BrickCountPlus () {	brickCount++; }
+	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
+	public void BrickCountPlus () {
+		brickCount++;
+	}
 	public void BrickCountMinus () {
 		brickCount--;
 		BrickDestroyed();
@@ -120,35 +123,10 @@ public class LevelManager : MonoBehaviour {
 		if (name == "_Start Menu" || name == "Level_01") {
 			ballCount = 2;
 			score = 0;
-			sceneIndex = 1;
-			hasStarted = false;
 		}
 		brickCount = 0;
+// DEP:		Application.LoadLevel(name);
 		SceneManager.LoadScene(name);
-	}
-
-	public void FreeBallin () { // set reward levels where free plays are granted
-		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 5000) {
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(1);
-			}
-		}
-		if (PlayerPrefsManager.GetAward() == 1) {
-			if (score > 15000) {
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(2);
-			}
-		}
-		if (PlayerPrefsManager.GetAward() == 2) {
-			if (score > 50000) {
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(3);
-			}
-		}
 	}
 	
 //	public void QuitRequest() {

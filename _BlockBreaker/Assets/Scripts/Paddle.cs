@@ -8,14 +8,10 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private GameObject startNote;
-	private LevelManager levelManager;
 	
 	void Start () {
 	// TODO re-enable at some point for release?
-
 	//	Cursor.visible = false; 
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		ball = GameObject.FindObjectOfType<Ball>();
 		autoplay = PlayerPrefsManager.GetAutoplay ();
@@ -65,11 +61,11 @@ public class Paddle : MonoBehaviour {
 				}
 			} 
 			if (autoplay) 	{
-				if (!levelManager.HasStartedReturn() && !begun) {
+				if (!ball.hasStarted && !begun) {
 					begun = true;
 					Invoke ("BeginPlay", 2);
 				}
-				if (levelManager.HasStartedReturn()) {
+				if (ball.hasStarted) {
 					ballPos = ball.transform.position;
 					if (easy) {
 						paddlePos.x = Mathf.Clamp((ballPos.x), 1.916f, 14.086f); // easy paddle
@@ -82,7 +78,7 @@ public class Paddle : MonoBehaviour {
 	}
 	
 	void BeginPlay () {
-		levelManager.HasStartedTrue();
+		ball.hasStarted = true;
 		if (startNote) startNote.SetActive (false);
 		ball.GetComponent<Rigidbody2D>().velocity = new Vector2 (Random.Range(-12f, 12f), Random.Range(8f, 10f));
 	}

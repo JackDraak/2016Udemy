@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class SplashManager : MonoBehaviour {
@@ -20,6 +19,6 @@ public class SplashManager : MonoBehaviour {
 	}
 	
 	public void LoadNextLevel() {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+		Application.LoadLevel(Application.loadedLevel + 1);
 	}
 }
