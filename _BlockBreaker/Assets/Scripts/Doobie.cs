@@ -76,7 +76,9 @@ public class Doobie : MonoBehaviour {
 			GameObject smokePuff = Instantiate(smokeEffect, smoke.transform.position, Quaternion.identity) as GameObject;
 			smokePuff.transform.parent = parent.transform;
 			levelManager.EffectAdd (smokePuff);
-			Instantiate(cherryEffect, smoke.transform.position, Quaternion.identity);
+			GameObject cherryPuff = Instantiate(cherryEffect, smoke.transform.position, Quaternion.identity) as GameObject;
+			cherryPuff.transform.parent = parent.transform;
+			levelManager.EffectAdd (cherryPuff);
 		}
 	}
 	
