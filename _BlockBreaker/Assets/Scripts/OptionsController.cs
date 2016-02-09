@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -9,7 +10,9 @@ public class OptionsController : MonoBehaviour {
 	private LevelManager levelManager;
 	
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogWarning (this + ": unable to attach to LevelManager");
+		if (SceneManager.GetActiveScene().buildIndex != 0) {
+			levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		}
 		speedSlider.value = PlayerPrefsManager.GetSpeed ();
 		if (PlayerPrefsManager.GetAutoplay () == true) autoplaySlider.value = 1; else autoplaySlider.value = 0;
 		if (PlayerPrefsManager.GetEasy () == true) easySlider.value = 1; else easySlider.value = 0;

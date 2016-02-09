@@ -147,7 +147,6 @@ public class LevelManager : MonoBehaviour {
 	}
 	
 	void LoadNextLevel() {
-		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 		sceneIndex++;
 		hasStarted = false;
