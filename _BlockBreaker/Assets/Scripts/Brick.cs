@@ -54,7 +54,6 @@ public class Brick : MonoBehaviour {
 	}
 	
 	void ScoreHit () {
-		Debug.Log( this + " HIT SceneIndex:::: " + levelManager.GetSceneIndex());
 		// small score, multiply by level# & dynamic scoreFactor
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
@@ -64,14 +63,13 @@ public class Brick : MonoBehaviour {
 
 		levelManager.FreeBallin();
 	}
-	
+
 	void ScoreBrick () {
-		Debug.Log( this + " FINAL HIT SceneIndex:::: " + levelManager.GetSceneIndex());
 		// larger score, multiply by level# & dynamic scoreFactor
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								2.3f * baseScore * (levelManager.GetSceneIndex() +1)
+								4.2f * baseScore * (levelManager.GetSceneIndex() +1)
 							);
 		levelManager.FreeBallin();
 	}

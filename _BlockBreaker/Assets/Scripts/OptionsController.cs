@@ -5,6 +5,7 @@ using System.Collections;
 public class OptionsController : MonoBehaviour {
 	
 	public Slider autoplaySlider, easySlider, fireballsSlider, speedSlider, trailsSlider;
+
 	private LevelManager levelManager;
 	
 	void Start () {

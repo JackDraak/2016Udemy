@@ -2,7 +2,9 @@
 using System.Collections;
 
 public class LoseCollider : MonoBehaviour {
+
 	public AudioClip loser;
+
 	private LevelManager levelManager;
 	
 	void Start () {

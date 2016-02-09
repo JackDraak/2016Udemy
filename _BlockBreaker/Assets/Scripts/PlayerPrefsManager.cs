@@ -7,8 +7,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 	const string AWARD_KEY = 		"award";
 	const string EASYMODE_KEY = 	"easymode";
 	const string FIREBALLS_KEY = 	"fireballs";
-	const string FIRSTUSE_KEY = 	"firstUse";
-	const string MASTER_VOL_KEY = 	"master_volume";
+	const string MASTER_VOL_KEY = 	"master_volume"; // TODO work in progress
 	const string SPEED_KEY = 		"speed";
 	const string TOPSCORE_KEY = 	"topscore";
 	const string TRAILS_KEY = 		"trails";
@@ -20,12 +19,6 @@ public class PlayerPrefsManager : MonoBehaviour {
 	public static void SetSpeed (float yorn) 		{ PlayerPrefs.SetFloat (SPEED_KEY, yorn); }
 	public static float GetTopscore () 				{ return PlayerPrefs.GetFloat (TOPSCORE_KEY); }
 	public static void SetTopscore (float yorn) 	{ PlayerPrefs.SetFloat (TOPSCORE_KEY, yorn); }
-
-	public static void SetUsed () 					{ PlayerPrefs.SetInt (FIRSTUSE_KEY, 1); }
-	public static bool GetUsed () {
-		if (PlayerPrefs.GetInt (FIRSTUSE_KEY) == 1) return true;
-		else return false;
-	}
 
 	// Fireballs
 	public static void SetFireBalls (bool set) {
@@ -75,5 +68,4 @@ public class PlayerPrefsManager : MonoBehaviour {
 			Debug.LogError ("Master volume out of range");
 		}
 	}
-
 }

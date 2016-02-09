@@ -4,12 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
-	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
-	// TODO working on structure to expunge relic effects REE
-	private ArrayList deadEffects = new ArrayList();
-//	private Text hintBoard; // for bug-testing purposes
-	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
-	private Text scoreBoard;
 
 	static LevelManager instance = null;
 
@@ -19,22 +13,30 @@ public class LevelManager : MonoBehaviour {
 	public static int sceneIndex = 1;
 	public static float score;
 	public static float scoreFactor;
-	
-	public void BrickCountMinus () { brickCount--; BrickDestroyed(); }
-	public void BrickCountPlus () {	brickCount++; }
-	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
-	public int BrickGetNumRemaining () { return brickCount; } 
-	public int GetSceneIndex () { return sceneIndex; }
-	public void HasStartedFalse() { hasStarted = false; }
-	public bool HasStartedReturn () { return hasStarted; }
-	public void HasStartedToggle() { hasStarted = !hasStarted; }
-	public void HasStartedTrue() { hasStarted = true; }
+
+	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
+	// TODO working on structure to expunge relic effects REE
+	private ArrayList deadEffects = new ArrayList();
+//	private Text hintBoard; // for bug-testing purposes
+	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
+	private Text scoreBoard;
+
+	public void BrickCountMinus ()		{ brickCount--; BrickDestroyed(); }
+	public void BrickCountPlus ()		{	brickCount++; }
+	public void BrickDestroyed()		{ if (brickCount <= 0) LoadNextLevel(); }
+	public int BrickGetNumRemaining ()	{ return brickCount; } 
+	public int GetSceneIndex ()			{ return sceneIndex; }
+	public void HasStartedFalse()		{ hasStarted = false; }
+	public bool HasStartedReturn ()		{ return hasStarted; }
+	public void HasStartedToggle()		{ hasStarted = !hasStarted; }
+	public void HasStartedTrue()		{ hasStarted = true; }
+
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 //		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
+		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		ShowMyBalls ();
 	}
 
@@ -60,7 +62,7 @@ public class LevelManager : MonoBehaviour {
 		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
 		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
 		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
+		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.2f);
 	}
 
 	public void EffectAdd (GameObject preDE) {
@@ -98,7 +100,7 @@ public class LevelManager : MonoBehaviour {
 	public void BallDown() {
 		if (ballCount-- <= 0) {
 			brickCount = 0;
-			if (PlayerPrefsManager.GetTopscore () < LevelManager.score) PlayerPrefsManager.SetTopscore (LevelManager.score);
+			if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 			LoadLevel("Game Over");
 		}
 		ShowMyBalls ();
@@ -152,8 +154,4 @@ public class LevelManager : MonoBehaviour {
 		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
-
-//	public void QuitRequest() {
-//		Application.Quit();
-//	}
 }

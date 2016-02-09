@@ -54,7 +54,7 @@ public class Doobie : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								baseScore * levelManager.GetSceneIndex() + 
+								1.5f * baseScore * levelManager.GetSceneIndex() + 
 								levelManager.BrickGetNumRemaining() * 10
 							);
 		levelManager.FreeBallin();
@@ -65,7 +65,7 @@ public class Doobie : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								10 * baseScore * levelManager.GetSceneIndex() + 
+								15f * baseScore * levelManager.GetSceneIndex() + 
 								levelManager.BrickGetNumRemaining() * 10
 							);
 		levelManager.FreeBallin();

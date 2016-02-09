@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Paddle : MonoBehaviour {
+
 	public AudioClip paddle;
 
 	private bool autoplay, begun, easy;
