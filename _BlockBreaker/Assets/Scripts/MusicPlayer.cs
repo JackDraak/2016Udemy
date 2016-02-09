@@ -25,7 +25,7 @@ public class MusicPlayer : MonoBehaviour {
 			music.Stop();
 			music.clip = level_[level];
 			music.loop = true;
-			music.volume = 0.15f;
+			music.volume = 0.86f;
 			music.Play();
 		}
 	}

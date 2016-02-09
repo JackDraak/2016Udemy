@@ -5,11 +5,11 @@ using System.Collections;
 [RequireComponent (typeof (Brick))]
 public class Doobie : MonoBehaviour {
 
-	public Sprite[] hitSprites;
-	public int baseScore = 42;
+	public int baseScore = 71;
 	public AudioClip brick;
-	public GameObject smokeEffect;
 	public GameObject cherryEffect;
+	public Sprite[] hitSprites;
+	public GameObject smokeEffect;
 	
 	private LevelManager levelManager;
 	private GameObject parent;
@@ -19,7 +19,7 @@ public class Doobie : MonoBehaviour {
 	void Start () {
 		timesHit = 0;
 		smoke = GameObject.Find("DoobieSmoke");
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		levelManager.BrickCountPlus();
 		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
 	}
@@ -55,7 +55,7 @@ public class Doobie : MonoBehaviour {
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
 								baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
+								levelManager.BrickGetNumRemaining() * 10
 							);
 		levelManager.FreeBallin();
 	}
@@ -66,7 +66,7 @@ public class Doobie : MonoBehaviour {
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
 								10 * baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
+								levelManager.BrickGetNumRemaining() * 10
 							);
 		levelManager.FreeBallin();
 	}

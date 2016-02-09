@@ -120,15 +120,18 @@ public class LevelManager : MonoBehaviour {
 		brickCount--;
 		BrickDestroyed();
 	}
-	
+
+
 	public void LoadLevel(string name){
 		Cursor.visible = true;
 		if (name == "_Start Menu" || name == "Level_01") {
+			Cursor.visible = false;
 			ballCount = 2;
 			score = 0;
 			sceneIndex = 1;
 			PlayerPrefsManager.SetAward(0);
 		}
+		if (name == "_Start Menu" ) { Cursor.visible = true; }
 		brickCount = 0;
 		hasStarted = false;
 		SceneManager.LoadScene(name);
@@ -137,21 +140,21 @@ public class LevelManager : MonoBehaviour {
 	public void FreeBallin () { // set reward levels where free plays are granted
 //		Debug.Log(this + " score: " + score + " and Award: " + PlayerPrefsManager.GetAward());
 		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 10000 && score < 50000) { // TODO tweak these score thresholds for release
+			if (score > 2000 && score < 10000) { // TODO tweak these score thresholds for release
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(1);
 			}
 		}
 		else if (PlayerPrefsManager.GetAward() == 1) {
-			if (score > 50000 && score < 250000) {
+			if (score > 10000 && score < 25000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(2);
 			}
 		}
 		else if (PlayerPrefsManager.GetAward() == 2) {
-			if (score > 250000) {
+			if (score > 25000) {
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(3);

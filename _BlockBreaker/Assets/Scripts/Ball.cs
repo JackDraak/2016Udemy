@@ -5,31 +5,34 @@ public class Ball : MonoBehaviour {
 
 	public AudioClip ball;
 	
+	private float currentVelocityX;
+	private float currentVelocityY;
+	private float maxVelocityX = 13f;
+	private float maxVelocityY = 19f;
 	private bool fire, trails;
+	private GameObject fireBalls, trippyTrails, sphere;
+	private LevelManager levelManager;
 	private Paddle paddle;
 	private Vector3 paddleToBallVector;
-	private float maxVelocityX = 13f;
-	private float currentVelocityX;
-	private float maxVelocityY = 19f;
-	private float currentVelocityY;
 	private Vector2 preClampVelocity;
-	private GameObject fireBalls, trippyTrails, sphere;
 	private GameObject startNote;
-	private LevelManager levelManager;
 
 	void Start () {
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		paddle = GameObject.FindObjectOfType<Paddle>();
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		paddle = GameObject.FindObjectOfType<Paddle>(); if (!paddle) Debug.LogError (this + ": unable to attach to Paddle");
+		InitializeBallState();
+	}
+
+	void InitializeBallState () {
 		paddleToBallVector = this.transform.position - paddle.transform.position;
 		maxVelocityY = (1.18f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityY);
 		maxVelocityX = (0.7f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityX); // less variance than in Y
 		fire = PlayerPrefsManager.GetFireBalls ();
-		trails = PlayerPrefsManager.GetTrails ();
 		fireBalls = GameObject.FindGameObjectWithTag ("fireball");
-		trippyTrails = GameObject.FindGameObjectWithTag ("trail");
 		sphere = GameObject.FindGameObjectWithTag ("sphere");
+		trails = PlayerPrefsManager.GetTrails ();
+		trippyTrails = GameObject.FindGameObjectWithTag ("trail");
 		fireBalls.SetActive (fire);
 		sphere.SetActive (!fire);
 		trippyTrails.SetActive (trails);

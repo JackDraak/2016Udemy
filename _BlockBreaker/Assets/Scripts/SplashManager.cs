@@ -7,7 +7,7 @@ public class SplashManager : MonoBehaviour {
 	private OptionsController optionsController;
 	
 	void Start () {
-//		Screen.showCursor = false; // save for release... PITA while testing
+		Cursor.visible = false; // save for release... PITA while testing
 		optionsController = GameObject.FindObjectOfType<OptionsController>();
 		if (!optionsController) Debug.LogError (this + ": unable to attach to OptionsController");
 		optionsController.SetDefaults();
@@ -17,6 +17,7 @@ public class SplashManager : MonoBehaviour {
 	}
 	
 	public void LoadNextLevel() {
+		Cursor.visible = true;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
 }

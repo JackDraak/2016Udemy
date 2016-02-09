@@ -6,26 +6,21 @@ using UnityEngine.SceneManagement;
 [RequireComponent (typeof (LevelManager))]
 public class Brick : MonoBehaviour {
 
-	public int baseScore = 4;
+	public int baseScore = 11;
 	public AudioClip brick;
-	public Sprite[] hitSprites;
 	public GameObject dustEffect;
+	public Sprite[] hitSprites;
 
-	private int timesHit;
 	private bool isBreakable;
 	private LevelManager levelManager;
 	private GameObject parent;
+	private int timesHit;
 	
 	void Start () {
 		timesHit = 0;
-		parent = GameObject.Find ("Effects");
-		if (!parent) parent = new GameObject ("Effects");
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-		if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		isBreakable = (this.tag == "breakable");
-		if (isBreakable) {
-			levelManager.BrickCountPlus();
-		}
+		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		isBreakable = (this.tag == "breakable"); if (isBreakable) { levelManager.BrickCountPlus(); }
 	}
 	
 	void OnCollisionEnter2D (Collision2D col) { 
@@ -63,8 +58,7 @@ public class Brick : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								0.1f * baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
+								0.1f * baseScore * (levelManager.GetSceneIndex() +1)
 							);
 
 		levelManager.FreeBallin();
@@ -75,8 +69,7 @@ public class Brick : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								0.5f * baseScore * levelManager.GetSceneIndex() + 
-								levelManager.BrickGetNumRemaining() * 5
+								0.5f * baseScore * (levelManager.GetSceneIndex() +1)
 							);
 		levelManager.FreeBallin();
 	}
