@@ -4,11 +4,18 @@ using System.Collections;
 public class Paddle : MonoBehaviour {
 	public AudioClip paddle;
 
-	private bool autoplay, easy, begun;
+	private bool autoplay, begun, easy;
 	private Ball ball;
 	private Vector3 ballPos;
 	private GameObject startNote;
 	private LevelManager levelManager;
+
+	void EasyFlip ()		{ if (easy) this.transform.localScale = new Vector2(2.5f,1); else this.transform.localScale = new Vector2(1.5f,1); }
+	void EasyPlayOff ()		{ easy = false; EasySync(); }
+	void EasyPlayOn ()		{ easy = true; EasySync(); }
+	void EasySync ()		{ PlayerPrefsManager.SetEasy (easy); EasyFlip(); }
+	void ToggleAuto () 		{ autoplay = !autoplay; PlayerPrefsManager.SetAutoplay (autoplay); }
+	void ToggleEasy ()		{ easy = !easy; EasySync(); }
 	
 	void Start () {
 		//	Cursor.visible = false; // TODO re-enable at some point for release?
@@ -20,9 +27,13 @@ public class Paddle : MonoBehaviour {
 		EasyFlip();
 	}
 
-	void FixedUpdate () {
+	// TODO this really ought to be in LevelManager or something, eh?
+	void Update () {
 		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
 		if (Input.GetKeyDown(KeyCode.E)) {ToggleEasy();}
+	}
+
+	void FixedUpdate () {
 		PaddleMotion();
 	}
 
@@ -51,34 +62,6 @@ public class Paddle : MonoBehaviour {
 		} else {
 			return Mathf.Clamp((xPos), 1.390f, 14.615f); // normal paddle
 		}
-	}
-
-	void ToggleAuto () {
-		autoplay = !autoplay;
-		PlayerPrefsManager.SetAutoplay (autoplay);
-	}
-	
-	void EasyPlayOn () {
-		easy = true;
-		PlayerPrefsManager.SetEasy (easy);
-		this.transform.localScale = new Vector2(2.5f,1);
-	}
-	
-	void EasyPlayOff () {
-		easy = false;
-		PlayerPrefsManager.SetEasy (easy);
-		this.transform.localScale = new Vector2(1.5f,1);
-	}
-
-	void ToggleEasy () {
-		easy = !easy;
-		PlayerPrefsManager.SetEasy (easy);
-		EasyFlip();
-		}
-	
-	void EasyFlip () {
-		if (easy) this.transform.localScale = new Vector2(2.5f,1);
-		else this.transform.localScale = new Vector2(1.5f,1);
 	}
 
 	void BeginPlay () {

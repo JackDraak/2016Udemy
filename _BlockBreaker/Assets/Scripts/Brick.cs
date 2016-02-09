@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent (typeof (LevelManager))]
 public class Brick : MonoBehaviour {
 
-	public int baseScore = 11;
+	public int baseScore = 420;
 	public AudioClip brick;
 	public GameObject dustEffect;
 	public Sprite[] hitSprites;
@@ -58,7 +58,7 @@ public class Brick : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								0.1f * baseScore * (levelManager.GetSceneIndex() +1)
+								baseScore * (levelManager.GetSceneIndex() +1)
 							);
 
 		levelManager.FreeBallin();
@@ -69,7 +69,7 @@ public class Brick : MonoBehaviour {
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
 								LevelManager.scoreFactor *
-								0.5f * baseScore * (levelManager.GetSceneIndex() +1)
+								2.3f * baseScore * (levelManager.GetSceneIndex() +1)
 							);
 		levelManager.FreeBallin();
 	}

@@ -7,16 +7,17 @@ public class Ball : MonoBehaviour {
 	
 	private float currentVelocityX;
 	private float currentVelocityY;
+	private bool fire, trails;
+	private GameObject fireBalls, sphere, trippyTrails;
+	private LevelManager levelManager;
 	private float maxVelocityX = 13f;
 	private float maxVelocityY = 19f;
-	private bool fire, trails;
-	private GameObject fireBalls, trippyTrails, sphere;
-	private LevelManager levelManager;
 	private Paddle paddle;
 	private Vector3 paddleToBallVector;
 	private Vector2 preClampVelocity;
 	private GameObject startNote;
 
+	//TODO noted odd behaviour in editor during play testing with ball selected ; different behavious in difference scenes?!?
 	void Start () {
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");

@@ -27,6 +27,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 		else return false;
 	}
 
+	// Fireballs
 	public static void SetFireBalls (bool set) {
 		if (set) PlayerPrefs.SetInt (FIREBALLS_KEY, 1);
 		else  PlayerPrefs.SetInt (FIREBALLS_KEY, 0);
@@ -36,6 +37,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 		else return false;
 	}
 
+	// TrippyTrails
 	public static void SetTrails (bool set) {
 		if (set) PlayerPrefs.SetInt (TRAILS_KEY, 1);
 		else PlayerPrefs.SetInt (TRAILS_KEY, 0);
@@ -44,7 +46,8 @@ public class PlayerPrefsManager : MonoBehaviour {
 		if (PlayerPrefs.GetInt (TRAILS_KEY) == 1) return true;
 		else return false;
 	}
-	
+
+	// Easy mode
 	public static void SetEasy (bool set) {
 		if (set) PlayerPrefs.SetInt (EASYMODE_KEY, 1);
 		else PlayerPrefs.SetInt (EASYMODE_KEY, 0);
@@ -53,7 +56,8 @@ public class PlayerPrefsManager : MonoBehaviour {
 		if (PlayerPrefs.GetInt (EASYMODE_KEY) == 1) return true;
 		else return false; 
 	}
-	
+
+	// Autoplay
 	public static void SetAutoplay (bool set) {
 		if (set) PlayerPrefs.SetInt (AUTOPLAY_KEY, 1);
 		else PlayerPrefs.SetInt (AUTOPLAY_KEY, 0);
@@ -63,6 +67,7 @@ public class PlayerPrefsManager : MonoBehaviour {
 		else return false;
 	}
 
+	// Volume // TODO not fully implemented
 	public static void SetMasterVolume (float volume) {
 		if (volume >= 0f && volume <= 1f) {
 			PlayerPrefs.SetFloat (MASTER_VOL_KEY, volume);

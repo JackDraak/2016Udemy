@@ -5,7 +5,7 @@ using System.Collections;
 [RequireComponent (typeof (Brick))]
 public class Doobie : MonoBehaviour {
 
-	public int baseScore = 71;
+	public int baseScore = 710;
 	public AudioClip brick;
 	public GameObject cherryEffect;
 	public Sprite[] hitSprites;
