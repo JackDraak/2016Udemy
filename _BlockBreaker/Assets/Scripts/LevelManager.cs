@@ -4,23 +4,69 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
-
-	static LevelManager instance = null;
-	
-	public static int ballCount = 2;
-	public static int brickCount;
-	public static float score;
-	public static float scoreFactor;
-	public static int sceneIndex = 1;
-	public static bool hasStarted;
-	
-	private Text scoreBoard;
-//	private Text hintBoard;
 	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
-	private Color onColor = new Color (1f, 1f, 1f, 0.667f), offColor = new Color (0f, 0f, 0f, 0f);
-	
 	// working on structure to expunge relic effects REE
 	private ArrayList deadEffects = new ArrayList();
+	private Color onColor = new Color (1f, 1f, 1f, 0.667f), offColor = new Color (0f, 0f, 0f, 0f);
+	private Text scoreBoard;
+	//	private Text hintBoard;
+
+	static LevelManager instance = null;
+
+	public static int ballCount = 2;
+	public static int brickCount;
+	public static bool hasStarted;
+	public static int sceneIndex = 1;
+	public static float score;
+	public static float scoreFactor;
+	
+	public void BrickCountMinus () { brickCount--; BrickDestroyed(); }
+	public void BrickCountPlus () {	brickCount++; }
+	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
+	public int BrickGetNumRemaining () { return brickCount; } 
+	public int GetSceneIndex () { return sceneIndex; }
+	public void HasStartedFalse() { hasStarted = false; }
+	public bool HasStartedReturn () { return hasStarted; }
+	public void HasStartedToggle() { hasStarted = !hasStarted; }
+	public void HasStartedTrue() { hasStarted = true; }
+
+	void Start () {	
+		if (instance != null && instance != this) {
+			Destroy (gameObject);
+		} else {
+			instance = this;
+			GameObject.DontDestroyOnLoad(gameObject);
+		}
+		ShowMyBalls ();
+		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
+	}
+
+	void Update () {
+		// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object
+		foreach (GameObject de in deadEffects) { // more stuff for REE
+			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
+				Destroy (de);
+			}
+		}
+
+		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
+		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
+
+//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
+//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
+//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
+	}
+
+	public void  CalculateScoreFactor () {
+		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
+		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
+		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
+		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
+		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
+	}
+
 	public void EffectAdd (GameObject preDE) {
 		deadEffects.Add (preDE);
 	}
@@ -52,48 +98,6 @@ public class LevelManager : MonoBehaviour {
 			if (ballCount < 5) ball5.color = offColor;
 		}
 	}
-	
-	void Start () {	
-		if (instance != null && instance != this) {
-			Destroy (gameObject);
-		} else {
-			instance = this;
-			GameObject.DontDestroyOnLoad(gameObject);
-		}
-		ShowMyBalls ();
-		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
-	}
-
-	public void  CalculateScoreFactor () {
-		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
-		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
-		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
-		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.1f);
-	}
-
-	void Update () {
-		foreach (GameObject de in deadEffects) { // more stuff for REE
-			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
-				Destroy (de);
-			}
-		}
-
-		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
-		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
-
-//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
-//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
-//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
-	}
-
-	public int GetSceneIndex () { return sceneIndex; }
-	public bool HasStartedReturn () { return hasStarted; }
-	public void HasStartedTrue() { hasStarted = true; }
-	public void HasStartedFalse() { hasStarted = false; }
-	public void HasStartedToggle() { hasStarted = !hasStarted; }
 
 	public void BallDown() {
 		if (ballCount-- <= 0) {
@@ -102,39 +106,6 @@ public class LevelManager : MonoBehaviour {
 			LoadLevel("Game Over");
 		}
 		ShowMyBalls ();
-	}
-
-	void LoadNextLevel() {
-		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
-		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		sceneIndex++;
-		hasStarted = false;
-		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
-	}
-
-	public int BrickGetNumRemaining () { return brickCount; } 
-	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
-	public void BrickCountPlus () {	brickCount++; }
-	public void BrickCountMinus () {
-		brickCount--;
-		BrickDestroyed();
-	}
-
-
-	public void LoadLevel(string name){
-		Cursor.visible = true;
-		if (name == "_Start Menu" || name == "Level_01") {
-			Cursor.visible = false;
-			ballCount = 2;
-			score = 0;
-			sceneIndex = 1;
-			PlayerPrefsManager.SetAward(0);
-		}
-		if (name == "_Start Menu" ) { Cursor.visible = true; }
-		brickCount = 0;
-		hasStarted = false;
-		SceneManager.LoadScene(name);
 	}
 
 	public void FreeBallin () { // set reward levels where free plays are granted
@@ -161,7 +132,31 @@ public class LevelManager : MonoBehaviour {
 			}
 		}
 	}
+
+	public void LoadLevel(string name){
+		Cursor.visible = true;
+		if (name == "_Start Menu" || name == "Level_01") {
+			Cursor.visible = false;
+			ballCount = 2;
+			score = 0;
+			sceneIndex = 1;
+			PlayerPrefsManager.SetAward(0);
+		}
+		if (name == "_Start Menu" ) { Cursor.visible = true; }
+		brickCount = 0;
+		hasStarted = false;
+		SceneManager.LoadScene(name);
+	}
 	
+	void LoadNextLevel() {
+		// set ball ! hasstarted here so you can freeze it before pause and load. requires bringing it into levelmanager
+		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
+		sceneIndex++;
+		hasStarted = false;
+		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+	}
+
 //	public void QuitRequest() {
 //		Application.Quit();
 //	}
