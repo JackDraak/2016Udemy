@@ -3,14 +3,14 @@ using System.Collections;
 
 public class PlayerPrefsManager : MonoBehaviour {
 	
-	const string AUTOPLAY_KEY =		"autoplay";
-	const string AWARD_KEY =		"award";
-	const string EASYMODE_KEY =		"easymode";
-	const string FIREBALLS_KEY =	"fireballs";
-	const string MASTER_VOL_KEY =	"master_volume"; // TODO work in progress, not in options_scene
-	const string SPEED_KEY =		"speed";
-	const string TOPSCORE_KEY =		"topscore";
-	const string TRAILS_KEY =		"trails";
+	const string AUTOPLAY_KEY = "autoplay";
+	const string AWARD_KEY = "award";
+	const string EASYMODE_KEY = "easymode";
+	const string FIREBALLS_KEY = "fireballs";
+	const string MASTER_VOL_KEY = "master_volume"; // TODO work in progress, not in options_scene
+	const string SPEED_KEY = "speed";
+	const string TOPSCORE_KEY = "topscore";
+	const string TRAILS_KEY = "trails";
 
 	// Autoplay
 	public static bool GetAutoplay () { if (PlayerPrefs.GetInt (AUTOPLAY_KEY) == 1) return true; else return false; }
