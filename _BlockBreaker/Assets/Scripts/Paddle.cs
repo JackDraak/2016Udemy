@@ -30,11 +30,7 @@ public class Paddle : MonoBehaviour {
 		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 		if (!autoplay) 	{
 			float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
-			if (easy) {
-				paddlePos.x = Mathf.Clamp((mousePosInBlocks), 1.916f, 14.086f); // easy paddle
-			} else {
-				paddlePos.x = Mathf.Clamp((mousePosInBlocks), 1.390f, 14.615f); // normal paddle
-			}
+			paddlePos.x = PaddleClamp(mousePosInBlocks);
 		} 
 		if (autoplay) 	{
 			if (!levelManager.HasStartedReturn() && !begun) {
@@ -43,14 +39,18 @@ public class Paddle : MonoBehaviour {
 			}
 			if (levelManager.HasStartedReturn()) {
 				ballPos = ball.transform.position;
-				if (easy) {
-					paddlePos.x = Mathf.Clamp((ballPos.x), 1.916f, 14.086f); // easy paddle
-				} else {
-					paddlePos.x = Mathf.Clamp((ballPos.x), 1.390f, 14.615f); // normal paddle
-				}
+				paddlePos.x = PaddleClamp(ballPos.x);
 			}
 		}
 		this.transform.position = paddlePos;
+	}
+
+	float PaddleClamp (float xPos) {
+		if (easy) {
+			return Mathf.Clamp((xPos), 1.916f, 14.086f); // easy paddle
+		} else {
+			return Mathf.Clamp((xPos), 1.390f, 14.615f); // normal paddle
+		}
 	}
 
 	void ToggleAuto () {
