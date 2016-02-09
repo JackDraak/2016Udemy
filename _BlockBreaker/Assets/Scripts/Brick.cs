@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
+// TODO Doobie.cs is a wild branch of Brick.cs.... suggest making them subclasses of SceneObject or somesuch
 [RequireComponent (typeof (LevelManager))]
 public class Brick : MonoBehaviour {
 
@@ -54,6 +54,7 @@ public class Brick : MonoBehaviour {
 	}
 	
 	void ScoreHit () {
+		Debug.Log( this + " HIT SceneIndex:::: " + levelManager.GetSceneIndex());
 		// small score, multiply by level# & dynamic scoreFactor
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *
@@ -65,6 +66,7 @@ public class Brick : MonoBehaviour {
 	}
 	
 	void ScoreBrick () {
+		Debug.Log( this + " FINAL HIT SceneIndex:::: " + levelManager.GetSceneIndex());
 		// larger score, multiply by level# & dynamic scoreFactor
 		LevelManager.score += Mathf.Round (
 								PlayerPrefsManager.GetSpeed() *

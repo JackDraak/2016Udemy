@@ -18,7 +18,6 @@ public class Paddle : MonoBehaviour {
 	void ToggleEasy ()		{ easy = !easy; EasySync(); }
 	
 	void Start () {
-		//	Cursor.visible = false; // TODO re-enable at some point for release?
 		levelManager = GameObject.FindObjectOfType<LevelManager>();	if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
 		ball = GameObject.FindObjectOfType<Ball>();	if (!ball) Debug.LogError (this + ": unable to attach to Ball");

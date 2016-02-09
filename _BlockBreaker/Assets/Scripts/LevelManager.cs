@@ -131,14 +131,14 @@ public class LevelManager : MonoBehaviour {
 
 	public void LoadLevel(string name){
 		Cursor.visible = true;
-		if (name == "_Start Menu" || name == "Level_01") {
+		if (name != "Level_01") { Cursor.visible = true; }
+		if (name == "Level_01") {
 			Cursor.visible = false;
 			ballCount = 2;
 			score = 0;
 			sceneIndex = 1;
 			PlayerPrefsManager.SetAward(0);
 		}
-		if (name == "_Start Menu" ) { Cursor.visible = true; }
 		brickCount = 0;
 		hasStarted = false;
 		SceneManager.LoadScene(name);
