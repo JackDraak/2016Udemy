@@ -27,8 +27,8 @@ public class Ball : MonoBehaviour {
 
 	void InitializeBallState () {
 		paddleToBallVector = this.transform.position - paddle.transform.position;
-		maxVelocityY = (1.18f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityY);
-		maxVelocityX = (0.7f * (PlayerPrefsManager.GetSpeed ()) * maxVelocityX); // less variance than in Y
+		maxVelocityX = (0.7f * (PlayerPrefsManager.GetSpeed () + 0.01f) * maxVelocityX); // less variance than in Y
+		maxVelocityY = (1.18f * (PlayerPrefsManager.GetSpeed () + 0.05f) * maxVelocityY);
 		fire = PlayerPrefsManager.GetFireBalls ();
 		fireBalls = GameObject.FindGameObjectWithTag ("fireball");
 		sphere = GameObject.FindGameObjectWithTag ("sphere");
