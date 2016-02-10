@@ -5,16 +5,15 @@ public class Paddle : MonoBehaviour {
 
 	public AudioClip paddle;
 
-	private bool autoplay, begun, easy;
+	private bool autoplay, begun, driftDirection, easy;
 	private Ball ball;
 	private Vector3 ballPos;
-	private bool driftDirection;
-	private float driftSpan, driftSpeed, driftThat, driftThis;
+	private float driftSkew, driftSpan, driftSpeed, driftThat, driftThis;
 	private LevelManager levelManager;
 	private GameObject startNote;
 	
 	void AutoMove () {
-		Vector3 paddlePosition = new Vector3 (PaddleClamp (ball.transform.position.x + driftSpan), this.transform.position.y, 0f);
+		Vector3 paddlePosition = new Vector3 (PaddleClamp (ball.transform.position.x + (driftSkew * driftSpan)), this.transform.position.y, 0f);
 		this.transform.position = paddlePosition;
 	}
   
@@ -32,12 +31,12 @@ public class Paddle : MonoBehaviour {
 	void FixedUpdate () { PaddleMotion(); }
 
 	void OnTriggerEnter2D (Collider2D trigger) { 
-		AudioSource.PlayClipAtPoint (paddle, transform.position); // optional 3rd float value for volume
+		AudioSource.PlayClipAtPoint (paddle, transform.position);
 	}
 	
 	float PaddleClamp (float xPos) {
-		if (easy) { return Mathf.Clamp((xPos), 1.916f, 14.086f); } // easy paddle
-		else { return Mathf.Clamp((xPos), 1.390f, 14.615f); } // normal paddle
+		if (easy) return Mathf.Clamp((xPos), 1.916f, 14.086f); // easy paddle
+		else return Mathf.Clamp((xPos), 1.390f, 14.615f); // normal paddle
 	}
 	
 	void PaddleMotion () {
@@ -54,11 +53,11 @@ public class Paddle : MonoBehaviour {
 			}
 			if (levelManager.HasStartedReturn()) {
 				paddlePos.x = PaddleClamp(ball.transform.position.x);
-				if (driftDirection) { // drifting right
+				if (driftDirection) { // drifting right, +x
 					driftSpan = driftSpan + driftSpeed;
 					SetupDrift();
 					AutoMove();
-				} else { // drifting left
+				} else { // drifting left, -x
 					driftSpan = driftSpan - driftSpeed;
 					SetupDrift();
 					AutoMove();
@@ -69,6 +68,15 @@ public class Paddle : MonoBehaviour {
 
 	void SetupDrift () {
 		TestDriftBoundary();
+		// test distance to ball, & skew span...
+		// objective, allow ball to "drift away from paddle collumn" 
+		// (X-skew between paddle and ball, relative to ball's Y-distance from the lower boundary)
+		// curently driftSpan is used directly to: 
+		// Automove() the paddle, TestDriftBoundary(), Obv. Set Span for PaddleMotion(), 
+		// ergo, calculate a skew factor here, apply it on Automove(), and Bob's your uncle.
+		if (ball.transform.position.y > 1.3f) driftSkew = ball.transform.position.y * 0.55f;
+		else driftSkew = 1f;
+//		Debug.Log (ball.transform.position.y + " " + driftSkew);
 	}
 
 	void SetupDriftBoundary () {
@@ -78,13 +86,13 @@ public class Paddle : MonoBehaviour {
 
 	void SetupDriftReset () {
 		SetupDriftBoundary();
-		ToggleDrift();
+		ToggleDriftDirection();
 		SetupDriftSpeed();
 //		Debug.Log ("This: " + driftThis + ", That: " + driftThat + ", Direction: " + driftDirection + ", Velocity: " + driftSpeed + ", Span: " + driftSpan);
 	}
 
 	void SetupDriftSpeed () {
-		driftSpeed = Random.Range (0.005f, 0.07f);
+		driftSpeed = Random.Range (0.005f, 0.05f);
 	}
 
 	void Start () {
@@ -94,22 +102,23 @@ public class Paddle : MonoBehaviour {
 		autoplay = PlayerPrefsManager.GetAutoplay ();
 		easy = PlayerPrefsManager.GetEasy ();
 		EasyFlip();
+		driftDirection = true;
+		driftSkew = 1;
 		driftSpan = 0;
 		driftSpeed = 0.02f;
-		driftDirection = true;
 	}
 	
 	void TestDriftBoundary () {
-		if (driftDirection && driftSpan > driftThat) { SetupDriftReset(); }
-		if (!driftDirection && driftSpan < driftThis) { SetupDriftReset(); }
+		if (driftDirection && driftSpan > driftThat) SetupDriftReset();
+		if (!driftDirection && driftSpan < driftThis) SetupDriftReset();
 	}
 	
 	void ToggleAuto () { autoplay = !autoplay; PlayerPrefsManager.SetAutoplay (autoplay); }
-	void ToggleDrift () { driftDirection = !driftDirection; }
+	void ToggleDriftDirection () { driftDirection = !driftDirection; }
 	void ToggleEasy () { easy = !easy; EasySync(); }
 
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
-		if (Input.GetKeyDown(KeyCode.P)) {ToggleEasy();}
+		if (Input.GetKeyDown(KeyCode.A)) ToggleAuto();
+		if (Input.GetKeyDown(KeyCode.P)) ToggleEasy();
 	}
 }
