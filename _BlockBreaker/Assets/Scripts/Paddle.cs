@@ -9,7 +9,7 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private bool driftDirection;
-	private float driftSpan, driftThat, driftThis;
+	private float driftSpan, driftSpeed, driftThat, driftThis;
 	private LevelManager levelManager;
 	private GameObject startNote;
 	
@@ -55,11 +55,11 @@ public class Paddle : MonoBehaviour {
 			if (levelManager.HasStartedReturn()) {
 				paddlePos.x = PaddleClamp(ball.transform.position.x);
 				if (driftDirection) { // drifting right
-					driftSpan = driftSpan + 0.032f;
+					driftSpan = driftSpan + driftSpeed;
 					SetupDrift();
 					AutoMove();
 				} else { // drifting left
-					driftSpan = driftSpan - 0.032f;
+					driftSpan = driftSpan - driftSpeed;
 					SetupDrift();
 					AutoMove();
 				}
@@ -68,22 +68,44 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void SetupDrift () {
-		if (driftDirection && driftSpan > driftThat) { driftThat = Random.Range (0.21f, 0.79f); driftDirection = !driftDirection; }
-		if (!driftDirection && driftSpan < driftThis) { driftThis = Random.Range (-0.21f, -0.79f); driftDirection = !driftDirection; }
+		TestDriftBoundary();
 	}
-	
+
+	void SetupDriftBoundary () {
+		if (driftDirection) driftThat = Random.Range (0.21f, 0.79f);
+		else driftThis = Random.Range (-0.21f, -0.79f);
+	}
+
+	void SetupDriftReset () {
+		SetupDriftBoundary();
+		ToggleDrift();
+		SetupDriftSpeed();
+//		Debug.Log ("This: " + driftThis + ", That: " + driftThat + ", Direction: " + driftDirection + ", Velocity: " + driftSpeed + ", Span: " + driftSpan);
+	}
+
+	void SetupDriftSpeed () {
+		driftSpeed = Random.Range (0.005f, 0.07f);
+	}
+
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();	if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
-		ball = GameObject.FindObjectOfType<Ball>();	if (!ball) Debug.LogError (this + ": unable to attach to Ball");
+		ball = GameObject.FindObjectOfType<Ball>(); if (!ball) Debug.LogError (this + ": unable to attach to Ball");
 		autoplay = PlayerPrefsManager.GetAutoplay ();
 		easy = PlayerPrefsManager.GetEasy ();
 		EasyFlip();
 		driftSpan = 0;
+		driftSpeed = 0.02f;
 		driftDirection = true;
 	}
 	
+	void TestDriftBoundary () {
+		if (driftDirection && driftSpan > driftThat) { SetupDriftReset(); }
+		if (!driftDirection && driftSpan < driftThis) { SetupDriftReset(); }
+	}
+	
 	void ToggleAuto () { autoplay = !autoplay; PlayerPrefsManager.SetAutoplay (autoplay); }
+	void ToggleDrift () { driftDirection = !driftDirection; }
 	void ToggleEasy () { easy = !easy; EasySync(); }
 
 	void Update () {
