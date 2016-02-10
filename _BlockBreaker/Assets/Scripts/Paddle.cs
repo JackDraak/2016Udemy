@@ -26,8 +26,8 @@ public class Paddle : MonoBehaviour {
 
 	void DriftReset () {
 		SetDriftBoundary();
-		ToggleDriftDirection();
 		SetDriftSpeed();
+		ToggleDriftDirection();
 	}
 
 	void EasyFlip () { if (easy) this.transform.localScale = new Vector2(2.5f,1); else this.transform.localScale = new Vector2(1.5f,1); }
