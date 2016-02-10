@@ -9,12 +9,11 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private bool driftDirection;
-	private float driftThat, driftThis, driftSpan;
-	private GameObject startNote;
+	private float driftSpan, driftThat, driftThis;
 	private LevelManager levelManager;
+	private GameObject startNote;
 	
 	void AutoMove () {
-//		Debug.Log (driftSpan);
 		Vector3 paddlePosition = new Vector3 (PaddleClamp (ball.transform.position.x + driftSpan), this.transform.position.y, 0f);
 		this.transform.position = paddlePosition;
 	}
@@ -56,11 +55,11 @@ public class Paddle : MonoBehaviour {
 			if (levelManager.HasStartedReturn()) {
 				paddlePos.x = PaddleClamp(ball.transform.position.x);
 				if (driftDirection) { // drifting right
-					driftSpan = driftSpan + 0.025f;
+					driftSpan = driftSpan + 0.032f;
 					SetupDrift();
 					AutoMove();
 				} else { // drifting left
-					driftSpan = driftSpan - 0.025f;
+					driftSpan = driftSpan - 0.032f;
 					SetupDrift();
 					AutoMove();
 				}
@@ -69,11 +68,8 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void SetupDrift () {
-		if (driftSpan > driftThat || driftSpan < driftThis ) {
-			driftThat = Random.Range (0.25f, 0.8f); driftThis = (-(driftThat));
-			driftDirection = !driftDirection;
-			if (driftDirection) Debug.Log ("NEW up - drift: " + driftThat); else Debug.Log ("NEW down - drift: " + driftThis);
-		}
+		if (driftDirection && driftSpan > driftThat) { driftThat = Random.Range (0.21f, 0.79f); driftDirection = !driftDirection; }
+		if (!driftDirection && driftSpan < driftThis) { driftThis = Random.Range (-0.21f, -0.79f); driftDirection = !driftDirection; }
 	}
 	
 	void Start () {
