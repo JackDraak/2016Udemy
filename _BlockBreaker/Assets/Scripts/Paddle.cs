@@ -10,6 +10,7 @@ public class Paddle : MonoBehaviour {
 	private Vector3 ballPos;
 	private float driftSkew, driftSpan, driftSpeed, driftThat, driftThis;
 	private LevelManager levelManager;
+	private Vector3 paddlePos;
 	private GameObject startNote;
 	
 	void AutoMove () {
@@ -36,6 +37,17 @@ public class Paddle : MonoBehaviour {
 
 	void FixedUpdate () { PaddleMotion(); }
 
+	void LockPaddleToAI() {
+		SetBegun();
+		SetPaddleX();
+	}
+
+	void LockPaddleToMouse () {
+		float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
+		paddlePos.x = PaddleClamp(mousePosInBlocks);
+		this.transform.position = paddlePos;
+	}
+
 	void OnTriggerEnter2D (Collider2D trigger) { 
 		AudioSource.PlayClipAtPoint (paddle, transform.position);
 	}
@@ -46,28 +58,29 @@ public class Paddle : MonoBehaviour {
 	}
 	
 	void PaddleMotion () {
-		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 		if (!autoplay) 	{
-			float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
-			paddlePos.x = PaddleClamp(mousePosInBlocks);
-			this.transform.position = paddlePos;
+			LockPaddleToMouse();
 		} 
 		if (autoplay) 	{
-			if (!levelManager.HasStartedReturn() && !begun) {
-				begun = true;
-				Invoke ("BeginPlay", 2);
-			}
-			if (levelManager.HasStartedReturn()) {
-				paddlePos.x = PaddleClamp(ball.transform.position.x);
-				if (driftDirection) { // drifting right, +x
-					driftSpan = driftSpan + driftSpeed;
-					SetupDrift();
-					AutoMove();
-				} else { // drifting left, -x
-					driftSpan = driftSpan - driftSpeed;
-					SetupDrift();
-					AutoMove();
-				}
+			LockPaddleToAI();
+		}
+	}
+
+	void SetBegun () {
+		if (!levelManager.HasStartedReturn() && !begun) { begun = true; Invoke ("BeginPlay", 2); }
+	}
+
+	void SetPaddleX () {
+		if (levelManager.HasStartedReturn()) {
+			paddlePos.x = PaddleClamp(ball.transform.position.x);
+			if (driftDirection) { // drifting right, +x
+				driftSpan = driftSpan + driftSpeed;
+				SetupDrift();
+				AutoMove();
+			} else { // drifting left, -x
+				driftSpan = driftSpan - driftSpeed;
+				SetupDrift();
+				AutoMove();
 			}
 		}
 	}
@@ -102,6 +115,7 @@ public class Paddle : MonoBehaviour {
 		driftSkew = 1;
 		driftSpan = 0;
 		driftSpeed = 0.02f;
+		paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 	}
 	
 	void TestDriftBoundary () {
