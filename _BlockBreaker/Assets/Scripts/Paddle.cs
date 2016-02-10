@@ -9,9 +9,15 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private bool driftDirection;
-	private float driftThat, driftThis, driftWindow;
+	private float driftThat, driftThis, driftSpan;
 	private GameObject startNote;
 	private LevelManager levelManager;
+	
+	void AutoMove () {
+//		Debug.Log (driftSpan);
+		Vector3 paddlePosition = new Vector3 (PaddleClamp (ball.transform.position.x + driftSpan), this.transform.position.y, 0f);
+		this.transform.position = paddlePosition;
+	}
   
 	void BeginPlay () {
 		levelManager.HasStartedTrue();
@@ -48,33 +54,28 @@ public class Paddle : MonoBehaviour {
 				Invoke ("BeginPlay", 2);
 			}
 			if (levelManager.HasStartedReturn()) {
-				ballPos = ball.transform.position;
-				paddlePos.x = PaddleClamp(ballPos.x);
-				if (driftDirection) {
-					driftWindow = driftWindow + 0.05f;
-					TestDriftDirection(driftWindow);
-					AutoMove(driftWindow);
-				} else {
-					driftWindow = driftWindow - 0.05f;
-					TestDriftDirection(driftWindow);
-					AutoMove(driftWindow);
+				paddlePos.x = PaddleClamp(ball.transform.position.x);
+				if (driftDirection) { // drifting right
+					driftSpan = driftSpan + 0.025f;
+					SetupDrift();
+					AutoMove();
+				} else { // drifting left
+					driftSpan = driftSpan - 0.025f;
+					SetupDrift();
+					AutoMove();
 				}
 			}
 		}
 	}
 
-	void TestDriftDirection (float span) {
- 		if (span > driftThat || span < driftThis ) {
- 			driftThat = Random.Range (0.3f, 0.8f); driftThis = -driftThat;
- 			driftDirection = !driftDirection;
- 		}
- 	}
- 
-	void AutoMove (float jitter) {
-		Vector3 paddlePosition = new Vector3 (PaddleClamp (ball.transform.position.x + jitter), this.transform.position.y, 0f);
-		this.transform.position = paddlePosition;
+	void SetupDrift () {
+		if (driftSpan > driftThat || driftSpan < driftThis ) {
+			driftThat = Random.Range (0.25f, 0.8f); driftThis = (-(driftThat));
+			driftDirection = !driftDirection;
+			if (driftDirection) Debug.Log ("NEW up - drift: " + driftThat); else Debug.Log ("NEW down - drift: " + driftThis);
+		}
 	}
-
+	
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();	if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
 		if (GameObject.FindGameObjectWithTag ("StartNote")) startNote = GameObject.FindGameObjectWithTag ("StartNote");
@@ -82,6 +83,8 @@ public class Paddle : MonoBehaviour {
 		autoplay = PlayerPrefsManager.GetAutoplay ();
 		easy = PlayerPrefsManager.GetEasy ();
 		EasyFlip();
+		driftSpan = 0;
+		driftDirection = true;
 	}
 	
 	void ToggleAuto () { autoplay = !autoplay; PlayerPrefsManager.SetAutoplay (autoplay); }
