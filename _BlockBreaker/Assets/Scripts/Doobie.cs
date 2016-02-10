@@ -16,20 +16,6 @@ public class Doobie : MonoBehaviour {
 	private GameObject smoke;
 	private int timesHit;
 	
-	void Start () {
-		timesHit = 0;
-		smoke = GameObject.Find("DoobieSmoke");
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		levelManager.BrickCountPlus();
-		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
-	}
-	
-	void OnCollisionEnter2D (Collision2D col) { 
-		levelManager.CalculateScoreFactor();
-		HandleHits();
-		AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
-	}
-	
 	void HandleHits() {
 		timesHit++;
 		int maxHits = hitSprites.Length + 1;
@@ -46,6 +32,32 @@ public class Doobie : MonoBehaviour {
 			ScoreHit ();
 			Puff();
 			LoadSprites();
+		}
+	}
+	
+	void LoadSprites () {
+		int spriteIndex = (timesHit -1);
+		if (hitSprites[spriteIndex]) {
+			this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+		} else {
+			Debug.LogError (this + " missing sprite!");
+		}
+	}
+
+	void OnCollisionEnter2D (Collision2D col) { 
+		levelManager.CalculateScoreFactor();
+		HandleHits();
+		AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
+	}
+	
+	void Puff () {
+		if (smoke) {
+			GameObject smokePuff = Instantiate(smokeEffect, smoke.transform.position, Quaternion.identity) as GameObject;
+			smokePuff.transform.parent = parent.transform;
+			levelManager.EffectAdd (smokePuff);
+			GameObject cherryPuff = Instantiate(cherryEffect, smoke.transform.position, Quaternion.identity) as GameObject;
+			cherryPuff.transform.parent = parent.transform;
+			levelManager.EffectAdd (cherryPuff);
 		}
 	}
 
@@ -71,23 +83,11 @@ public class Doobie : MonoBehaviour {
 		levelManager.FreeBallin();
 	}
 	
-	void Puff () {
-		if (smoke) {
-			GameObject smokePuff = Instantiate(smokeEffect, smoke.transform.position, Quaternion.identity) as GameObject;
-			smokePuff.transform.parent = parent.transform;
-			levelManager.EffectAdd (smokePuff);
-			GameObject cherryPuff = Instantiate(cherryEffect, smoke.transform.position, Quaternion.identity) as GameObject;
-			cherryPuff.transform.parent = parent.transform;
-			levelManager.EffectAdd (cherryPuff);
-		}
-	}
-	
-	void LoadSprites () {
-		int spriteIndex = (timesHit -1);
-		if (hitSprites[spriteIndex]) {
-			this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
-		} else {
-			Debug.LogError (this + " missing sprite!");
-		}
+	void Start () {
+		timesHit = 0;
+		smoke = GameObject.Find("DoobieSmoke");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		levelManager.BrickCountPlus();
+		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
 	}
 }

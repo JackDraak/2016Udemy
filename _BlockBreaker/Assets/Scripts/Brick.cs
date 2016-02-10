@@ -15,25 +15,7 @@ public class Brick : MonoBehaviour {
 	private LevelManager levelManager;
 	private GameObject parent;
 	private int timesHit;
-	
-	void Start () {
-		timesHit = 0;
-		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		isBreakable = (this.tag == "breakable"); if (isBreakable) { levelManager.BrickCountPlus(); }
-	}
-	
-	void OnCollisionEnter2D (Collision2D col) { 
-		levelManager.CalculateScoreFactor();
-		if (isBreakable) {
-			HandleHits();
-			AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
-		} else {
-			AudioSource.PlayClipAtPoint (brick, transform.position, 0.3f); // i.e. quiet unbreakable bricks	
-			ScoreHit ();
-		}
-	}
-	
+
 	void HandleHits() {
 		timesHit++;
 		int maxHits = hitSprites.Length + 1;
@@ -53,27 +35,26 @@ public class Brick : MonoBehaviour {
 		}
 	}
 	
-	void ScoreHit () {
-		// small score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += Mathf.Round (
-								PlayerPrefsManager.GetSpeed() *
-								LevelManager.scoreFactor *
-								baseScore * (levelManager.GetSceneIndex() +1)
-							);
-
-		levelManager.FreeBallin();
+	void LoadSprites () {
+		int spriteIndex = (timesHit -1);
+		if (hitSprites[spriteIndex]) {
+			this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
+		} else {
+			Debug.LogError (this + " missing sprite!");
+		}
+	}
+	
+	void OnCollisionEnter2D (Collision2D col) { 
+		levelManager.CalculateScoreFactor();
+		if (isBreakable) {
+			HandleHits();
+			AudioSource.PlayClipAtPoint (brick, transform.position); // optional 3rd float value for volume
+		} else {
+			AudioSource.PlayClipAtPoint (brick, transform.position, 0.3f); // i.e. quiet unbreakable bricks	
+			ScoreHit ();
+		}
 	}
 
-	void ScoreBrick () {
-		// larger score, multiply by level# & dynamic scoreFactor
-		LevelManager.score += Mathf.Round (
-								PlayerPrefsManager.GetSpeed() *
-								LevelManager.scoreFactor *
-								4.2f * baseScore * (levelManager.GetSceneIndex() +1)
-							);
-		levelManager.FreeBallin();
-	}
-		
 	void Puff () {
 		if (dustEffect) {
 			GameObject dustPuff = Instantiate (dustEffect, this.transform.position, Quaternion.identity) as GameObject;
@@ -82,13 +63,32 @@ public class Brick : MonoBehaviour {
 			levelManager.EffectAdd (dustPuff);
 		}
 	}
+
+	void ScoreBrick () {
+		// larger score, multiply by level# & dynamic scoreFactor
+		LevelManager.score += Mathf.Round (
+					PlayerPrefsManager.GetSpeed() *
+					LevelManager.scoreFactor *
+					4.2f * baseScore * (levelManager.GetSceneIndex() +1)
+		);
+		levelManager.FreeBallin();
+	}
 	
-	void LoadSprites () {
-		int spriteIndex = (timesHit -1);
-		if (hitSprites[spriteIndex]) {
-			this.GetComponent<SpriteRenderer>().sprite = hitSprites[spriteIndex];
-		} else {
-			Debug.LogError (this + " missing sprite!");
-		}
+	void ScoreHit () {
+		// small score, multiply by level# & dynamic scoreFactor
+		LevelManager.score += Mathf.Round (
+					PlayerPrefsManager.GetSpeed() *
+					LevelManager.scoreFactor *
+					baseScore * (levelManager.GetSceneIndex() +1)
+		);
+
+		levelManager.FreeBallin();
+	}
+
+	void Start () {
+		timesHit = 0;
+		parent = GameObject.Find ("Effects"); if (!parent) parent = new GameObject ("Effects");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		isBreakable = (this.tag == "breakable"); if (isBreakable) { levelManager.BrickCountPlus(); }
 	}
 }

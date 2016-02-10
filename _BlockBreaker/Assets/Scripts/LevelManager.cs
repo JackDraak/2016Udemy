@@ -21,16 +21,16 @@ public class LevelManager : MonoBehaviour {
 	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
 	private Text scoreBoard;
 
-	public void BrickCountMinus ()		{ brickCount--; BrickDestroyed(); }
-	public void BrickCountPlus ()		{	brickCount++; }
-	public void BrickDestroyed()		{ if (brickCount <= 0) LoadNextLevel(); }
-	public int BrickGetNumRemaining ()	{ return brickCount; } 
-	public int GetSceneIndex ()			{ return sceneIndex; }
-	public void HasStartedFalse()		{ hasStarted = false; }
-	public bool HasStartedReturn ()		{ return hasStarted; }
-	public void HasStartedToggle()		{ hasStarted = !hasStarted; }
-	public void HasStartedTrue()		{ hasStarted = true; }
-
+	public void BrickCountMinus () { brickCount--; BrickDestroyed(); }
+	public void BrickCountPlus () { brickCount++; }
+	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
+	public int BrickGetNumRemaining () { return brickCount; } 
+	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
+	public int GetSceneIndex () { return sceneIndex; }
+	public void HasStartedFalse() { hasStarted = false; }
+	public bool HasStartedReturn () { return hasStarted; }
+	public void HasStartedToggle() { hasStarted = !hasStarted; }
+	public void HasStartedTrue() { hasStarted = true; }
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
@@ -41,13 +41,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Update () {
-		// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
-		foreach (GameObject de in deadEffects) { // more stuff for REE
-			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
-				Destroy (de);
-			}
-		}
-
+		ExpungeDeadEffects();
 		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
 		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
@@ -57,46 +51,6 @@ public class LevelManager : MonoBehaviour {
 //		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
 	}
 
-	public void  CalculateScoreFactor () {
-		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
-		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
-		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
-		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.2f);
-	}
-
-	public void EffectAdd (GameObject preDE) {
-		deadEffects.Add (preDE);
-	}
-
-	public void ShowMyBalls () {
-		if (GameObject.FindGameObjectWithTag ("ball1")) {
-			ball1 = GameObject.FindGameObjectWithTag ("ball1").GetComponent<SpriteRenderer>();
-			if (ballCount > 0) ball1.color = onColor;
-			if (ballCount < 1) ball1.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball2")) {
-			ball2 = GameObject.FindGameObjectWithTag ("ball2").GetComponent<SpriteRenderer>();
-			if (ballCount > 1) ball2.color = onColor;
-			if (ballCount < 2) ball2.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball3")) {
-			ball3 = GameObject.FindGameObjectWithTag ("ball3").GetComponent<SpriteRenderer>();
-			if (ballCount > 2) ball3.color = onColor;
-			if (ballCount < 3) ball3.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball4")) {
-			ball4 = GameObject.FindGameObjectWithTag ("ball4").GetComponent<SpriteRenderer>();
-			if (ballCount > 3) ball4.color = onColor;
-			if (ballCount < 4) ball4.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball5")) {
-			ball5 = GameObject.FindGameObjectWithTag ("ball5").GetComponent<SpriteRenderer>();
-			if (ballCount > 4) ball5.color = onColor;
-			if (ballCount < 5) ball5.color = offColor;
-		}
-	}
-
 	public void BallDown() {
 		if (ballCount-- <= 0) {
 			brickCount = 0;
@@ -104,6 +58,23 @@ public class LevelManager : MonoBehaviour {
 			LoadLevel("Game Over");
 		}
 		ShowMyBalls ();
+	}
+
+	public void  CalculateScoreFactor () {
+		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
+		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
+		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
+		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
+		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.2f);
+	}
+	
+	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
+	void ExpungeDeadEffects () {
+		foreach (GameObject de in deadEffects) { // more stuff for REE
+			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
+				Destroy (de);
+			}
+		}
 	}
 
 	public void FreeBallin () { // set reward levels where free plays are granted
@@ -135,10 +106,10 @@ public class LevelManager : MonoBehaviour {
 		Cursor.visible = true;
 		if (name != "Level_01") { Cursor.visible = true; }
 		if (name == "Level_01") {
-			Cursor.visible = false;
 			ballCount = 2;
-			score = 0;
+			Cursor.visible = false;
 			sceneIndex = 1;
+			score = 0;
 			PlayerPrefsManager.SetAward(0);
 		}
 		brickCount = 0;
@@ -148,9 +119,37 @@ public class LevelManager : MonoBehaviour {
 	
 	void LoadNextLevel() {
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		sceneIndex++;
-		hasStarted = false;
 		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
+		hasStarted = false;
+		sceneIndex++;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+	}
+
+	public void ShowMyBalls () {
+		if (GameObject.FindGameObjectWithTag ("ball1")) {
+			ball1 = GameObject.FindGameObjectWithTag ("ball1").GetComponent<SpriteRenderer>();
+			if (ballCount > 0) ball1.color = onColor;
+			if (ballCount < 1) ball1.color = offColor;
+		}
+		if (GameObject.FindGameObjectWithTag ("ball2")) {
+			ball2 = GameObject.FindGameObjectWithTag ("ball2").GetComponent<SpriteRenderer>();
+			if (ballCount > 1) ball2.color = onColor;
+			if (ballCount < 2) ball2.color = offColor;
+		}
+		if (GameObject.FindGameObjectWithTag ("ball3")) {
+			ball3 = GameObject.FindGameObjectWithTag ("ball3").GetComponent<SpriteRenderer>();
+			if (ballCount > 2) ball3.color = onColor;
+			if (ballCount < 3) ball3.color = offColor;
+		}
+		if (GameObject.FindGameObjectWithTag ("ball4")) {
+			ball4 = GameObject.FindGameObjectWithTag ("ball4").GetComponent<SpriteRenderer>();
+			if (ballCount > 3) ball4.color = onColor;
+			if (ballCount < 4) ball4.color = offColor;
+		}
+		if (GameObject.FindGameObjectWithTag ("ball5")) {
+			ball5 = GameObject.FindGameObjectWithTag ("ball5").GetComponent<SpriteRenderer>();
+			if (ballCount > 4) ball5.color = onColor;
+			if (ballCount < 5) ball5.color = offColor;
+		}
 	}
 }
