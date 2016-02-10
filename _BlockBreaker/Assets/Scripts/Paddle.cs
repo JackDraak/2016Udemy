@@ -9,7 +9,7 @@ public class Paddle : MonoBehaviour {
 	private Ball ball;
 	private Vector3 ballPos;
 	private bool driftDirection;
-	private float driftWindow;
+	private float driftThat, driftThis, driftWindow;
 	private GameObject startNote;
 	private LevelManager levelManager;
   
@@ -46,42 +46,44 @@ public class Paddle : MonoBehaviour {
 		if (!autoplay) 	{
 			float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
 			paddlePos.x = PaddleClamp(mousePosInBlocks);
+			this.transform.position = paddlePos;
 		} 
 		if (autoplay) 	{
 			if (!levelManager.HasStartedReturn() && !begun) {
 				begun = true;
 				Invoke ("BeginPlay", 2);
 			}
-			if (levelManager.HasStartedReturn()) { // drop jitter in here?
+			if (levelManager.HasStartedReturn()) {
 				ballPos = ball.transform.position;
 				paddlePos.x = PaddleClamp(ballPos.x);
-			}
-		}
-		this.transform.position = paddlePos;
-		if (autoplay) {
-			if (driftDirection) {
-				driftWindow = driftWindow + .01f;
-				TestDriftDirection(driftWindow);
-				AutoMove(driftWindow);
-			} else {
-				driftWindow = driftWindow - .01f;
-				TestDriftDirection(driftWindow);
-				AutoMove(driftWindow);
+				if (driftDirection) {
+					driftWindow = driftWindow + 0.05f;
+					TestDriftDirection(driftWindow);
+					AutoMove(driftWindow);
+				} else {
+					driftWindow = driftWindow - 0.05f;
+					TestDriftDirection(driftWindow);
+					AutoMove(driftWindow);
+				}
 			}
 		}
 	}
 
 	void TestDriftDirection (float span) {
- 		if (span > 0.5f || span < -0.5f ) driftDirection = !driftDirection;
+ 		if (span > driftThat || span < driftThis ) {
+ 			driftThat = Random.Range (0.3f, 0.8f);
+ 			driftThis = -driftThat;
+ 			driftDirection = !driftDirection;
+ 		}
  	}
  
 	void AutoMove (float jitter) {
 		float ballXPosition = ball.transform.position.x;
 		float window = ballXPosition + jitter; 
-//		float paddleXPosition = Mathf.Clamp (window, -7.2f, 7.2f);
 		float paddleXPosition = PaddleClamp (window);
 		Vector3 paddlePosition = new Vector3 (paddleXPosition, this.transform.position.y, 0f);
 		this.transform.position = paddlePosition;
+//		Debug.Log (this.transform.position.x - ball.transform.position.x );
 	}
 
 
@@ -100,6 +102,6 @@ public class Paddle : MonoBehaviour {
 	// TODO this really ought to be in LevelManager or something, eh? y'think? meh... good enough for now....
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.A)) {ToggleAuto();}
-		if (Input.GetKeyDown(KeyCode.E)) {ToggleEasy();}
+		if (Input.GetKeyDown(KeyCode.P)) {ToggleEasy();}
 	}
 }
