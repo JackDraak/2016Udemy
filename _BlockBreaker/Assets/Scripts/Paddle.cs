@@ -8,9 +8,12 @@ public class Paddle : MonoBehaviour {
 	private bool autoplay, begun, easy;
 	private Ball ball;
 	private Vector3 ballPos;
+	private bool driftDirection;
+	private float driftWindow;
 	private GameObject startNote;
 	private LevelManager levelManager;
-	
+  
+
 	void BeginPlay () {
 		levelManager.HasStartedTrue();
 		if (startNote) startNote.SetActive (false);
@@ -49,13 +52,38 @@ public class Paddle : MonoBehaviour {
 				begun = true;
 				Invoke ("BeginPlay", 2);
 			}
-			if (levelManager.HasStartedReturn()) {
+			if (levelManager.HasStartedReturn()) { // drop jitter in here?
 				ballPos = ball.transform.position;
 				paddlePos.x = PaddleClamp(ballPos.x);
 			}
 		}
 		this.transform.position = paddlePos;
+		if (autoplay) {
+			if (driftDirection) {
+				driftWindow = driftWindow + .01f;
+				TestDriftDirection(driftWindow);
+				AutoMove(driftWindow);
+			} else {
+				driftWindow = driftWindow - .01f;
+				TestDriftDirection(driftWindow);
+				AutoMove(driftWindow);
+			}
+		}
 	}
+
+	void TestDriftDirection (float span) {
+ 		if (span > 0.5f || span < -0.5f ) driftDirection = !driftDirection;
+ 	}
+ 
+	void AutoMove (float jitter) {
+		float ballXPosition = ball.transform.position.x;
+		float window = ballXPosition + jitter; 
+//		float paddleXPosition = Mathf.Clamp (window, -7.2f, 7.2f);
+		float paddleXPosition = PaddleClamp (window);
+		Vector3 paddlePosition = new Vector3 (paddleXPosition, this.transform.position.y, 0f);
+		this.transform.position = paddlePosition;
+	}
+
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();	if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
