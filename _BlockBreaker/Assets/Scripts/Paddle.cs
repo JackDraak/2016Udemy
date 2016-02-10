@@ -23,6 +23,12 @@ public class Paddle : MonoBehaviour {
 		ball.GetComponent<Rigidbody2D>().velocity = new Vector2 (Random.Range(-8f, 8f), Random.Range(8f, 10f));
 	}
 
+	void DriftReset () {
+		SetDriftBoundary();
+		ToggleDriftDirection();
+		SetDriftSpeed();
+	}
+
 	void EasyFlip () { if (easy) this.transform.localScale = new Vector2(2.5f,1); else this.transform.localScale = new Vector2(1.5f,1); }
 	void EasyPlayOff () { easy = false; EasySync(); }
 	void EasyPlayOn () { easy = true; EasySync(); }
@@ -68,31 +74,21 @@ public class Paddle : MonoBehaviour {
 
 	void SetupDrift () {
 		TestDriftBoundary();
-		// test distance to ball, & skew span...
-		// objective, allow ball to "drift away from paddle collumn" 
-		// (X-skew between paddle and ball, relative to ball's Y-distance from the lower boundary)
-		// curently driftSpan is used directly to: 
-		// Automove() the paddle, TestDriftBoundary(), Obv. Set Span for PaddleMotion(), 
-		// ergo, calculate a skew factor here, apply it on Automove(), and Bob's your uncle.
-		if (ball.transform.position.y > 1.3f) driftSkew = ball.transform.position.y * 0.55f;
-		else driftSkew = 1f;
-//		Debug.Log (ball.transform.position.y + " " + driftSkew);
+		SetDriftSkew();
 	}
 
-	void SetupDriftBoundary () {
+	void SetDriftBoundary () {
 		if (driftDirection) driftThat = Random.Range (0.21f, 0.79f);
 		else driftThis = Random.Range (-0.21f, -0.79f);
 	}
 
-	void SetupDriftReset () {
-		SetupDriftBoundary();
-		ToggleDriftDirection();
-		SetupDriftSpeed();
-//		Debug.Log ("This: " + driftThis + ", That: " + driftThat + ", Direction: " + driftDirection + ", Velocity: " + driftSpeed + ", Span: " + driftSpan);
+	void SetDriftSkew () {
+		if (ball.transform.position.y > 1.8f) driftSkew = ball.transform.position.y * 0.55f;
+		else driftSkew = 1f;
 	}
 
-	void SetupDriftSpeed () {
-		driftSpeed = Random.Range (0.005f, 0.05f);
+	void SetDriftSpeed () {
+		driftSpeed = Random.Range (0.005f, 0.04f);
 	}
 
 	void Start () {
@@ -109,8 +105,8 @@ public class Paddle : MonoBehaviour {
 	}
 	
 	void TestDriftBoundary () {
-		if (driftDirection && driftSpan > driftThat) SetupDriftReset();
-		if (!driftDirection && driftSpan < driftThis) SetupDriftReset();
+		if (driftDirection && driftSpan > driftThat) DriftReset();
+		if (!driftDirection && driftSpan < driftThis) DriftReset();
 	}
 	
 	void ToggleAuto () { autoplay = !autoplay; PlayerPrefsManager.SetAutoplay (autoplay); }
