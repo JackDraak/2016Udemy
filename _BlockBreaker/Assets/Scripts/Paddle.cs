@@ -43,8 +43,8 @@ public class Paddle : MonoBehaviour {
 
 	void LockPaddleToMouse () {
 		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
-		float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
-		paddlePos.x = PaddleClamp(mousePosInBlocks);
+		float mousePosInBlockUnits = (Input.mousePosition.x / Screen.width * 16);
+		paddlePos.x = PaddleClamp(mousePosInBlockUnits);
 		this.transform.position = paddlePos;
 	}
 
@@ -72,7 +72,6 @@ public class Paddle : MonoBehaviour {
 
 	void SetPaddleX () {
 		if (levelManager.HasStartedReturn()) {
-//			paddlePos.x = PaddleClamp(ball.transform.position.x);
 			if (driftDirection) { // drifting right, +x
 				driftSpan = driftSpan + driftSpeed;
 				SetupDrift();

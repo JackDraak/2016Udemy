@@ -67,7 +67,21 @@ public class LevelManager : MonoBehaviour {
 		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
 		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.2f);
 	}
-	
+
+	void ConfigureAnyLevel () {
+		Cursor.visible = true;
+		brickCount = 0;
+		hasStarted = false;
+	}
+
+	void ConfigureLevelOne () {
+		ballCount = 2;
+		Cursor.visible = false;
+		sceneIndex = 1;
+		score = 0;
+		PlayerPrefsManager.SetAward(0);
+	}
+
 	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	void ExpungeDeadEffects () {
 		foreach (GameObject de in deadEffects) { // more stuff for REE
@@ -78,9 +92,8 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void FreeBallin () { // set reward levels where free plays are granted
-//		Debug.Log(this + " score: " + score + " and Award: " + PlayerPrefsManager.GetAward());
 		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 2000 && score < 10000) { // TODO tweak these score thresholds for release
+			if (score > 2000 && score < 10000) { // TODO tweak these score thresholds id needed
 				ballCount++;
 				ShowMyBalls();
 				PlayerPrefsManager.SetAward(1);
@@ -103,23 +116,15 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoadLevel(string name){
-		Cursor.visible = true;
-		if (name != "Level_01") { Cursor.visible = true; }
-		if (name == "Level_01") {
-			ballCount = 2;
-			Cursor.visible = false;
-			sceneIndex = 1;
-			score = 0;
-			PlayerPrefsManager.SetAward(0);
-		}
-		brickCount = 0;
-		hasStarted = false;
+		StoreHighs();
+		ConfigureAnyLevel();
+		if (name == "Level_01") ConfigureLevelOne (); 
 		SceneManager.LoadScene(name);
 	}
 	
 	void LoadNextLevel() {
-		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-		brickCount = 0; // overkill? didn't seem nec. but does seem like where it ought to go
+		StoreHighs();
+		brickCount = 0;
 		hasStarted = false;
 		sceneIndex++;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
@@ -151,5 +156,9 @@ public class LevelManager : MonoBehaviour {
 			if (ballCount > 4) ball5.color = onColor;
 			if (ballCount < 5) ball5.color = offColor;
 		}
+	}
+
+	void StoreHighs () {
+		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 	}
 }
