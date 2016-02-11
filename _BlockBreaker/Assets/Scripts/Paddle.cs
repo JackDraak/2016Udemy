@@ -10,7 +10,6 @@ public class Paddle : MonoBehaviour {
 	private Vector3 ballPos;
 	private float driftSkew, driftSpan, driftSpeed, driftThat, driftThis;
 	private LevelManager levelManager;
-	private Vector3 paddlePos;
 	private GameObject startNote;
 	
 	void AutoMove () {
@@ -43,6 +42,7 @@ public class Paddle : MonoBehaviour {
 	}
 
 	void LockPaddleToMouse () {
+		Vector3 paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 		float mousePosInBlocks = (Input.mousePosition.x / Screen.width * 16);
 		paddlePos.x = PaddleClamp(mousePosInBlocks);
 		this.transform.position = paddlePos;
@@ -72,7 +72,7 @@ public class Paddle : MonoBehaviour {
 
 	void SetPaddleX () {
 		if (levelManager.HasStartedReturn()) {
-			paddlePos.x = PaddleClamp(ball.transform.position.x);
+//			paddlePos.x = PaddleClamp(ball.transform.position.x);
 			if (driftDirection) { // drifting right, +x
 				driftSpan = driftSpan + driftSpeed;
 				SetupDrift();
@@ -115,7 +115,6 @@ public class Paddle : MonoBehaviour {
 		driftSkew = 1;
 		driftSpan = 0;
 		driftSpeed = 0.02f;
-		paddlePos = new Vector3 (8f, this.transform.position.y, 0f);
 	}
 	
 	void TestDriftBoundary () {
