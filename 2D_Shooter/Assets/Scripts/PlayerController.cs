@@ -3,26 +3,21 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	public GameObject player;
-
 	private float acceleration;
 	private float baseAcceleration;
-	private bool right;
 	private float lateralVelocity;
 	private float maxAcceleration;
 	private float maxSpeed;
-	private Vector3 nextPos;
+	private bool right;
 
 	void SetLeftward () {
 		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-//		transform.rotation.y = 17f;
 		SetVelocity();
 		SetNextPos();
 	}
 
 	void SetRightward() {
 		if (!right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-//		transform.rotation.y = -17f;
 		SetVelocity();
 		SetNextPos();
 	}
@@ -30,7 +25,6 @@ public class PlayerController : MonoBehaviour {
 	void SetNextPos () {
 		if (right) transform.position = new Vector3(SetXClamps(transform.position.x + lateralVelocity), transform.position.y, transform.position.z);
 		else  transform.position = new Vector3(SetXClamps(transform.position.x - lateralVelocity), transform.position.y, transform.position.z);
-		//		Debug.Log ("Accel:" + acceleration + ", LVelocity:" + lateralVelocity);
 	}
 	
 	void SetVelocity () {
@@ -53,7 +47,6 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
 		if (Input.GetKey(KeyCode.LeftArrow)) SetLeftward();
-		else if (Input.GetKey(KeyCode.RightArrow)) SetRightward();
-	//	else transform.rotation.y = 0f;
+		if (Input.GetKey(KeyCode.RightArrow)) SetRightward();
 	}
 }
