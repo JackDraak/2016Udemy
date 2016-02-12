@@ -8,7 +8,10 @@ public class PlayerController : MonoBehaviour {
 	private float lateralVelocity;
 	private float maxAcceleration;
 	private float maxSpeed;
+	private float padding = 0.6f;
 	private bool right;
+	private Vector3 tempPos;
+	private float xMax, xMin;
 
 	void SetLeftward () {
 		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
@@ -16,15 +19,16 @@ public class PlayerController : MonoBehaviour {
 		SetNextPos();
 	}
 
-	void SetRightward() {
+	void SetRightward () {
 		if (!right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
 		SetVelocity();
 		SetNextPos();
 	}
 
 	void SetNextPos () {
-		if (right) transform.position = new Vector3(SetXClamps(transform.position.x + lateralVelocity), transform.position.y, transform.position.z);
-		else  transform.position = new Vector3(SetXClamps(transform.position.x - lateralVelocity), transform.position.y, transform.position.z);
+		tempPos = transform.position;
+		if (right) transform.position = new Vector3(SetXClamps(tempPos.x + lateralVelocity), tempPos.y, tempPos.z);
+		else  transform.position = new Vector3(SetXClamps(tempPos.x - lateralVelocity), tempPos.y, tempPos.z);
 	}
 	
 	void SetVelocity () {
@@ -32,11 +36,16 @@ public class PlayerController : MonoBehaviour {
 		if (lateralVelocity < maxSpeed) lateralVelocity = lateralVelocity + acceleration;
 	}
 	
-	float SetXClamps(float position) {
-		return Mathf.Clamp(position, 0.55f, 15.41f);
+	float SetXClamps (float position) {
+		return Mathf.Clamp(position, xMin, xMax); //  0.55f, 15.41f);
 	}
 	
 	void Start () {
+		float distance = transform.position.z - Camera.main.transform.position.z;
+		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
+		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
+		xMin = leftBoundary.x + padding;
+		xMax = rightBoundary.x - padding;
 		acceleration = 0f;
 		baseAcceleration = 0.02f;
 		lateralVelocity = 0f;
@@ -50,3 +59,5 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.RightArrow)) SetRightward();
 	}
 }
+
+// lecture 104
