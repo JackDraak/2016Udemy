@@ -47,16 +47,21 @@ public class PlayerController : MonoBehaviour {
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
 		acceleration = 0f;
-		baseAcceleration = 0.02f;
+		baseAcceleration = 0.025f;
 		lateralVelocity = 0f;
-		maxAcceleration = 0.5f;
-		maxSpeed = 1f;
+		maxAcceleration = 0.7f;
+		maxSpeed = 1.4f;
 	}
 	
 	void Update () {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
-		if (Input.GetKey(KeyCode.LeftArrow)) SetLeftward();
-		if (Input.GetKey(KeyCode.RightArrow)) SetRightward();
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
+		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
+		if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) Shoot();
+	}
+
+	void Shoot () {
+		Debug.Log ("pew pew pew"); // invoke repeating
 	}
 }
 
