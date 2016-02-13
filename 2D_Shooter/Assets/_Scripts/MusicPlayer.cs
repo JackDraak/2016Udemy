@@ -22,6 +22,7 @@ public class MusicPlayer : MonoBehaviour {
 	}
 	
 	void OnLevelWasLoaded(int level){
+		print (this + " level: " + level);
 		if (music) {
 			music.Stop();
 			music.clip = level_[level]; // setup clips-quesheet in the inspector

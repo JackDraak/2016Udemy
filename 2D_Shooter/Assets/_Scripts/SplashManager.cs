@@ -6,13 +6,13 @@ public class SplashManager : MonoBehaviour {
 
 	public float autoLoadNextLevelDelay = 2;
 
-	private OptionsController optionsController;
+	//private OptionsController optionsController;
 	
 	void Start () {
-		Cursor.visible = false;
-		optionsController = GameObject.FindObjectOfType<OptionsController>(); if (!optionsController) Debug.LogError (this + ":ERROR: unable to attach to OptionsController to reset options to defaults");
-		optionsController.SetDefaults();
-		optionsController.Save ();
+	//	Cursor.visible = false;
+	//	optionsController = GameObject.FindObjectOfType<OptionsController>(); if (!optionsController) Debug.LogError (this + ":ERROR: unable to attach to OptionsController to reset options to defaults");
+	//	optionsController.SetDefaults();
+	//	optionsController.Save ();
 		Invoke("LoadNextLevel", autoLoadNextLevelDelay);
 	}
 	
