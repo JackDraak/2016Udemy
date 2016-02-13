@@ -25,7 +25,7 @@ public class Doobie : MonoBehaviour {
 			ScoreDoobie ();
 			Puff();
 			levelManager.BrickCountMinus();
-			Destroy(gameObject);
+			Destroy(gameObject, 0.05f);
 
 		// if a brick can take a hit and stick around for more
 		} else {

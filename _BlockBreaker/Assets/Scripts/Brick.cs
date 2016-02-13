@@ -25,7 +25,7 @@ public class Brick : MonoBehaviour {
 			Puff();
 			levelManager.BrickCountMinus();
 			ScoreBrick();
-			Destroy(gameObject);
+			Destroy(gameObject, 0.05f);
 			
 		// if a brick can take a hit and stick around for more
 		} else {
