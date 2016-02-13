@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 	private float maxAcceleration;
 	private float maxSpeed;
 	private float padding = 0.6f;
-	private bool right;
+	private bool right, shoot;
 	private Vector3 tempPos;
 	private float xMax, xMin;
 
@@ -57,11 +57,14 @@ public class PlayerController : MonoBehaviour {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
 		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
 		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
-		if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W)) Shoot();
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) ShootToggle();
+		else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) ShootToggle();
 	}
 
-	void Shoot () {
-		Debug.Log ("pew pew pew"); // invoke repeating
+	void ShootToggle () {
+		shoot = !shoot;
+		if (shoot) Debug.Log ("pew pew pew"); // invoke repeating
+		else Debug.Log ("squelch");
 	}
 }
 
