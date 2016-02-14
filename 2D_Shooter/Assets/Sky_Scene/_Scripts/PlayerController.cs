@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
+	public AudioClip zappySound;
 
 	private float bulletSpeed = 420f;
 	private GameObject playerGun;
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
 			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed * Time.deltaTime;
+			AudioSource.PlayClipAtPoint (zappySound, transform.position);
 			fireTime = Time.time;
 		}
 	}

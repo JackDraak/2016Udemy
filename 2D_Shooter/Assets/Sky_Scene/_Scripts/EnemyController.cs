@@ -2,12 +2,15 @@
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
+	public AudioClip damage;
+	public AudioClip scuttle;
+
 	private LevelManager levelManager;
 	private float hitPoints;
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		hitPoints = 101f;
+		hitPoints = 251f;
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -18,13 +21,15 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void TakeDamage () {
-		hitPoints = hitPoints / 3 - 10;
-		Debug.Log (hitPoints);
-		if (hitPoints <= 0) ScoreAndDestroy();
+		hitPoints = (hitPoints * 0.8f) - 5f;
+		AudioSource.PlayClipAtPoint (damage, transform.position);
+		Debug.Log ("HitPoints: " + hitPoints);
+		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
-		levelManager.ChangeScore(100);
+		levelManager.ChangeScore(100f);
+		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		Destroy(this.gameObject, 0.001f);
 	}
 }
