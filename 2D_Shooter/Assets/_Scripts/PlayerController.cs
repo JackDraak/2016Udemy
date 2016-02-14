@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject zappyBolt;
 
-	private float bulletSpeed = 120f;
+	private float bulletSpeed = 220f;
 	private GameObject playerGun;
 	private float acceleration;
 	private float baseAcceleration;
@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour {
 	private bool right, shoot;
 	private Vector3 tempPos;
 	private float xMax, xMin;
+	private float fireTime;
+	private float fireDelay = 0.3f;
 
 	void SetLeftward () {
 		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
@@ -56,8 +58,9 @@ public class PlayerController : MonoBehaviour {
 		lateralVelocity = 0f;
 		maxAcceleration = 0.7f;
 		maxSpeed = 5f;
+		fireTime = Time.time;
 	}
-	
+
 	void Update () {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
 		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
@@ -67,8 +70,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void FireBlaster () {
-		GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
-		discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed * Time.deltaTime;
+		if (fireTime + fireDelay <= Time.time) {
+			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
+			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed * Time.deltaTime;
+			fireTime = Time.time;
+		}
 	}
 
 	void ShootToggle () {
