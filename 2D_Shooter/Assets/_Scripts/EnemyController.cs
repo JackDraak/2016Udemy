@@ -3,30 +3,39 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
-	private float speedFactor = 61.3f;
+	public GameObject enemyPrefab;
 
-	private bool decelerate, right, shoot;
-	private float xMax, xMin;
-	private float padding = 3.4f;
 	private float acceleration;
 	private float baseAcceleration;
+	private bool decelerate, right, shoot;
 	private float lateralVelocity;
 	private float maxAcceleration;
 	private float maxSpeed;
-	private Vector3 tempPos;
+	private float padding = 3.4f;
 	private float reverseBuffer = -2.12f;
 	private float reverseSquelch = 1.12f;
+	private float speedFactor = 61.3f;
+	private Vector3 tempPos;
+	private float xMax, xMin;
 
 	void Start () { 
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
+		decelerate = true;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
 		maxSpeed = 0.19f;
 		right = true;
-		decelerate = true;
 		shoot = false;
 		SetMinMaxX();
+		foreach (Transform child in transform) {
+			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
+			enemy.transform.parent = child;
+		}
+	}
+
+	void OnDrawGizmos () {
+		Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1));
 	}
 
 	void SetMinMaxX () {
@@ -35,18 +44,6 @@ public class EnemyController : MonoBehaviour {
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
-	}
-
-	void SetLeftward () {
-		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-		SetVelocity();
-		SetNextPos();
-	}
-
-	void SetRightward () {
-		if (!right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-		SetVelocity();
-		SetNextPos();
 	}
 
 	void SetNextPos () {
@@ -60,9 +57,9 @@ public class EnemyController : MonoBehaviour {
 		tempPos = transform.position;
 		if (tempPos.x <= xMin || tempPos.x >= xMax) {
 			right = !right;
-			lateralVelocity = 0.00010f;
 			acceleration = baseAcceleration;
 			decelerate = false;
+			lateralVelocity = 0.00010f;
 		}
 	}
 	
@@ -74,9 +71,8 @@ public class EnemyController : MonoBehaviour {
 		if (decelerate) {
 			if (tempPos.x < xMin - reverseBuffer || tempPos.x > xMax + reverseBuffer)  {
 				lateralVelocity = lateralVelocity / reverseSquelch;
-				Debug.Log ("SQUELCH");
+//				Debug.Log ("SQUELCH " + Time.time);
 			}
-			Debug.Log (lateralVelocity);
 			lateralVelocity = lateralVelocity * Time.deltaTime * speedFactor;
 		}
 	}

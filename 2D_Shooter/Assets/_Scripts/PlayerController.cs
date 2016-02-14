@@ -3,7 +3,12 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	private float speedFactor = 61.3f;
+	public GameObject zappyBolt;
+
+	private float bulletSpeed = 120;
+
+	private GameObject playerGun;
+	private float speedFactor = 58.7f;
 	private float acceleration;
 	private float baseAcceleration;
 	private float lateralVelocity;
@@ -39,10 +44,11 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	float SetXClamps (float position) {
-		return Mathf.Clamp(position, xMin, xMax); //  0.55f, 15.41f);
+		return Mathf.Clamp(position, xMin, xMax);
 	}
 	
 	void Start () {
+		playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -63,10 +69,15 @@ public class PlayerController : MonoBehaviour {
 		else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) ShootToggle();
 	}
 
+	void FireBlaster () {
+		GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
+		discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed * Time.deltaTime;
+	}
+
 	void ShootToggle () {
 		shoot = !shoot;
-		if (shoot) Debug.Log ("pew pew pew"); // invoke repeating
-		else Debug.Log ("squelch");
+		if (shoot) InvokeRepeating("FireBlaster", 0.0000001f, 0.3f);
+		else CancelInvoke();
 	}
 }
 
