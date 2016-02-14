@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
+	private float speedFactor = 61.3f;
 	private float acceleration;
 	private float baseAcceleration;
 	private float lateralVelocity;
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour {
 	void SetVelocity () {
 		if (acceleration < maxAcceleration) acceleration = acceleration + baseAcceleration;
 		if (lateralVelocity < maxSpeed) lateralVelocity = lateralVelocity + acceleration;
+		lateralVelocity =  lateralVelocity * Time.deltaTime * speedFactor;
 	}
 	
 	float SetXClamps (float position) {

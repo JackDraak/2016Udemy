@@ -3,6 +3,8 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour {
 
+	private float speedFactor = 61.3f;
+
 	private bool decelerate, right, shoot;
 	private float xMax, xMin;
 	private float padding = 3.4f;
@@ -12,8 +14,7 @@ public class EnemyController : MonoBehaviour {
 	private float maxAcceleration;
 	private float maxSpeed;
 	private Vector3 tempPos;
-
-	private float reverseBuffer = -1.79f;
+	private float reverseBuffer = -2.12f;
 	private float reverseSquelch = 1.12f;
 
 	void Start () { 
@@ -21,7 +22,7 @@ public class EnemyController : MonoBehaviour {
 		baseAcceleration = 0.00010f;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
-		maxSpeed = 0.21f;
+		maxSpeed = 0.19f;
 		right = true;
 		decelerate = true;
 		shoot = false;
@@ -76,6 +77,7 @@ public class EnemyController : MonoBehaviour {
 				Debug.Log ("SQUELCH");
 			}
 			Debug.Log (lateralVelocity);
+			lateralVelocity = lateralVelocity * Time.deltaTime * speedFactor;
 		}
 	}
 	
