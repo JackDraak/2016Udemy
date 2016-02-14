@@ -17,11 +17,15 @@ public class EnemyController : MonoBehaviour {
 	public float speedFactor = 61.3f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
+	private float hitPoints;
+	private LevelManager levelManager;
 
-	void Start () { 
+	void Start () {
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
+		hitPoints = 100;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
 		maxSpeed = 0.19f;
@@ -36,6 +40,23 @@ public class EnemyController : MonoBehaviour {
 
 	void OnDrawGizmos () {
 		Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1));
+	}
+
+	void OnTriggerEnter2D (Collider2D collider) {
+		if (collider.tag == "PlayerProjectile") {
+			TakeDamage();
+			Destroy (collider.gameObject);
+		}
+	}
+
+	void TakeDamage () {
+		hitPoints = hitPoints / 3 - 10;
+		Debug.Log (hitPoints);
+		if (hitPoints <= 0) ScoreAndDestroy();
+	}
+
+	void ScoreAndDestroy () {
+		levelManager.ChangeScore(100);
 	}
 
 	void SetMinMaxX () {

@@ -7,24 +7,24 @@ public class LevelManager : MonoBehaviour {
 
 	static LevelManager instance = null;
 
-	public static int ballCount = 2;
-	public static int brickCount;
+	public static int shipCount = 2;
 	public static bool hasStarted;
 	public static int sceneIndex = 1;
 	public static float score;
 	public static float scoreFactor;
 
-	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
+//	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
 	// TODO working on structure to expunge relic effects REE
 	private ArrayList deadEffects = new ArrayList();
 //	private Text hintBoard; // for bug-testing purposes
 	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
-	private Text scoreBoard;
+//	private Text scoreBoard;
 
-	public void BrickCountMinus () { brickCount--; BrickDestroyed(); }
-	public void BrickCountPlus () { brickCount++; }
-	public void BrickDestroyed() { if (brickCount <= 0) LoadNextLevel(); }
-	public int BrickGetNumRemaining () { return brickCount; } 
+	public void ChangeScore (float scoreDelta) {
+		score += scoreDelta;
+		Debug.Log (score);
+	}
+
 	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
 	public int GetSceneIndex () { return sceneIndex; }
 	public void HasStartedFalse() { hasStarted = false; }
@@ -35,16 +35,18 @@ public class LevelManager : MonoBehaviour {
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
+		score = 0;
 //		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
-		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-		ShowMyBalls ();
+//		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		ShowMyBalls ();
 	}
 
 	void Update () {
-		ExpungeDeadEffects();
-		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
-		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
+//		ExpungeDeadEffects();
+
+//		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
+//		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
+//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
 
 //		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
 //		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
@@ -52,12 +54,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void BallDown() {
-		if (ballCount-- <= 0) {
-			brickCount = 0;
-			if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-			LoadLevel("Game Over");
-		}
-		ShowMyBalls ();
+//		ShowMyBalls ();
 	}
 
 	public void  CalculateScoreFactor () {
@@ -70,12 +67,12 @@ public class LevelManager : MonoBehaviour {
 
 	void ConfigureAnyLevel () {
 		Cursor.visible = true;
-		brickCount = 0;
+	//	brickCount = 0;
 		hasStarted = false;
 	}
 
 	void ConfigureLevelOne () {
-		ballCount = 2;
+		shipCount = 2;
 		Cursor.visible = false;
 		sceneIndex = 1;
 		score = 0;
@@ -91,7 +88,7 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 
-	public void FreeBallin () { // set reward levels where free plays are granted
+/*	public void FreeBallin () { // set reward levels where free plays are granted
 		if (PlayerPrefsManager.GetAward() == 0) {
 			if (score > 2000 && score < 10000) { // TODO tweak these score thresholds id needed
 				ballCount++;
@@ -113,7 +110,7 @@ public class LevelManager : MonoBehaviour {
 				PlayerPrefsManager.SetAward(3);
 			}
 		}
-	}
+	} */
 
 	public void LoadLevel(string name){
 		StoreHighs();
@@ -124,13 +121,13 @@ public class LevelManager : MonoBehaviour {
 	
 	void LoadNextLevel() {
 		StoreHighs();
-		brickCount = 0;
+	//	brickCount = 0;
 		hasStarted = false;
 		sceneIndex++;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
 
-	public void ShowMyBalls () {
+/*	public void ShowMyBalls () {
 		if (GameObject.FindGameObjectWithTag ("ball1")) {
 			ball1 = GameObject.FindGameObjectWithTag ("ball1").GetComponent<SpriteRenderer>();
 			if (ballCount > 0) ball1.color = onColor;
@@ -156,7 +153,7 @@ public class LevelManager : MonoBehaviour {
 			if (ballCount > 4) ball5.color = onColor;
 			if (ballCount < 5) ball5.color = offColor;
 		}
-	}
+	} */
 
 	void StoreHighs () {
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
