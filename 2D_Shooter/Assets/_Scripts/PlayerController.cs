@@ -5,15 +5,13 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject zappyBolt;
 
-	private float bulletSpeed = 120;
-
+	private float bulletSpeed = 120f;
 	private GameObject playerGun;
-	private float speedFactor = 58.7f;
 	private float acceleration;
 	private float baseAcceleration;
 	private float lateralVelocity;
-	private float maxAcceleration;
-	private float maxSpeed;
+	private float maxAcceleration = 0.4f;
+	private float maxSpeed= 3f;
 	private float padding = 0.6f;
 	private bool right, shoot;
 	private Vector3 tempPos;
@@ -40,9 +38,8 @@ public class PlayerController : MonoBehaviour {
 	void SetVelocity () {
 		if (acceleration < maxAcceleration) acceleration = acceleration + baseAcceleration;
 		if (lateralVelocity < maxSpeed) lateralVelocity = lateralVelocity + acceleration;
-		lateralVelocity =  lateralVelocity * Time.deltaTime * speedFactor;
+
 	}
-	
 	float SetXClamps (float position) {
 		return Mathf.Clamp(position, xMin, xMax);
 	}
@@ -58,7 +55,7 @@ public class PlayerController : MonoBehaviour {
 		baseAcceleration = 0.025f;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.7f;
-		maxSpeed = 1.4f;
+		maxSpeed = 5f;
 	}
 	
 	void Update () {
@@ -76,7 +73,7 @@ public class PlayerController : MonoBehaviour {
 
 	void ShootToggle () {
 		shoot = !shoot;
-		if (shoot) InvokeRepeating("FireBlaster", 0.0000001f, 0.3f);
+		if (shoot) InvokeRepeating ("FireBlaster", 0.0000001f, 0.3f);
 		else CancelInvoke();
 	}
 }

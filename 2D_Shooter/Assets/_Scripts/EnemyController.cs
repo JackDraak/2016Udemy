@@ -12,9 +12,9 @@ public class EnemyController : MonoBehaviour {
 	private float maxAcceleration;
 	private float maxSpeed;
 	private float padding = 3.4f;
-	private float reverseBuffer = -2.12f;
-	private float reverseSquelch = 1.12f;
-	private float speedFactor = 61.3f;
+	public float reverseBuffer = -2.12f;
+	public float reverseSquelch = 1.12f;
+	public float speedFactor = 61.3f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
 
@@ -73,7 +73,7 @@ public class EnemyController : MonoBehaviour {
 				lateralVelocity = lateralVelocity / reverseSquelch;
 //				Debug.Log ("SQUELCH " + Time.time);
 			}
-			lateralVelocity = lateralVelocity * Time.deltaTime * speedFactor;
+			//lateralVelocity = lateralVelocity * Time.deltaTime * speedFactor;
 		}
 	}
 	
