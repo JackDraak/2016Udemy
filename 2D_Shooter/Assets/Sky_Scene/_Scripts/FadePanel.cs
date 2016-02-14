@@ -3,9 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class FadePanel : MonoBehaviour {
-
-	public float fadeInTime= 1f;
-
+	private float fadeInTime= 1.3f;
 	private Image fadePanel;
 	private Color currentColor = new Color(0f,0f,0f,1f); // or = Color.black;
 	

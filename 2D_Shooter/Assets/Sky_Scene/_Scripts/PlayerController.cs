@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	public GameObject zappyBolt;
 
-	private float bulletSpeed = 220f;
+	private float bulletSpeed = 420f;
 	private GameObject playerGun;
 	private float acceleration;
 	private float baseAcceleration;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	private float maxAcceleration = 0.4f;
 	private float maxSpeed= 3f;
 	private float padding = 0.6f;
-	private bool right; //, shoot;
+	private bool right;
 	private Vector3 tempPos;
 	private float xMax, xMin;
 
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void InvokeShot () {
-		InvokeRepeating ("FireBlaster", 0.0000001f, 0.3f);
+		InvokeRepeating ("FireBlaster", 0.03f, fireDelay);
 	}
 }
 
