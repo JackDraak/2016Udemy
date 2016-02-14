@@ -9,15 +9,15 @@ public class PlayerController : MonoBehaviour {
 	private GameObject playerGun;
 	private float acceleration;
 	private float baseAcceleration;
+	private float fireDelay = 0.3f;
+	private float fireTime;
 	private float lateralVelocity;
 	private float maxAcceleration = 0.4f;
 	private float maxSpeed= 3f;
 	private float padding = 0.6f;
-	private bool right, shoot;
+	private bool right; //, shoot;
 	private Vector3 tempPos;
 	private float xMax, xMin;
-	private float fireTime;
-	private float fireDelay = 0.3f;
 
 	void SetLeftward () {
 		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
@@ -65,8 +65,8 @@ public class PlayerController : MonoBehaviour {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
 		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
 		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) ShootToggle();
-		else if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) ShootToggle();
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
+		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
 	}
 
 	void FireBlaster () {
@@ -77,10 +77,8 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void ShootToggle () {
-		shoot = !shoot;
-		if (shoot) InvokeRepeating ("FireBlaster", 0.0000001f, 0.3f);
-		else CancelInvoke();
+	void InvokeShot () {
+		InvokeRepeating ("FireBlaster", 0.0000001f, 0.3f);
 	}
 }
 
