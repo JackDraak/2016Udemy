@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class FormationController : MonoBehaviour {
-
 	public GameObject enemyPrefab;
 
 	private float acceleration;
@@ -17,20 +16,15 @@ public class FormationController : MonoBehaviour {
 	public float speedFactor = 61.3f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
-	private float hitPoints;
-	private LevelManager levelManager;
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
-		hitPoints = 100;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
 		maxSpeed = 0.19f;
 		right = true;
-		shoot = false;
 		SetMinMaxX();
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
@@ -40,23 +34,6 @@ public class FormationController : MonoBehaviour {
 
 	void OnDrawGizmos () {
 		Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1));
-	}
-
-	void OnTriggerEnter2D (Collider2D collider) {
-		if (collider.tag == "PlayerProjectile") {
-			TakeDamage();
-			Destroy (collider.gameObject);
-		}
-	}
-
-	void TakeDamage () {
-		hitPoints = hitPoints / 3 - 10;
-		Debug.Log (hitPoints);
-		if (hitPoints <= 0) ScoreAndDestroy();
-	}
-
-	void ScoreAndDestroy () {
-		levelManager.ChangeScore(100);
 	}
 
 	void SetMinMaxX () {
@@ -92,9 +69,7 @@ public class FormationController : MonoBehaviour {
 		if (decelerate) {
 			if (tempPos.x < xMin - reverseBuffer || tempPos.x > xMax + reverseBuffer)  {
 				lateralVelocity = lateralVelocity / reverseSquelch;
-//				Debug.Log ("SQUELCH " + Time.time);
 			}
-			//lateralVelocity = lateralVelocity * Time.deltaTime * speedFactor;
 		}
 	}
 	
@@ -104,11 +79,5 @@ public class FormationController : MonoBehaviour {
 	
 	void Update () {
 		SetNextPos();
-	}
-
-	void ShootToggle () {
-		shoot = !shoot;
-		if (shoot) Debug.Log ("pew pew pew"); // invoke repeating
-		else Debug.Log ("squelch");
 	}
 }

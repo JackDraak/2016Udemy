@@ -2,14 +2,13 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-
 	public GameObject zappyBolt;
 
 	private float bulletSpeed = 420f;
 	private GameObject playerGun;
 	private float acceleration;
 	private float baseAcceleration;
-	private float fireDelay = 0.3f;
+	private float fireDelay = 0.2f;
 	private float fireTime;
 	private float lateralVelocity;
 	private float maxAcceleration = 0.4f;

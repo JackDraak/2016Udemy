@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
-
 	static LevelManager instance = null;
 
 	public static int shipCount = 2;
@@ -17,7 +16,7 @@ public class LevelManager : MonoBehaviour {
 	// TODO working on structure to expunge relic effects REE
 	private ArrayList deadEffects = new ArrayList();
 //	private Text hintBoard; // for bug-testing purposes
-	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
+//	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
 //	private Text scoreBoard;
 
 	public void ChangeScore (float scoreDelta) {
