@@ -5,7 +5,7 @@ public class EnemyController : MonoBehaviour {
 
 	private bool decelerate, right, shoot;
 	private float xMax, xMin;
-	private float padding = 3.2f;
+	private float padding = 3.4f;
 	private float acceleration;
 	private float baseAcceleration;
 	private float lateralVelocity;
