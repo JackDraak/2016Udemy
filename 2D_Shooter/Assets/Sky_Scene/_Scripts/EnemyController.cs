@@ -15,46 +15,20 @@ public class EnemyController : MonoBehaviour {
 	private bool dearmed;
 	private float fireDelay = 1.4f;
 	private float fireTime;
-	private LevelManager levelManager;
 	private float hitPoints;
+	private LevelManager levelManager;
 	private float maxHealth = 111f; // TODO tweak this
 	private SpriteRenderer myRenderer;
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+		myRenderer = GetComponent<SpriteRenderer>(); 
+			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		armed = true;
 		dearmed = false;
 		fireTime = Time.time;
 		hitPoints = maxHealth;
-	}
-
-	public void Disarm () { dearmed = true; }
-	public void Rearm () { dearmed = false; }
-
-	
-	void OnTriggerEnter2D (Collider2D collider) {
-		if (collider.tag == "PlayerProjectile") {
-			TakeDamage();
-			Destroy (collider.gameObject);
-		}
-	}
-
-	void TakeDamage () {
-		// TODO typical time to do a visual effect
-		hitPoints = (hitPoints * 0.65f) - 4f;
-		AudioSource.PlayClipAtPoint (damage, transform.position);
-		if (hitPoints <= 0f) ScoreAndDestroy();
-	}
-
-	void ScoreAndDestroy () {
-		// TODO typical time to randomly "drop a bonus"
-		// TODO typical time to do a visual effect
-		levelManager.ChangeScore(100f);
-		AudioSource.PlayClipAtPoint (scuttle, transform.position);
-		levelManager.EnemyDown();
-		Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
-		Destroy(this.gameObject, 0.001f); // TODO does this have anything to do with the disapearing LevelManagers?
 	}
 
 	void Update () {
@@ -70,7 +44,14 @@ public class EnemyController : MonoBehaviour {
 		chance = Random.Range (1, 100);
 		if (chance > 98) armed = !armed;
 	}
-
+	
+	void OnTriggerEnter2D (Collider2D collider) {
+		if (collider.tag == "PlayerProjectile") {
+			TakeDamage();
+			Destroy (collider.gameObject);
+		}
+	}
+	
 	void DropBomb () {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(bomb, transform.position, Quaternion.identity) as GameObject;
@@ -78,5 +59,25 @@ public class EnemyController : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			fireTime = Time.time + Random.Range(0.0f, 4.0f);
 		}
+	}
+	
+	public void Disarm () { dearmed = true; }
+	public void Rearm () { dearmed = false; }
+	
+	void TakeDamage () {
+		// TODO typical time to do a visual effect
+		hitPoints = (hitPoints * 0.65f) - 4f;
+		AudioSource.PlayClipAtPoint (damage, transform.position);
+		if (hitPoints <= 0f) ScoreAndDestroy();
+	}
+
+	// TODO typical time to do a visual effect
+	void ScoreAndDestroy () {
+		// TODO typical time to randomly "drop a bonus"
+		levelManager.ChangeScore(100f);
+		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+		levelManager.EnemyDown();
+		Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
+		Destroy(this.gameObject, 0.001f);
 	}
 }

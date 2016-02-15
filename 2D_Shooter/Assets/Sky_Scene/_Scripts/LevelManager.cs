@@ -17,21 +17,39 @@ public class LevelManager : MonoBehaviour {
 	private bool bCredit = false;
 	private FormationController formation;
 	private float playerHitPoints;
-	private float playerMaxHealth = 500f;
+	private float playerMaxHealth = 710f;
 	private int playerShipCount;
 
-	public void PlayerDown () { playerShipCount--; }
-	public void PlayerUp () { playerShipCount++; }
-	public int GetPlayerShips () { return playerShipCount; }
-	public void PlayerChangeHealth (float pips) { playerHitPoints += pips; }
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }
+	public int GetPlayerShips () { return playerShipCount; }
+	public void PlayerChangeHealth (float pips) { playerHitPoints += pips; }
+	public void PlayerDown () { playerShipCount--; }
+	public void PlayerUp () { playerShipCount++; }
 
 	public void EnemyUp () { enemiesRemaining++; }
 	public void EnemyDown () { enemiesRemaining--; }
 	public int GetEnemies () { return enemiesRemaining; }
+	public void ZeroEnemies () { enemiesRemaining = 0; }
 
-	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
+	void Start () {	
+		if (instance != null && instance != this) { Destroy (gameObject); } 
+		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
+		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
+			if (!formation) Debug.Log ("formation 2 pickup error");
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
+		startMessage.gameObject.SetActive(true);
+		startButton.gameObject.SetActive(true);
+		creditButton.gameObject.SetActive(true);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+	}
+
+	// TODO this is not working as advertised.... 
+	// the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList deadEffects = new ArrayList();
 	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
 	void ExpungeDeadEffects () {
@@ -43,8 +61,6 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void StartGameButton () {
-	//	formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
-	//	formation.SpawnEnemies();
 		score = 0;
 		startMessage.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
@@ -57,8 +73,6 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(true);
 		formation.SpawnEnemies();
 	}
-
-	public void ZeroEnemies () { enemiesRemaining = 0; }
 
 	public void RestartButton () {
 		Debug.Log (enemiesRemaining + " enemies.");
@@ -100,22 +114,6 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
-
-	void Start () {	
-		if (instance != null && instance != this) { Destroy (gameObject); } 
-		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-		if (!formation) formation = enemyFormation.GetComponent<FormationController>(); if (!formation) Debug.Log ("formation 2 pickup error");
-		playerHitPoints = playerMaxHealth;
-		playerShipCount = playerMaxShips;
-		startMessage.gameObject.SetActive(true);
-		startButton.gameObject.SetActive(true);
-		creditButton.gameObject.SetActive(true);
-		creditMessage.gameObject.SetActive(false);
-		loseMessage.gameObject.SetActive(false);
-		startOverButton.gameObject.SetActive(false);
-		winMessage.gameObject.SetActive(false);
-
-	}
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
 	void ConfigureSkyGame () {	Cursor.visible = false;	}

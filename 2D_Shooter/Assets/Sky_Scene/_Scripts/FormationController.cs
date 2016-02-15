@@ -12,15 +12,19 @@ public class FormationController : MonoBehaviour {
 	private float baseAcceleration;
 	private bool decelerate, right, shoot;
 	private float lateralVelocity;
+	private LevelManager levelManager;
 	private float maxAcceleration;
 	private float maxSpeed;
 	private float padding = 3.4f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
-	private LevelManager levelManager;
+
+	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
+	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
@@ -31,8 +35,14 @@ public class FormationController : MonoBehaviour {
 		SetMinMaxX();
 	}
 
+	void Update () {
+		SetNextPos();
+		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+	}
+
 	public void SpawnEnemies () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2");
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2");
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
 			EnemyAdd(enemy);
@@ -41,28 +51,25 @@ public class FormationController : MonoBehaviour {
 		}
 	}
 
-	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
+	// TODO this is not working as advertised.... 
+	// the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList enemies = new ArrayList();
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
-	void ExpungeDeadEnemies () {
+	void ExpungeDeadEnemies () { // TODO clean this up / get rid of it
 		foreach (GameObject enemy in enemies) {
 			if (enemy && !enemy.gameObject.activeSelf) {
 			Destroy (enemy, 0.000001f);
 			}
-			//enemy.BroadcastMessage("Disarm");
 		}
 	}
 
 	public void Despawner () {
 		foreach (GameObject enemy in enemies) {
-		//	levelManager.EnemyDown();
 			Destroy (enemy, 0.000001f);
 		}
 		levelManager.ZeroEnemies();
 	}
-
-	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 
 	void SetMinMaxX () {
 		float distance = transform.position.z - Camera.main.transform.position.z;
@@ -99,13 +106,5 @@ public class FormationController : MonoBehaviour {
 				lateralVelocity = lateralVelocity / reverseSquelch;
 			}
 		}
-	}
-	
-	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
-	
-	void Update () {
-		SetNextPos();
-		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
-
 	}
 }

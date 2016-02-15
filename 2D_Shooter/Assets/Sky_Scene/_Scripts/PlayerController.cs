@@ -4,36 +4,74 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	// adjust/set in inspector!
-	public GameObject zappyBolt;
-	public AudioClip zappySound;
 	public AudioClip damage;
 	public AudioClip scuttle;
+	public GameObject zappyBolt;
+	public AudioClip zappySound;
 
-	private float bulletSpeed = 420f;
-	private GameObject playerGun;
 	private float acceleration;
+	private float bulletSpeed = 420f;
 	private float baseAcceleration;
+	private float chance;
+	private Color currentColor;
 	private float fireDelay = 0.2f;
 	private float fireTime;
 	private float lateralVelocity;
+	private LevelManager levelManager;
 	private float maxAcceleration = 0.4f;
 	private float maxSpeed = 3f;
+	private SpriteRenderer myRenderer;
 	private float padding = 0.6f;
+	private GameObject playerGun;
 	private bool right;
+	private Text scoreboard;
 	private Vector3 tempPos;
 	private float xMax, xMin;
-	private LevelManager levelManager;
-	private Color currentColor;
-	private SpriteRenderer myRenderer;
-	private float chance;
-	private Text scoreboard;
 
 	void OnTriggerEnter2D (Collider2D collider) {
-	//	Debug.Log(collider);
 		if (collider.tag == "EnemyBomb") {
 			TakeDamage();
 			Destroy (collider.gameObject);
 		}
+	}
+
+	void Start () {
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+		myRenderer = GetComponent<SpriteRenderer>();
+			if (!myRenderer) Debug.LogError ("FAIL renderer");
+		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
+			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
+		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
+			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+
+		float distance = transform.position.z - Camera.main.transform.position.z;
+		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
+		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
+		xMin = leftBoundary.x + padding;
+		xMax = rightBoundary.x - padding;
+
+		acceleration = 0f;
+		baseAcceleration = 0.025f;
+		fireTime = Time.time;
+		lateralVelocity = 0f;
+		maxAcceleration = 0.7f;
+		maxSpeed = 5f;
+	}
+
+	void Update () {
+		if (acceleration > 0.001f) acceleration =- 0.01f; 
+		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
+		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
+		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
+		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
+
+		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
+		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
+		myRenderer.color = currentColor;
+
+		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
 	void TakeDamage () {
@@ -80,42 +118,6 @@ public class PlayerController : MonoBehaviour {
 	float SetXClamps (float position) {
 		return Mathf.Clamp(position, xMin, xMax);
 	}
-	
-	void Start () {
-		playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
-
-		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>(); if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
-		float distance = transform.position.z - Camera.main.transform.position.z;
-		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
-		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
-		xMin = leftBoundary.x + padding;
-		xMax = rightBoundary.x - padding;
-		acceleration = 0f;
-		baseAcceleration = 0.025f;
-		lateralVelocity = 0f;
-		maxAcceleration = 0.7f;
-		maxSpeed = 5f;
-		fireTime = Time.time;
-	//	hitPoints = maxHealth;
-	//	shipCount = maxShips;
-	}
-
-	void Update () {
-		if (acceleration > 0.001f) acceleration =- 0.01f; 
-		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
-		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
-		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
-
-		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
-		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
-		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
-		myRenderer.color = currentColor;
-
-		scoreboard.text = ("Score: " + levelManager.GetScore());
-	}
 
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
@@ -130,5 +132,3 @@ public class PlayerController : MonoBehaviour {
 		InvokeRepeating ("FireBlaster", fireDelay, fireDelay);
 	}
 }
-
-// lecture 106

@@ -6,6 +6,8 @@ public class _Notes : MonoBehaviour {
 
 	things to do:
 
+		@ lecture 111
+
 		get things on deltatime for frame-rate independence
 		fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
