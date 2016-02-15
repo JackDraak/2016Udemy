@@ -4,6 +4,8 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
+	public AudioClip damage;
+	public AudioClip scuttle;
 
 	private float bulletSpeed = 420f;
 	private GameObject playerGun;
@@ -13,11 +15,38 @@ public class PlayerController : MonoBehaviour {
 	private float fireTime;
 	private float lateralVelocity;
 	private float maxAcceleration = 0.4f;
-	private float maxSpeed= 3f;
+	private float maxSpeed = 3f;
+	private float maxHealth = 1000f;
+	private float hitPoints;
 	private float padding = 0.6f;
 	private bool right;
 	private Vector3 tempPos;
 	private float xMax, xMin;
+	private LevelManager levelManager;
+
+	void OnTriggerEnter2D (Collider2D collider) {
+		if (collider.tag == "EnemyProjectile") {
+			TakeDamage();
+			Destroy (collider.gameObject);
+		}
+	}
+
+	void TakeDamage () {
+		// TODO typical time to do a visual & audible effect
+		hitPoints = (hitPoints * 0.8f) - 12f;
+	
+		AudioSource.PlayClipAtPoint (damage, transform.position);
+		Debug.Log ("PlayerHitPoints: " + hitPoints);
+		if (hitPoints <= 0f) ScoreAndDestroy();
+	}
+
+	void ScoreAndDestroy () {
+		// TODO typical time to do a visual & audible effect
+		levelManager.ChangeScore(-500f);
+		levelManager.RemoveLife();
+		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("GameOver");
+		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+	}
 
 	void SetLeftward () {
 		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
@@ -48,6 +77,7 @@ public class PlayerController : MonoBehaviour {
 	
 	void Start () {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -59,6 +89,7 @@ public class PlayerController : MonoBehaviour {
 		maxAcceleration = 0.7f;
 		maxSpeed = 5f;
 		fireTime = Time.time;
+		hitPoints = maxHealth;
 	}
 
 	void Update () {

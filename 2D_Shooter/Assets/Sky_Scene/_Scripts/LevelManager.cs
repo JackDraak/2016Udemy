@@ -11,13 +11,12 @@ public class LevelManager : MonoBehaviour {
 	public static int sceneIndex = 1;
 	public static float score;
 	public static float scoreFactor;
+	public Text scoreboard;
 
 //	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
 	// TODO working on structure to expunge relic effects REE
 	private ArrayList deadEffects = new ArrayList();
-//	private Text hintBoard; // for bug-testing purposes
-//	private Color offColor = new Color (0f, 0f, 0f, 0f), onColor = new Color (1f, 1f, 1f, 0.667f);
-//	private Text scoreBoard;
+
 
 	public void ChangeScore (float scoreDelta) {
 		score += scoreDelta;
@@ -31,16 +30,25 @@ public class LevelManager : MonoBehaviour {
 	public void HasStartedToggle() { hasStarted = !hasStarted; }
 	public void HasStartedTrue() { hasStarted = true; }
 
+	public float GetScore() { return score; }
+	public int GetLives() { return shipCount; }
+	public void AddLife() { shipCount++; }
+	public void RemoveLife() { shipCount--; }
+
+
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-		score = 0;
+		score = 0f;
 //		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
 //		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
 //		ShowMyBalls ();
 	}
 
 	void Update () {
+		if (scoreboard) scoreboard.text = ("Score: " + score); 
+		else Debug.LogError("scoreboard error");
+
 //		ExpungeDeadEffects();
 
 //		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
