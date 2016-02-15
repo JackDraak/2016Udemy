@@ -7,18 +7,25 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip scuttle;
 	public GameObject bomb;
 
+	private float chance;
+	private Color currentColor = new Color(0f,0f,0f,1f); // or = Color.black;
+	private bool armed;
 	private float bombSpeed = 420f;
 	//private GameObject playerGun;
 	private float fireDelay = 1.4f;
 	private float fireTime;
 	private LevelManager levelManager;
 	private float hitPoints;
+	private float maxHealth = 222f;
+	private Color offColor = new Color (1f, 0f, 0f, 1f), onColor = new Color (1f, 1f, 1f, 1f);
+	private SpriteRenderer myRenderer;
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 	//	playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
+		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
 		fireTime = Time.time;
-		hitPoints = 251f;
+		hitPoints = maxHealth;
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -30,7 +37,8 @@ public class EnemyController : MonoBehaviour {
 
 	void TakeDamage () {
 		// typical time to do a visual effect
-		hitPoints = (hitPoints * 0.8f) - 5f;
+		hitPoints = (hitPoints * 0.8f) - 4f;
+	
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		Debug.Log ("HitPoints: " + hitPoints);
 		if (hitPoints <= 0f) ScoreAndDestroy();
@@ -45,7 +53,15 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void Update () {
-		InvokeRepeating ("DropBomb", fireDelay, fireDelay);
+		if (!armed) {
+			InvokeRepeating ("DropBomb", fireDelay, fireDelay);
+			armed = !armed;
+		}
+		float colourChange = (maxHealth - hitPoints) / maxHealth;
+		currentColor = new Vector4 (colourChange, 1/colourChange, 1/colourChange, 1f);
+		myRenderer.color = currentColor;
+		chance = Random.Range (1, 100);
+		if (chance > 95) armed = !armed;
 	}
 
 	void DropBomb () {
