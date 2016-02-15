@@ -32,16 +32,14 @@ public class FormationController : MonoBehaviour {
 		}
 	}
 
-	void OnDrawGizmos () {
-		Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1));
-	}
+	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 
 	void SetMinMaxX () {
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
-		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
+		xMin = leftBoundary.x + padding;
 	}
 
 	void SetNextPos () {
@@ -73,11 +71,7 @@ public class FormationController : MonoBehaviour {
 		}
 	}
 	
-	float SetXClamps (float position) {
-		return Mathf.Clamp(position, xMin, xMax); //  0.55f, 15.41f);
-	}
+	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	
-	void Update () {
-		SetNextPos();
-	}
+	void Update () { SetNextPos(); }
 }
