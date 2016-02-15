@@ -6,19 +6,11 @@ public class _Notes : MonoBehaviour {
 
 	things to do:
 
-		visual effects for damage to enemy && player
-		note end of level and win || lose
-		double-check that there is audio when enemy && player weapons fire && hit
+		get things on deltatime for frame-rate independence
+		fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
-		troubles upon troubles trying to get scenes loading w/out destroying 
-		prefab links twixt buttons and levelmanager
-		w t f ???
-
-		idea - fuck multiple scenes, just use active settings to pop/hide
-		buttons when needed...
-
-		get things on deltatime
-		fix singleton (menuing) and/or spawn issuees
+		add visual effects for damage to enemy && player
+		double-check that there is consistent audio when enemy && player weapons fire && hit
 
 */
 }

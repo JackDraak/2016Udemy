@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class FormationController : MonoBehaviour {
+	// adjust/set in inspector!
 	public GameObject enemyPrefab;
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
@@ -28,11 +29,9 @@ public class FormationController : MonoBehaviour {
 		maxSpeed = 0.19f;
 		right = true;
 		SetMinMaxX();
-	//	SpawnEnemies(); //shouldnt be done here, really
 	}
 
 	public void SpawnEnemies () {
-		Debug.Log ("SPAWN --->>>");
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2");
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;

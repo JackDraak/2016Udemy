@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
+	// adjust/set in inspector!
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 	public AudioClip damage;

@@ -5,7 +5,7 @@ public class MusicPlayer : MonoBehaviour {
 
 	static MusicPlayer instance = null;
 
-	public AudioClip[] level_;
+	public AudioClip[] level_; // adjust/set in inspector!
 
 	private AudioSource music;
 
@@ -25,7 +25,7 @@ public class MusicPlayer : MonoBehaviour {
 		print (this + " level: " + level);
 		if (music) {
 			music.Stop();
-			music.clip = level_[level]; // setup clips-quesheet in the inspector
+			music.clip = level_[level];
 			music.loop = true;
 			music.volume = 0.86f;
 			music.Play();

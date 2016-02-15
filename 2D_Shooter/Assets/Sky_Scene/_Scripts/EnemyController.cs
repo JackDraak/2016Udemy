@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
+	// adjust/set in inspector!
 	public GameObject bomb;
 	public AudioClip bombSound;
 	public AudioClip damage;
@@ -52,7 +53,8 @@ public class EnemyController : MonoBehaviour {
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
-		Destroy(this.gameObject, 0.001f);
+		Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
+		Destroy(this.gameObject, 0.001f); // TODO does this have anything to do with the disapearing LevelManagers?
 	}
 
 	void Update () {

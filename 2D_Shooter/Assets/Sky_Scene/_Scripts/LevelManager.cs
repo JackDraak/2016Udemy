@@ -8,6 +8,7 @@ public class LevelManager : MonoBehaviour {
 	public static float score;
 	public static int enemiesRemaining;
 
+	// adjust/set in inspector!
 	public Text creditMessage, loseMessage, startMessage, winMessage;
 	public Button creditButton, startButton, startOverButton;
 	public GameObject enemyFormation;
@@ -106,6 +107,14 @@ public class LevelManager : MonoBehaviour {
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>(); if (!formation) Debug.Log ("formation 2 pickup error");
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
+		startMessage.gameObject.SetActive(true);
+		startButton.gameObject.SetActive(true);
+		creditButton.gameObject.SetActive(true);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+
 	}
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
