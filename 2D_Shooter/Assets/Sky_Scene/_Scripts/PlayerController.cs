@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip zappySound;
 	public AudioClip damage;
 	public AudioClip scuttle;
-	public int maxShips = 2;
 
 	private float bulletSpeed = 420f;
 	private GameObject playerGun;
@@ -18,8 +17,6 @@ public class PlayerController : MonoBehaviour {
 	private float lateralVelocity;
 	private float maxAcceleration = 0.4f;
 	private float maxSpeed = 3f;
-	private float maxHealth = 500f;
-	private float hitPoints;
 	private float padding = 0.6f;
 	private bool right;
 	private Vector3 tempPos;
@@ -28,7 +25,6 @@ public class PlayerController : MonoBehaviour {
 	private Color currentColor;
 	private SpriteRenderer myRenderer;
 	private float chance;
-	private int shipCount;
 	private Text scoreboard;
 
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -41,19 +37,20 @@ public class PlayerController : MonoBehaviour {
 
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
-		hitPoints = (hitPoints * 0.7f) - 11f;
+		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.3f) - 11f);
+		//hitPoints = (hitPoints * 0.7f) - 11f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 	//	Debug.Log ("PlayerHitPoints: " + hitPoints);
-		if (hitPoints <= 0f) ScoreAndDestroy();
+		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
 		// TODO typical time to do a visual & audible effect
 		levelManager.ChangeScore(-100f);
-		shipCount--;
+		levelManager.PlayerDown();
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
-		if (shipCount <= 0) levelManager.LoseBattle();
-		else hitPoints = maxHealth;
+		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
+		else levelManager.PlayerResetHitpoints();
 	}
 
 	void SetLeftward () {
@@ -100,8 +97,8 @@ public class PlayerController : MonoBehaviour {
 		maxAcceleration = 0.7f;
 		maxSpeed = 5f;
 		fireTime = Time.time;
-		hitPoints = maxHealth;
-		shipCount = maxShips;
+	//	hitPoints = maxHealth;
+	//	shipCount = maxShips;
 	}
 
 	void Update () {
@@ -112,7 +109,7 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
 
 		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
-		float colourChange = maxHealth / hitPoints;
+		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
 		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
 

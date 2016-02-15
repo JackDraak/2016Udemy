@@ -14,6 +14,21 @@ public class LevelManager : MonoBehaviour {
 
 	private bool bCredit = false;
 
+
+	public int playerMaxShips = 2; // move to LM
+	private float playerMaxHealth = 500f;// move to LM
+	private float playerHitPoints;// move to LM
+	private int playerShipCount;// move to LM
+
+	public void PlayerDown () { playerShipCount--; }
+	public void PlayerUp () { playerShipCount++; }
+	public int GetPlayerShips () { return playerShipCount; }
+
+	public void PlayerChangeHealth (float pips) { playerHitPoints += pips; }
+	public float GetPlayerHealth () { return playerHitPoints; }
+	public float GetPlayerMaxHealth () { return playerMaxHealth; }
+
+
 	public void EnemyUp () { enemiesRemaining++; }
 	public void EnemyDown () { enemiesRemaining--; }
 	public int GetEnemies () { return enemiesRemaining; }
@@ -44,7 +59,8 @@ public class LevelManager : MonoBehaviour {
 
 	public void RestartButton () {
 		score = 0;
-		// tell player to reset to full hitpoints / lives or manage it here
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
 		startMessage.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
 		creditButton.gameObject.SetActive(false);
@@ -53,8 +69,8 @@ public class LevelManager : MonoBehaviour {
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
 
-		// do some more things so it really restarts
 		enemyFormation.gameObject.SetActive(true);
+		// reset spawn states
 	}
 
 	public void CreditButton () {
@@ -78,9 +94,13 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(false);
 	}
 
+	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
+
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
 	}
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
