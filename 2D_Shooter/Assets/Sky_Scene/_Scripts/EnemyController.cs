@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour {
 	private float chance;
 	private Color currentColor;// = new Color(0f,0f,0f,1f); // or = Color.black;
 	private bool armed;
-	private float bombSpeed = 420f;
+	private float bombSpeed = 360f;
 	private float fireDelay = 1.4f;
 	private float fireTime;
 	private LevelManager levelManager;
