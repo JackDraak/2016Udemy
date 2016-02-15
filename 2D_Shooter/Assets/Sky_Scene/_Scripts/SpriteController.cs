@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BombController : MonoBehaviour {
+public class SpriteController : MonoBehaviour {
 	public Sprite[] mySprite;
 
 	private int spriteIndex;
@@ -12,7 +12,7 @@ public class BombController : MonoBehaviour {
 
 	void LoadSprite () {
 		if (mySprite[spriteIndex]) { this.GetComponent<SpriteRenderer>().sprite = mySprite[spriteIndex]; } 
-		else { Debug.LogError ("Brick.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch."); }
+		else { Debug.LogError ("SpriteController.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch."); }
 	}
 
 	void Update () {
