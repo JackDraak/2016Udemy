@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 	private Text scoreboard;
 
 	void OnTriggerEnter2D (Collider2D collider) {
-		Debug.Log(collider);
+	//	Debug.Log(collider);
 		if (collider.tag == "EnemyBomb") {
 			TakeDamage();
 			Destroy (collider.gameObject);
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour {
 		// TODO typical time to do a visual & audible effect
 		hitPoints = (hitPoints * 0.7f) - 11f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		Debug.Log ("PlayerHitPoints: " + hitPoints);
+	//	Debug.Log ("PlayerHitPoints: " + hitPoints);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
@@ -111,8 +111,9 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
 		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
 
-		float colourChange = (maxHealth - hitPoints) / maxHealth;
-		currentColor = new Vector4 (1/colourChange, colourChange, 1/colourChange, 1f);
+		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		float colourChange = maxHealth / hitPoints;
+		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
 
 		scoreboard.text = ("Score: " + levelManager.GetScore());

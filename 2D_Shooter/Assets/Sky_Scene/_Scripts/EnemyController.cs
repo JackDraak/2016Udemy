@@ -16,7 +16,6 @@ public class EnemyController : MonoBehaviour {
 	private LevelManager levelManager;
 	private float hitPoints;
 	private float maxHealth = 222f;
-//	private Color offColor = new Color (1f, 0f, 0f, 1f), onColor = new Color (1f, 1f, 1f, 1f);
 	private SpriteRenderer myRenderer;
 
 	void Start () {
@@ -37,9 +36,8 @@ public class EnemyController : MonoBehaviour {
 	void TakeDamage () {
 		// typical time to do a visual effect
 		hitPoints = (hitPoints * 0.65f) - 4f;
-	
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		Debug.Log ("HitPoints: " + hitPoints);
+//		Debug.Log ("HitPoints: " + hitPoints);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
@@ -71,8 +69,4 @@ public class EnemyController : MonoBehaviour {
 			fireTime = Time.time + Random.Range(0.0f, 4.0f);
 		}
 	}
-
-	void InvokeShot () {
-		InvokeRepeating ("DropBomb", fireDelay, fireDelay);
-	}	
 }
