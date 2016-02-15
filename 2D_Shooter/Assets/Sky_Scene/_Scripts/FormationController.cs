@@ -36,6 +36,7 @@ public class FormationController : MonoBehaviour {
 	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList enemies = new ArrayList();
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
+
 	void ExpungeDeadEnemies () {
 		foreach (GameObject enemy in enemies) { // more stuff for REE
 			/*	if (enemy && !enemy.GetComponent<ParticleSystem>().IsAlive()) {
@@ -85,5 +86,8 @@ public class FormationController : MonoBehaviour {
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	
-	void Update () { SetNextPos(); }
+	void Update () {
+		SetNextPos();
+		Debug.Log(enemies.Count + " enemies.Count");
+	}
 }

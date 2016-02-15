@@ -1,11 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-//using UnityEngine.UI;
+using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
 	public static float score;
+
+	public Text winMessage, loseMessage, startMessage, creditMessage;
+	public Button startButton, startOverButton, creditButton;
+	public GameObject enemyFormation;
+
+	private bool bCredit = false;
 
 	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList deadEffects = new ArrayList();
@@ -18,6 +24,39 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 
+	public void StartGameButton () {
+		score = 0;
+		startMessage.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		creditButton.gameObject.SetActive(false);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+
+		enemyFormation.gameObject.SetActive(true);
+	}
+
+	public void CreditButton () {
+		bCredit = !bCredit;
+		startMessage.gameObject.SetActive(!bCredit);
+		creditMessage.gameObject.SetActive(bCredit);
+	}
+
+	public void LoseBattle () {
+		loseMessage.gameObject.SetActive(true);
+		startOverButton.gameObject.SetActive(true);
+
+		enemyFormation.gameObject.SetActive(false);
+	}
+
+	void WinBattle () {
+		winMessage.gameObject.SetActive(true);
+		startOverButton.gameObject.SetActive(true);
+
+		enemyFormation.gameObject.SetActive(false);
+	}
+
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
@@ -25,7 +64,6 @@ public class LevelManager : MonoBehaviour {
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
 	void ConfigureSkyGame () {	Cursor.visible = false;	}
-
 	public float GetScore () { return score; }
 	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
 
@@ -39,6 +77,10 @@ public class LevelManager : MonoBehaviour {
 	void LoadNextLevel() {
 		StoreHighs();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+	}
+	
+	void StoreHighs () {
+		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 	}
 
 /*	public void ShowMyBalls () {
@@ -68,8 +110,4 @@ public class LevelManager : MonoBehaviour {
 			if (ballCount < 5) ball5.color = offColor;
 		}
 	} */
-
-	void StoreHighs () {
-		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-	}
 }

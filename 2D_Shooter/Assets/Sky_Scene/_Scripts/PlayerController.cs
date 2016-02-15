@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 		levelManager.ChangeScore(-100f);
 		shipCount--;
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
-		if (shipCount <= 0) levelManager.LoadLevel("Game Over");
+		if (shipCount <= 0) levelManager.LoseBattle();
 		else hitPoints = maxHealth;
 	}
 
