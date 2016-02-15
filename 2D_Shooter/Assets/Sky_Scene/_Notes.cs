@@ -17,5 +17,8 @@ public class _Notes : MonoBehaviour {
 		idea - fuck multiple scenes, just use active settings to pop/hide
 		buttons when needed...
 
+		get things on deltatime
+		fix singleton (menuing) and/or spawn issuees
+
 */
 }

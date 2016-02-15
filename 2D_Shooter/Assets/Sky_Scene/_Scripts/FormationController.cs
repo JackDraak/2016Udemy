@@ -28,11 +28,12 @@ public class FormationController : MonoBehaviour {
 		maxSpeed = 0.19f;
 		right = true;
 		SetMinMaxX();
-	//	SpawnEnemies(); shouldnt be done here, really
+	//	SpawnEnemies(); //shouldnt be done here, really
 	}
 
 	public void SpawnEnemies () {
 		Debug.Log ("SPAWN --->>>");
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2");
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
 			EnemyAdd(enemy);
@@ -52,6 +53,14 @@ public class FormationController : MonoBehaviour {
 			}
 			//enemy.BroadcastMessage("Disarm");
 		}
+	}
+
+	public void Despawner () {
+		foreach (GameObject enemy in enemies) {
+		//	levelManager.EnemyDown();
+			Destroy (enemy, 0.000001f);
+		}
+		levelManager.ZeroEnemies();
 	}
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
@@ -97,8 +106,6 @@ public class FormationController : MonoBehaviour {
 	
 	void Update () {
 		SetNextPos();
-	//	Debug.Log(enemies.Count + " enemies.Count");
-	//	ExpungeDeadEnemies();
 		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
 
 	}

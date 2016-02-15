@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour {
 	private float fireTime;
 	private LevelManager levelManager;
 	private float hitPoints;
-	private float maxHealth = 222f;
+	private float maxHealth = 111f; // TODO tweak this
 	private SpriteRenderer myRenderer;
 
 	void Start () {

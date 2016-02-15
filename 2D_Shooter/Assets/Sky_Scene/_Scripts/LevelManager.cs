@@ -42,8 +42,8 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void StartGameButton () {
-		formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
-		formation.SpawnEnemies();
+	//	formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
+	//	formation.SpawnEnemies();
 		score = 0;
 		startMessage.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
@@ -54,9 +54,13 @@ public class LevelManager : MonoBehaviour {
 		winMessage.gameObject.SetActive(false);
 
 		enemyFormation.gameObject.SetActive(true);
+		formation.SpawnEnemies();
 	}
 
+	public void ZeroEnemies () { enemiesRemaining = 0; }
+
 	public void RestartButton () {
+		Debug.Log (enemiesRemaining + " enemies.");
 		score = 0;
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
@@ -82,16 +86,16 @@ public class LevelManager : MonoBehaviour {
 		loseMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 
+		formation.Despawner();
 		enemyFormation.gameObject.SetActive(false);
-		// broadcast disarm to children/enemies
 	}
 
 	public void WinBattle () {
 		winMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 
+		formation.Despawner();
 		enemyFormation.gameObject.SetActive(false);
-		formation.SpawnEnemies();
 	}
 
 	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
@@ -99,7 +103,7 @@ public class LevelManager : MonoBehaviour {
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-		formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
+		if (!formation) formation = enemyFormation.GetComponent<FormationController>(); if (!formation) Debug.Log ("formation 2 pickup error");
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
 	}
