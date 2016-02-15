@@ -11,7 +11,6 @@ public class EnemyController : MonoBehaviour {
 	private Color currentColor = new Color(0f,0f,0f,1f); // or = Color.black;
 	private bool armed;
 	private float bombSpeed = 420f;
-	//private GameObject playerGun;
 	private float fireDelay = 1.4f;
 	private float fireTime;
 	private LevelManager levelManager;
@@ -22,10 +21,10 @@ public class EnemyController : MonoBehaviour {
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-	//	playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
 		fireTime = Time.time;
 		hitPoints = maxHealth;
+		armed = true;
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -58,10 +57,10 @@ public class EnemyController : MonoBehaviour {
 			armed = !armed;
 		}
 		float colourChange = (maxHealth - hitPoints) / maxHealth;
-		currentColor = new Vector4 (colourChange, 1/colourChange, 1/colourChange, 1f);
+		currentColor = new Vector4 (1/colourChange, 1/colourChange, colourChange, 1f);
 		myRenderer.color = currentColor;
 		chance = Random.Range (1, 100);
-		if (chance > 95) armed = !armed;
+		if (chance > 98) armed = !armed;
 	}
 
 	void DropBomb () {
