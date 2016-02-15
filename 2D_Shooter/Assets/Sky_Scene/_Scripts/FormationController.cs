@@ -28,6 +28,11 @@ public class FormationController : MonoBehaviour {
 		maxSpeed = 0.19f;
 		right = true;
 		SetMinMaxX();
+	//	SpawnEnemies(); shouldnt be done here, really
+	}
+
+	public void SpawnEnemies () {
+		Debug.Log ("SPAWN --->>>");
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
 			EnemyAdd(enemy);

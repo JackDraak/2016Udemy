@@ -8,26 +8,23 @@ public class LevelManager : MonoBehaviour {
 	public static float score;
 	public static int enemiesRemaining;
 
-	public Text winMessage, loseMessage, startMessage, creditMessage;
-	public Button startButton, startOverButton, creditButton;
+	public Text creditMessage, loseMessage, startMessage, winMessage;
+	public Button creditButton, startButton, startOverButton;
 	public GameObject enemyFormation;
+	public int playerMaxShips = 2;
 
 	private bool bCredit = false;
-
-
-	public int playerMaxShips = 2; // move to LM
-	private float playerMaxHealth = 500f;// move to LM
-	private float playerHitPoints;// move to LM
-	private int playerShipCount;// move to LM
+	private FormationController formation;
+	private float playerHitPoints;
+	private float playerMaxHealth = 500f;
+	private int playerShipCount;
 
 	public void PlayerDown () { playerShipCount--; }
 	public void PlayerUp () { playerShipCount++; }
 	public int GetPlayerShips () { return playerShipCount; }
-
 	public void PlayerChangeHealth (float pips) { playerHitPoints += pips; }
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }
-
 
 	public void EnemyUp () { enemiesRemaining++; }
 	public void EnemyDown () { enemiesRemaining--; }
@@ -45,6 +42,8 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void StartGameButton () {
+		formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
+		formation.SpawnEnemies();
 		score = 0;
 		startMessage.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
@@ -70,7 +69,7 @@ public class LevelManager : MonoBehaviour {
 		winMessage.gameObject.SetActive(false);
 
 		enemyFormation.gameObject.SetActive(true);
-		// reset spawn states
+		formation.SpawnEnemies();
 	}
 
 	public void CreditButton () {
@@ -92,6 +91,7 @@ public class LevelManager : MonoBehaviour {
 		startOverButton.gameObject.SetActive(true);
 
 		enemyFormation.gameObject.SetActive(false);
+		formation.SpawnEnemies();
 	}
 
 	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
@@ -99,6 +99,7 @@ public class LevelManager : MonoBehaviour {
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
+		formation = GameObject.FindObjectOfType<FormationController>(); if (!formation) Debug.Log ("formation pickup error");
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
 	}
