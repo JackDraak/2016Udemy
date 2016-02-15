@@ -6,85 +6,19 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
 
-	public static int shipCount = 3;
-	public static bool hasStarted;
-	public static int sceneIndex = 1;
 	public static float score;
-	public static float scoreFactor;
-	public Text scoreboard;
 
-//	private SpriteRenderer ball1, ball2, ball3, ball4, ball5;
-	// TODO working on structure to expunge relic effects REE
 	private ArrayList deadEffects = new ArrayList();
 
-
-	public void ChangeScore (float scoreDelta) {
-		score += scoreDelta;
-		Debug.Log (score);
-	}
-
 	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
-	public int GetSceneIndex () { return sceneIndex; }
-	public void HasStartedFalse() { hasStarted = false; }
-	public bool HasStartedReturn () { return hasStarted; }
-	public void HasStartedToggle() { hasStarted = !hasStarted; }
-	public void HasStartedTrue() { hasStarted = true; }
-
-	public float GetScore() { return score; }
-	public int GetLives() { return shipCount; }
-	public void AddLife() { shipCount++; }
-	public void RemoveLife() { shipCount--; }
-
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-		score = 0f;
-//		hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>(); // remaining bricks counter in-scene
-//		scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		ShowMyBalls ();
 	}
 
-	void Update () {
-		if (scoreboard) scoreboard.text = ("Score: " + score); 
-//		if (!scoreboard) Debug.LogError("scoreboard error");
-
-//		ExpungeDeadEffects();
-
-//		if (!scoreBoard) scoreBoard = GameObject.Find ("ScoreBoard").GetComponent<Text>();
-//		if (scoreBoard) scoreBoard.text = ("High: " + score + "  -  [Highest: " + PlayerPrefsManager.GetTopscore() + "]");
-//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Scoreboard");
-
-//		if (!hintBoard) hintBoard = GameObject.Find ("HintBoard").GetComponent<Text>();
-//		if (hintBoard) hintBoard.text = ("Breakable: [" + brickCount + "]");
-//		else Debug.LogError ("Levelmanager.cs Update() Unable to update Hintboard");
-	}
-
-	public void BallDown() {
-//		ShowMyBalls ();
-	}
-
-	public void  CalculateScoreFactor () {
-		if (PlayerPrefsManager.GetTrails()) scoreFactor = 1.25f;
-		if (PlayerPrefsManager.GetFireBalls()) scoreFactor = 1.3f;
-		if (PlayerPrefsManager.GetFireBalls() && PlayerPrefsManager.GetTrails()) scoreFactor = 2.0f;
-		if (PlayerPrefsManager.GetEasy()) scoreFactor = (scoreFactor * .7f);
-		if (PlayerPrefsManager.GetAutoplay()) scoreFactor = (scoreFactor * 0.2f);
-	}
-
-	void ConfigureAnyLevel () {
-		Cursor.visible = true;
-	//	brickCount = 0;
-		hasStarted = false;
-	}
-
-	void ConfigureLevelOne () {
-		shipCount = 2;
-		Cursor.visible = false;
-		sceneIndex = 1;
-		score = 0;
-		PlayerPrefsManager.SetAward(0);
-	}
+	void ConfigureAnyLevel () { Cursor.visible = true; }
+	void ConfigureSkyGame () {	Cursor.visible = false;	}
 
 	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	void ExpungeDeadEffects () {
@@ -95,42 +29,18 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 
-/*	public void FreeBallin () { // set reward levels where free plays are granted
-		if (PlayerPrefsManager.GetAward() == 0) {
-			if (score > 2000 && score < 10000) { // TODO tweak these score thresholds id needed
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(1);
-			}
-		}
-		else if (PlayerPrefsManager.GetAward() == 1) {
-			if (score > 10000 && score < 25000) {
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(2);
-			}
-		}
-		else if (PlayerPrefsManager.GetAward() == 2) {
-			if (score > 25000) {
-				ballCount++;
-				ShowMyBalls();
-				PlayerPrefsManager.SetAward(3);
-			}
-		}
-	} */
+	public float GetScore () { return score; }
+	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
 
 	public void LoadLevel(string name){
 		StoreHighs();
 		ConfigureAnyLevel();
-		if (name == "Level_01") ConfigureLevelOne (); 
+		if (name == "SkyGame") ConfigureSkyGame (); 
 		SceneManager.LoadScene(name);
 	}
 	
 	void LoadNextLevel() {
 		StoreHighs();
-	//	brickCount = 0;
-		hasStarted = false;
-		sceneIndex++;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
 

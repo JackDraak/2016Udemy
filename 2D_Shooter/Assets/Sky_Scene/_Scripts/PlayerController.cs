@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip zappySound;
 	public AudioClip damage;
 	public AudioClip scuttle;
+	public int maxShips = 2;
 
 	private float bulletSpeed = 420f;
 	private GameObject playerGun;
@@ -26,6 +27,9 @@ public class PlayerController : MonoBehaviour {
 	private Color currentColor;
 	private SpriteRenderer myRenderer;
 	private float chance;
+	private int shipCount;
+	private Text scoreboard;
+//	private Text scoreText;
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		Debug.Log(collider);
@@ -38,7 +42,6 @@ public class PlayerController : MonoBehaviour {
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
 		hitPoints = (hitPoints * 0.7f) - 11f;
-	
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		Debug.Log ("PlayerHitPoints: " + hitPoints);
 		if (hitPoints <= 0f) ScoreAndDestroy();
@@ -47,10 +50,9 @@ public class PlayerController : MonoBehaviour {
 	void ScoreAndDestroy () {
 		// TODO typical time to do a visual & audible effect
 		levelManager.ChangeScore(-100f);
-		levelManager.RemoveLife();
+		shipCount--;
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
-		Debug.Log (levelManager.GetLives());
-		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("Game Over");
+		if (shipCount <= 0) levelManager.LoadLevel("Game Over");
 		else hitPoints = maxHealth;
 	}
 
@@ -85,6 +87,8 @@ public class PlayerController : MonoBehaviour {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
+
+		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<guiText>(); if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -97,6 +101,7 @@ public class PlayerController : MonoBehaviour {
 		maxSpeed = 5f;
 		fireTime = Time.time;
 		hitPoints = maxHealth;
+		shipCount = maxShips;
 	}
 
 	void Update () {
@@ -109,6 +114,8 @@ public class PlayerController : MonoBehaviour {
 		float colourChange = (maxHealth - hitPoints) / maxHealth;
 		currentColor = new Vector4 (1/colourChange, colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
+
+	//	scoreboard.
 	}
 
 	void FireBlaster () {
