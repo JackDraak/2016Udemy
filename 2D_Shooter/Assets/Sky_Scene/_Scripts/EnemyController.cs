@@ -51,6 +51,7 @@ public class EnemyController : MonoBehaviour {
 		// TODO typical time to do a visual effect
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+		levelManager.EnemyDown();
 		Destroy(this.gameObject, 0.001f);
 	}
 

@@ -6,12 +6,17 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
 	public static float score;
+	public static int enemiesRemaining;
 
 	public Text winMessage, loseMessage, startMessage, creditMessage;
 	public Button startButton, startOverButton, creditButton;
 	public GameObject enemyFormation;
 
 	private bool bCredit = false;
+
+	public void EnemyUp () { enemiesRemaining++; }
+	public void EnemyDown () { enemiesRemaining--; }
+	public int GetEnemies () { return enemiesRemaining; }
 
 	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList deadEffects = new ArrayList();
@@ -37,6 +42,21 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(true);
 	}
 
+	public void RestartButton () {
+		score = 0;
+		// tell player to reset to full hitpoints / lives or manage it here
+		startMessage.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		creditButton.gameObject.SetActive(false);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+
+		// do some more things so it really restarts
+		enemyFormation.gameObject.SetActive(true);
+	}
+
 	public void CreditButton () {
 		bCredit = !bCredit;
 		startMessage.gameObject.SetActive(!bCredit);
@@ -48,9 +68,10 @@ public class LevelManager : MonoBehaviour {
 		startOverButton.gameObject.SetActive(true);
 
 		enemyFormation.gameObject.SetActive(false);
+		// broadcast disarm to children/enemies
 	}
 
-	void WinBattle () {
+	public void WinBattle () {
 		winMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 

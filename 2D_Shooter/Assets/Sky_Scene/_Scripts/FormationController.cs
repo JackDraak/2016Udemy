@@ -16,8 +16,10 @@ public class FormationController : MonoBehaviour {
 	private float padding = 3.4f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
+	private LevelManager levelManager;
 
 	void Start () {
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
@@ -29,6 +31,7 @@ public class FormationController : MonoBehaviour {
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
 			EnemyAdd(enemy);
+			levelManager.EnemyUp();
 			enemy.transform.parent = child;
 		}
 	}
@@ -38,10 +41,11 @@ public class FormationController : MonoBehaviour {
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
 	void ExpungeDeadEnemies () {
-		foreach (GameObject enemy in enemies) { // more stuff for REE
-			/*	if (enemy && !enemy.GetComponent<ParticleSystem>().IsAlive()) {
-			Destroy (enemy); */
-			enemy.BroadcastMessage("Disarm");
+		foreach (GameObject enemy in enemies) {
+			if (enemy && !enemy.gameObject.activeSelf) {
+			Destroy (enemy, 0.000001f);
+			}
+			//enemy.BroadcastMessage("Disarm");
 		}
 	}
 
@@ -88,6 +92,9 @@ public class FormationController : MonoBehaviour {
 	
 	void Update () {
 		SetNextPos();
-		Debug.Log(enemies.Count + " enemies.Count");
+	//	Debug.Log(enemies.Count + " enemies.Count");
+	//	ExpungeDeadEnemies();
+		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+
 	}
 }
