@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BombController : MonoBehaviour {
+public class BoltController : MonoBehaviour {
 	public int spriteCount;
 	public Sprite[] mySprite;
 
