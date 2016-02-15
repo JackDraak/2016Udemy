@@ -3,6 +3,9 @@ using System.Collections;
 
 public class FormationController : MonoBehaviour {
 	public GameObject enemyPrefab;
+	public float reverseBuffer = -2.12f;
+	public float reverseSquelch = 1.12f;
+	public float speedFactor = 61.3f;
 
 	private float acceleration;
 	private float baseAcceleration;
@@ -11,9 +14,6 @@ public class FormationController : MonoBehaviour {
 	private float maxAcceleration;
 	private float maxSpeed;
 	private float padding = 3.4f;
-	public float reverseBuffer = -2.12f;
-	public float reverseSquelch = 1.12f;
-	public float speedFactor = 61.3f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
 
@@ -28,7 +28,19 @@ public class FormationController : MonoBehaviour {
 		SetMinMaxX();
 		foreach (Transform child in transform) {
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
+			EnemyAdd(enemy);
 			enemy.transform.parent = child;
+		}
+	}
+
+	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
+	private ArrayList enemies = new ArrayList();
+	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
+	void ExpungeDeadEnemies () {
+		foreach (GameObject enemy in enemies) { // more stuff for REE
+			/*	if (enemy && !enemy.GetComponent<ParticleSystem>().IsAlive()) {
+			Destroy (enemy); */
+			enemy.BroadcastMessage("Disarm");
 		}
 	}
 

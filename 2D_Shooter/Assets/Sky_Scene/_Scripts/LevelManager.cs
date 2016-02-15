@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+//using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
-
 	public static float score;
 
+	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList deadEffects = new ArrayList();
-
 	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
+	void ExpungeDeadEffects () {
+		foreach (GameObject de in deadEffects) { // more stuff for REE
+			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
+				Destroy (de);
+			}
+		}
+	}
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
@@ -19,15 +25,6 @@ public class LevelManager : MonoBehaviour {
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
 	void ConfigureSkyGame () {	Cursor.visible = false;	}
-
-	// TODO this is not working as advertised.... the used game objects linger in the effects "folder" game object **some scenes are okay?
-	void ExpungeDeadEffects () {
-		foreach (GameObject de in deadEffects) { // more stuff for REE
-			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
-				Destroy (de);
-			}
-		}
-	}
 
 	public float GetScore () { return score; }
 	public void ChangeScore (float scoreDelta) { score += scoreDelta; }

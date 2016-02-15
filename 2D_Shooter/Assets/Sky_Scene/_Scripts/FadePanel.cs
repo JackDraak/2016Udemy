@@ -8,7 +8,8 @@ public class FadePanel : MonoBehaviour {
 	private Color currentColor = new Color(0f,0f,0f,1f); // or = Color.black;
 	
 	void Start() {
-		fadePanel = GetComponent<Image>(); if (!fadePanel) Debug.LogError (this + " fadePanel IMAGE failure");
+		fadePanel = GetComponent<Image>(); 
+		if (!fadePanel) Debug.LogError (this + " fadePanel IMAGE failure");
 	}
 	
 	void Update () {

@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour {
 	private float bombSpeed = 360f;
 	private float chance;
 	private Color currentColor;
+	private bool dearmed;
 	private float fireDelay = 1.4f;
 	private float fireTime;
 	private LevelManager levelManager;
@@ -22,9 +23,14 @@ public class EnemyController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
 		armed = true;
+		dearmed = false;
 		fireTime = Time.time;
 		hitPoints = maxHealth;
 	}
+
+	public void Disarm () { dearmed = true; }
+	public void Rearm () { dearmed = false; }
+
 	
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "PlayerProjectile") {
@@ -49,9 +55,11 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void Update () {
-		if (!armed) {
-			InvokeRepeating ("DropBomb", fireDelay, fireDelay);
-			armed = !armed;
+		if (!dearmed) {
+			if (!armed) {
+				InvokeRepeating ("DropBomb", fireDelay, fireDelay);
+				armed = !armed;
+			}
 		}
 		float colourChange = (maxHealth - hitPoints) / maxHealth;
 		currentColor = new Vector4 (1/colourChange, 1/colourChange, colourChange, 1f);
