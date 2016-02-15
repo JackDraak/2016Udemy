@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void InvokeShot () {
-		InvokeRepeating ("FireBlaster", 0.03f, fireDelay);
+		InvokeRepeating ("FireBlaster", fireDelay, fireDelay);
 	}
 }
 
