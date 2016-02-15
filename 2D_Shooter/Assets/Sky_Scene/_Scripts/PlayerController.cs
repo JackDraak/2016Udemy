@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	private float lateralVelocity;
 	private float maxAcceleration = 0.4f;
 	private float maxSpeed = 3f;
-	private float maxHealth = 1000f;
+	private float maxHealth = 500f;
 	private float hitPoints;
 	private float padding = 0.6f;
 	private bool right;
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
 
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
-		hitPoints = (hitPoints * 0.8f) - 12f;
+		hitPoints = (hitPoints * 0.7f) - 11f;
 	
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		Debug.Log ("PlayerHitPoints: " + hitPoints);
@@ -48,8 +48,10 @@ public class PlayerController : MonoBehaviour {
 		// TODO typical time to do a visual & audible effect
 		levelManager.ChangeScore(-100f);
 		levelManager.RemoveLife();
-		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("Game Over");
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+		Debug.Log (levelManager.GetLives());
+		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("Game Over");
+		else hitPoints = maxHealth;
 	}
 
 	void SetLeftward () {

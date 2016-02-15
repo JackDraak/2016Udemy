@@ -6,7 +6,7 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
 
-	public static int shipCount = 2;
+	public static int shipCount = 3;
 	public static bool hasStarted;
 	public static int sceneIndex = 1;
 	public static float score;
@@ -47,7 +47,7 @@ public class LevelManager : MonoBehaviour {
 
 	void Update () {
 		if (scoreboard) scoreboard.text = ("Score: " + score); 
-		else Debug.LogError("scoreboard error");
+//		if (!scoreboard) Debug.LogError("scoreboard error");
 
 //		ExpungeDeadEffects();
 

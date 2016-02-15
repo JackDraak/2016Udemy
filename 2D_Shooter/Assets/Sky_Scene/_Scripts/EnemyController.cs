@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour {
 
 	void TakeDamage () {
 		// typical time to do a visual effect
-		hitPoints = (hitPoints * 0.8f) - 4f;
+		hitPoints = (hitPoints * 0.65f) - 4f;
 	
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		Debug.Log ("HitPoints: " + hitPoints);
