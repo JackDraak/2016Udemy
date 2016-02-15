@@ -9,16 +9,11 @@ public class BoltController : MonoBehaviour {
 	private int frameBuffer = 1;
 	private int frameCounter = 0;
 
-	void Start () {
-		spriteIndex = 0;
-	}
+	void Start () { spriteIndex = 0; }
 
 	void LoadSprite () {
-		if (mySprite[spriteIndex]) {
-			this.GetComponent<SpriteRenderer>().sprite = mySprite[spriteIndex];
-		} else {
-			Debug.LogError ("Brick.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch.");
-		}
+		if (mySprite[spriteIndex]) { this.GetComponent<SpriteRenderer>().sprite = mySprite[spriteIndex]; } 
+		else { Debug.LogError ("Brick.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch."); }
 	}
 
 	void Update () {

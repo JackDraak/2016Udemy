@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -29,7 +30,6 @@ public class PlayerController : MonoBehaviour {
 	private float chance;
 	private int shipCount;
 	private Text scoreboard;
-//	private Text scoreText;
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		Debug.Log(collider);
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
 
-		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<guiText>(); if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>(); if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 		currentColor = new Vector4 (1/colourChange, colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
 
-	//	scoreboard.
+		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
 	void FireBlaster () {
