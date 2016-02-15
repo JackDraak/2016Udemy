@@ -23,9 +23,13 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 tempPos;
 	private float xMax, xMin;
 	private LevelManager levelManager;
+	private Color currentColor;
+	private SpriteRenderer myRenderer;
+	private float chance;
 
 	void OnTriggerEnter2D (Collider2D collider) {
-		if (collider.tag == "EnemyProjectile") {
+		Debug.Log(collider);
+		if (collider.tag == "EnemyBomb") {
 			TakeDamage();
 			Destroy (collider.gameObject);
 		}
@@ -42,9 +46,9 @@ public class PlayerController : MonoBehaviour {
 
 	void ScoreAndDestroy () {
 		// TODO typical time to do a visual & audible effect
-		levelManager.ChangeScore(-500f);
+		levelManager.ChangeScore(-100f);
 		levelManager.RemoveLife();
-		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("GameOver");
+		if (levelManager.GetLives() <= 0) levelManager.LoadLevel("Game Over");
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 	}
 
@@ -78,6 +82,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun"); if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+		myRenderer = 	GetComponent<SpriteRenderer>(); if (!myRenderer) Debug.LogError ("FAIL renderer");
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
@@ -98,6 +103,10 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
 		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
 		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
+
+		float colourChange = (maxHealth - hitPoints) / maxHealth;
+		currentColor = new Vector4 (1/colourChange, colourChange, 1/colourChange, 1f);
+		myRenderer.color = currentColor;
 	}
 
 	void FireBlaster () {

@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour {
 	public GameObject bomb;
 
 	private float chance;
-	private Color currentColor = new Color(0f,0f,0f,1f); // or = Color.black;
+	private Color currentColor;// = new Color(0f,0f,0f,1f); // or = Color.black;
 	private bool armed;
 	private float bombSpeed = 420f;
 	private float fireDelay = 1.4f;
@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour {
 	private LevelManager levelManager;
 	private float hitPoints;
 	private float maxHealth = 222f;
-	private Color offColor = new Color (1f, 0f, 0f, 1f), onColor = new Color (1f, 1f, 1f, 1f);
+//	private Color offColor = new Color (1f, 0f, 0f, 1f), onColor = new Color (1f, 1f, 1f, 1f);
 	private SpriteRenderer myRenderer;
 
 	void Start () {
