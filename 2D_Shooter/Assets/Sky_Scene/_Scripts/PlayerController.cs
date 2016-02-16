@@ -92,6 +92,8 @@ public class PlayerController : MonoBehaviour {
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
+			Quaternion rot = Quaternion.Euler (0f, 0f, 180f);
+			discharge.transform.rotation = rot;
 			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
 			AudioSource.PlayClipAtPoint (zappySound, transform.position);
 			fireTime = Time.time;
