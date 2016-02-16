@@ -36,7 +36,17 @@ public class FormationController : MonoBehaviour {
 
 	void FixedUpdate () {
 		SetNextPos();
-		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+	//	if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+		if (FormationIsEmpty()) {
+			 Debug.Log ("Formation is empty @ " + Time.time);
+			 SpawnEnemies();
+		}
+	}
+
+	bool FormationIsEmpty () {
+		foreach(Transform childPositionGameObject in transform) {
+			if (childPositionGameObject.childCount > 0 ) return false;
+		} return true;
 	}
 
 	public void SpawnEnemies () {

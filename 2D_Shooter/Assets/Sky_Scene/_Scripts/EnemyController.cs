@@ -23,7 +23,7 @@ public class EnemyController : MonoBehaviour {
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		myRenderer = GetComponent<SpriteRenderer>(); 
+		myRenderer = GetComponent<SpriteRenderer>();
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		armed = true;
 		dearmed = false;
@@ -38,8 +38,9 @@ public class EnemyController : MonoBehaviour {
 				armed = !armed;
 			}
 		}
-		float colourChange = (maxHealth - hitPoints) / maxHealth;
-		currentColor = new Vector4 (1/colourChange, 1/colourChange, colourChange, 1f);
+		float colourChange = maxHealth / hitPoints;
+		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		currentColor = new Vector4 (1f, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
 		chance = Random.Range (1, 100);
 		if (chance > 98) armed = !armed;
@@ -48,7 +49,7 @@ public class EnemyController : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "PlayerProjectile") {
 			TakeDamage();
-			Destroy (collider.gameObject);
+			if (collider.gameObject) Destroy (collider.gameObject, 0.01f);
 		}
 	}
 	
@@ -66,7 +67,7 @@ public class EnemyController : MonoBehaviour {
 	
 	void TakeDamage () {
 		// TODO typical time to do a visual effect
-		hitPoints = (hitPoints * 0.65f) - 4f;
+		hitPoints = (hitPoints * 0.90f) - 17f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
@@ -74,6 +75,8 @@ public class EnemyController : MonoBehaviour {
 	// TODO typical time to do a visual effect
 	void ScoreAndDestroy () {
 		// TODO typical time to randomly "drop a bonus"
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();

@@ -71,18 +71,18 @@ public class PlayerController : MonoBehaviour {
 
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
-		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.3f) - 11f);
+		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
 		// TODO typical time to do a visual & audible effect
+		levelManager.PlayerResetHitpoints();
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
-		else levelManager.PlayerResetHitpoints();
 	}
 
 	float SetXClamps (float position) {
