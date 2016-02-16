@@ -10,16 +10,13 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip zappySound;
 
 	private float acceleration;
-	private float bulletSpeed = 420f;
-	private float baseAcceleration;
+	private float bulletSpeed = 10f;
 	private float chance;
 	private Color currentColor;
-	private float fireDelay = 0.2f;
+	private float fireDelay = 0.25f;
 	private float fireTime;
-	private float lateralVelocity;
 	private LevelManager levelManager;
-	private float maxAcceleration = 0.4f;
-	private float maxSpeed = 3f;
+	private float moveSpeed = 20f;
 	private SpriteRenderer myRenderer;
 	private float padding = 0.6f;
 	private GameObject playerGun;
@@ -51,20 +48,18 @@ public class PlayerController : MonoBehaviour {
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
 
-		acceleration = 0f;
-		baseAcceleration = 0.025f;
 		fireTime = Time.time;
-		lateralVelocity = 0f;
-		maxAcceleration = 0.7f;
-		maxSpeed = 5f;
 	}
 
 	void Update () {
 		if (acceleration > 0.001f) acceleration =- 0.01f; 
-		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) SetLeftward();
-		if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) SetRightward();
-		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)) InvokeShot();
-		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.W)) CancelInvoke();
+
+		if (Input.GetAxis("Fire1") > 0.9f) FireBlaster();
+
+		Vector3 myPos = transform.position;
+		myPos.x += Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+		myPos.x = SetXClamps(myPos.x);
+		transform.position = myPos;
 
 		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
@@ -77,9 +72,7 @@ public class PlayerController : MonoBehaviour {
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.3f) - 11f);
-		//hitPoints = (hitPoints * 0.7f) - 11f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-	//	Debug.Log ("PlayerHitPoints: " + hitPoints);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
@@ -92,29 +85,6 @@ public class PlayerController : MonoBehaviour {
 		else levelManager.PlayerResetHitpoints();
 	}
 
-	void SetLeftward () {
-		if (right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-		SetVelocity();
-		SetNextPos();
-	}
-
-	void SetRightward () {
-		if (!right) { right = !right; lateralVelocity = 0f; acceleration = 0f;}
-		SetVelocity();
-		SetNextPos();
-	}
-
-	void SetNextPos () {
-		tempPos = transform.position;
-		if (right) transform.position = new Vector3(SetXClamps(tempPos.x + lateralVelocity), tempPos.y, tempPos.z);
-		else  transform.position = new Vector3(SetXClamps(tempPos.x - lateralVelocity), tempPos.y, tempPos.z);
-	}
-	
-	void SetVelocity () {
-		if (acceleration < maxAcceleration) acceleration = acceleration + baseAcceleration;
-		if (lateralVelocity < maxSpeed) lateralVelocity = lateralVelocity + acceleration;
-
-	}
 	float SetXClamps (float position) {
 		return Mathf.Clamp(position, xMin, xMax);
 	}
@@ -122,7 +92,7 @@ public class PlayerController : MonoBehaviour {
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.identity) as GameObject;
-			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed * Time.deltaTime;
+			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
 			AudioSource.PlayClipAtPoint (zappySound, transform.position);
 			fireTime = Time.time;
 		}

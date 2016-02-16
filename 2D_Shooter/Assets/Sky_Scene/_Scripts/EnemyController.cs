@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip scuttle;
 
 	private bool armed;
-	private float bombSpeed = 360f;
+	private float bombSpeed = 8f;
 	private float chance;
 	private Color currentColor;
 	private bool dearmed;
@@ -55,7 +55,7 @@ public class EnemyController : MonoBehaviour {
 	void DropBomb () {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(bomb, transform.position, Quaternion.identity) as GameObject;
-			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed * Time.deltaTime;
+			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			fireTime = Time.time + Random.Range(0.0f, 4.0f);
 		}

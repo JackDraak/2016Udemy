@@ -9,10 +9,16 @@ public class LevelManager : MonoBehaviour {
 	public static int enemiesRemaining;
 
 	// adjust/set in inspector!
-	public Text creditMessage, loseMessage, startMessage, winMessage;
-	public Button creditButton, startButton, startOverButton;
+	public Button creditButton;
+	public Text creditMessage;
 	public GameObject enemyFormation;
+	public Text loseMessage;
 	public int playerMaxShips = 2;
+	public Button quitButton;
+	public Button startButton;
+	public Text startMessage;
+	public Button startOverButton;
+	public Text winMessage;
 
 	private bool bCredit = false;
 	private FormationController formation;
@@ -37,13 +43,14 @@ public class LevelManager : MonoBehaviour {
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");
-		playerHitPoints = playerMaxHealth;
-		playerShipCount = playerMaxShips;
-		startMessage.gameObject.SetActive(true);
-		startButton.gameObject.SetActive(true);
 		creditButton.gameObject.SetActive(true);
 		creditMessage.gameObject.SetActive(false);
 		loseMessage.gameObject.SetActive(false);
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
+		quitButton.gameObject.SetActive(true);
+		startButton.gameObject.SetActive(true);
+		startMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
 	}
@@ -60,17 +67,21 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 
+	public void EndOfLine() {
+		Application.Quit();
+	}
+
 	public void StartGameButton () {
 		score = 0;
-		startMessage.gameObject.SetActive(false);
-		startButton.gameObject.SetActive(false);
 		creditButton.gameObject.SetActive(false);
 		creditMessage.gameObject.SetActive(false);
+		enemyFormation.gameObject.SetActive(true);
 		loseMessage.gameObject.SetActive(false);
+		quitButton.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-
-		enemyFormation.gameObject.SetActive(true);
 		formation.SpawnEnemies();
 	}
 
@@ -79,15 +90,15 @@ public class LevelManager : MonoBehaviour {
 		score = 0;
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
-		startMessage.gameObject.SetActive(false);
-		startButton.gameObject.SetActive(false);
 		creditButton.gameObject.SetActive(false);
 		creditMessage.gameObject.SetActive(false);
+		enemyFormation.gameObject.SetActive(true);
 		loseMessage.gameObject.SetActive(false);
+		quitButton.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-
-		enemyFormation.gameObject.SetActive(true);
 		formation.SpawnEnemies();
 	}
 
@@ -99,6 +110,7 @@ public class LevelManager : MonoBehaviour {
 
 	public void LoseBattle () {
 		loseMessage.gameObject.SetActive(true);
+		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 
 		formation.Despawner();
@@ -106,8 +118,9 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void WinBattle () {
-		winMessage.gameObject.SetActive(true);
+		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
+		winMessage.gameObject.SetActive(true);
 
 		formation.Despawner();
 		enemyFormation.gameObject.SetActive(false);

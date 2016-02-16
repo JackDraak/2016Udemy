@@ -6,7 +6,6 @@ public class FormationController : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
-	public float speedFactor = 61.3f;
 
 	private float acceleration;
 	private float baseAcceleration;
@@ -14,7 +13,7 @@ public class FormationController : MonoBehaviour {
 	private float lateralVelocity;
 	private LevelManager levelManager;
 	private float maxAcceleration;
-	private float maxSpeed;
+	public float maxSpeed;
 	private float padding = 3.4f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
@@ -35,7 +34,7 @@ public class FormationController : MonoBehaviour {
 		SetMinMaxX();
 	}
 
-	void Update () {
+	void FixedUpdate () {
 		SetNextPos();
 		if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
 	}
