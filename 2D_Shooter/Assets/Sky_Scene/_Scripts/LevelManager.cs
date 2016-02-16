@@ -82,7 +82,7 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.SpawnEnemies();
+		formation.SpawnFormation();
 	}
 
 	public void RestartButton () {
@@ -99,7 +99,7 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.SpawnEnemies();
+		formation.SpawnFormation();
 	}
 
 	public void CreditButton () {

@@ -37,27 +37,53 @@ public class FormationController : MonoBehaviour {
 	void FixedUpdate () {
 		SetNextPos();
 	//	if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+	}
+
+	void Update () {
 		if (FormationIsEmpty()) {
-			 Debug.Log ("Formation is empty @ " + Time.time);
-			 SpawnEnemies();
+			Debug.Log ("Formation is empty @ " + Time.time);
+			SpawnFullFormation();
 		}
 	}
 
 	bool FormationIsEmpty () {
 		foreach(Transform childPositionGameObject in transform) {
-			if (childPositionGameObject.childCount > 0 ) return false;
+			if (childPositionGameObject.childCount > 0) return false;
 		} return true;
 	}
 
-	public void SpawnEnemies () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2");
-		foreach (Transform child in transform) {
-			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-			EnemyAdd(enemy);
-			levelManager.EnemyUp();
-			enemy.transform.parent = child;
+	Transform NextFreePosition () {
+		foreach(Transform childPosition in transform) {
+			if (childPosition.childCount == 0) return childPosition;
+		} return null;
+	}
+
+	void SpawnFullFormation () {
+		while (!FormationIsFull()) {
+			Transform freePos = NextFreePosition();
+			if (freePos) FillPosition(freePos);
 		}
+	}
+
+	bool FormationIsFull () {
+		foreach(Transform childPosition in transform) {
+			if (childPosition.childCount == 0) return false;
+		} return true;
+	}
+
+	public void SpawnFormation () {
+		levelManager = GameObject.FindObjectOfType<LevelManager>();
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2"); // again... why the heck?? what'up LevelManager? You're drunk!
+		foreach (Transform child in transform) {
+			FillPosition(child);
+		}
+	}
+
+	void FillPosition (Transform pos) {
+		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
+		EnemyAdd(enemy);
+		enemy.transform.parent = pos;
+		levelManager.EnemyUp();
 	}
 
 	// TODO this is not working as advertised.... 
@@ -68,14 +94,14 @@ public class FormationController : MonoBehaviour {
 	void ExpungeDeadEnemies () { // TODO clean this up / get rid of it
 		foreach (GameObject enemy in enemies) {
 			if (enemy && !enemy.gameObject.activeSelf) {
-			Destroy (enemy, 0.000001f);
+			Destroy (enemy, 0.001f);
 			}
 		}
 	}
 
 	public void Despawner () {
 		foreach (GameObject enemy in enemies) {
-			Destroy (enemy, 0.000001f);
+			Destroy (enemy, 0.001f);
 		}
 		levelManager.ZeroEnemies();
 	}

@@ -75,7 +75,7 @@ public class EnemyController : MonoBehaviour {
 	// TODO typical time to do a visual effect
 	void ScoreAndDestroy () {
 		// TODO typical time to randomly "drop a bonus"
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
+		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
