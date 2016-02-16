@@ -36,7 +36,11 @@ public class FormationController : MonoBehaviour {
 
 	void FixedUpdate () {
 		SetNextPos();
-	//	if (levelManager.GetEnemies() <= 0) levelManager.WinBattle();
+		// TODO come up with a *good* win condition
+		if (levelManager.GetScore() > 1500f) {
+			levelManager.WinBattle();
+			Despawner();
+		}
 	}
 
 	void Update () {
