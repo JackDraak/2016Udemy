@@ -21,6 +21,7 @@ public class FormationController : MonoBehaviour {
 	private float spawnCount;
 	private float spawnTime;
 	private float spawnDelay = 1f;
+	private bool gameStarted;
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -38,6 +39,12 @@ public class FormationController : MonoBehaviour {
 		SetMinMaxX();
 	}
 
+	public void TriggerRespawn () {
+		respawn = true;
+		gameStarted = true;
+		Invoke ("Respawn", 1.2f);
+	}
+
 	void FixedUpdate () {
 		SetNextPos();
 		// TODO come up with a *good* win condition
@@ -46,28 +53,9 @@ public class FormationController : MonoBehaviour {
 			levelManager.WinBattle();
 		}
 
-		if (FormationIsEmpty()) {
-			Debug.Log ("Formation is empty @ " + Time.time);
-			respawn = true;
-			spawnTime = Time.time;
-		}
-
-		if (FormationIsFull()) { respawn = false; spawnCount = 0; }
-
-		if (respawn) {
-			Invoke("ToggleRespawn", 0.5f);
-		//	FillEmptyPosition();
-		}
-	}
-
-	void ToggleRespawn () {
-		respawn = !false;
-		Invoke("FillEmptyPosition", spawnCount);
-	}
-
-
-	void NeoSpawner () {
-				if  (!FormationIsFull()) Invoke ("FillEmptyPosition", Random.Range(0.5f, 2.5f));
+	//	if (FormationIsFull()) { respawn = false; }
+		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
+		if (spawnCount == 0 && !respawn && gameStarted)  { TriggerRespawn(); }
 	}
 
 	void FillEmptyPosition () { 
@@ -89,25 +77,16 @@ public class FormationController : MonoBehaviour {
 		} return null;
 	}
 
-	void SpawnFullFormation () {
-		while (!FormationIsFull()) {
-			Transform freePos = NextFreePosition();
-			if (freePos) FillPosition(freePos);
-		}
+	void Respawn () {
+		Transform freePos = NextFreePosition();
+		if (freePos) FillPosition(freePos);
+		if (NextFreePosition()) Invoke("Respawn", 0.7f);
 	}
 
 	bool FormationIsFull () {
 		foreach(Transform childPosition in transform) {
 			if (childPosition.childCount == 0) return false;
 		} return true;
-	}
-
-	public void SpawnFormation () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-			if (!levelManager) { Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2"); } // again... why the heck?? what'up LevelManager? You're drunk!
-		foreach (Transform child in transform) {
-			FillPosition(child);
-		}
 	}
 
 	void FillPosition (Transform pos) {
@@ -121,7 +100,6 @@ public class FormationController : MonoBehaviour {
 	// the used game objects linger in the effects "folder" game object **some scenes are okay?
 	private ArrayList enemies = new ArrayList();
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
-
 	void ExpungeDeadEnemies () { // TODO clean this up / get rid of it
 		foreach (GameObject enemy in enemies) {
 			if (enemy && !enemy.gameObject.activeSelf) {

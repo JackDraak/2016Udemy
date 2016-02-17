@@ -69,6 +69,10 @@ public class PlayerController : MonoBehaviour {
 		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
+	void SpawnPlayer () {
+		transform.gameObject.SetActive(true);		
+	}
+
 	void TakeDamage () {
 		// TODO typical time to do a visual & audible effect
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
@@ -78,11 +82,13 @@ public class PlayerController : MonoBehaviour {
 
 	void ScoreAndDestroy () {
 		// TODO typical time to do a visual & audible effect
+		transform.gameObject.SetActive(false);
 		levelManager.PlayerResetHitpoints();
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
+		else Invoke("SpawnPlayer", 1.5f);
 	}
 
 	float SetXClamps (float position) {

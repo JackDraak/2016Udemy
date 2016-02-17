@@ -71,8 +71,6 @@ public class LevelManager : MonoBehaviour {
 		else extra_03.gameObject.SetActive(false);
 		if (playerShipCount > 4) extra_04.gameObject.SetActive(true);
 		else extra_04.gameObject.SetActive(false);
-
-		Debug.Log (Time.time + ": " + playerShipCount);
 	}
 
 	// TODO this is not working as advertised.... 
@@ -102,7 +100,7 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.SpawnFormation();
+		formation.TriggerRespawn();
 	}
 
 	public void RestartButton () {
@@ -119,7 +117,7 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.SpawnFormation();
+		formation.TriggerRespawn();
 	}
 
 	public void CreditButton () {
