@@ -5,15 +5,19 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
-	public static float score;
 	public static int enemiesRemaining;
+	public static float score;
 
 	// adjust/set in inspector!
 	public Button creditButton;
 	public Text creditMessage;
 	public GameObject enemyFormation;
+	public GameObject extra_01;
+	public GameObject extra_02;
+	public GameObject extra_03;
+	public GameObject extra_04;
 	public Text loseMessage;
-	public int playerMaxShips = 2;
+	public int playerMaxShips;
 	public Button quitButton;
 	public Button startButton;
 	public Text startMessage;
@@ -53,6 +57,22 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
+		ShowMyShips();
+	}
+
+	void Update () { ShowMyShips(); }
+
+	void ShowMyShips() {
+		if (playerShipCount > 1) extra_01.gameObject.SetActive(true);
+		else extra_01.gameObject.SetActive(false);
+		if (playerShipCount > 2) extra_02.gameObject.SetActive(true);
+		else  extra_02.gameObject.SetActive(false);
+		if (playerShipCount > 3) extra_03.gameObject.SetActive(true);
+		else extra_03.gameObject.SetActive(false);
+		if (playerShipCount > 4) extra_04.gameObject.SetActive(true);
+		else extra_04.gameObject.SetActive(false);
+
+		Debug.Log (Time.time + ": " + playerShipCount);
 	}
 
 	// TODO this is not working as advertised.... 

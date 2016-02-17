@@ -17,13 +17,17 @@ public class FormationController : MonoBehaviour {
 	private float padding = 3.4f;
 	private Vector3 tempPos;
 	private float xMax, xMin;
+	private bool respawn;
+	private float spawnCount;
+	private float spawnTime;
+	private float spawnDelay = 1f;
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
@@ -37,16 +41,39 @@ public class FormationController : MonoBehaviour {
 	void FixedUpdate () {
 		SetNextPos();
 		// TODO come up with a *good* win condition
-		if (levelManager.GetScore() > 1500f) {
-			levelManager.WinBattle();
+		if (levelManager.GetScore() > 5000f) {
 			Despawner();
+			levelManager.WinBattle();
+		}
+
+		if (FormationIsEmpty()) {
+			Debug.Log ("Formation is empty @ " + Time.time);
+			respawn = true;
+			spawnTime = Time.time;
+		}
+
+		if (FormationIsFull()) { respawn = false; spawnCount = 0; }
+
+		if (respawn) {
+			Invoke("ToggleRespawn", 0.5f);
+		//	FillEmptyPosition();
 		}
 	}
 
-	void Update () {
-		if (FormationIsEmpty()) {
-			Debug.Log ("Formation is empty @ " + Time.time);
-			SpawnFullFormation();
+	void ToggleRespawn () {
+		respawn = !false;
+		Invoke("FillEmptyPosition", spawnCount);
+	}
+
+
+	void NeoSpawner () {
+				if  (!FormationIsFull()) Invoke ("FillEmptyPosition", Random.Range(0.5f, 2.5f));
+	}
+
+	void FillEmptyPosition () { 
+		if(!FormationIsFull()) {
+			FillPosition(NextFreePosition());
+			spawnCount++;
 		}
 	}
 
@@ -77,7 +104,7 @@ public class FormationController : MonoBehaviour {
 
 	public void SpawnFormation () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2"); // again... why the heck?? what'up LevelManager? You're drunk!
+			if (!levelManager) { Debug.LogError ("LEVEL_MANAGER_FAIL_Stage2"); } // again... why the heck?? what'up LevelManager? You're drunk!
 		foreach (Transform child in transform) {
 			FillPosition(child);
 		}
