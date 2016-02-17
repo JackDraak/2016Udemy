@@ -18,9 +18,8 @@ public class FormationController : MonoBehaviour {
 	private Vector3 tempPos;
 	private float xMax, xMin;
 	private bool respawn;
-	private float spawnCount;
 	private float spawnTime;
-	private float spawnDelay = 1f;
+	public float spawnDelay = 1f;
 	private bool gameStarted;
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
@@ -42,7 +41,7 @@ public class FormationController : MonoBehaviour {
 	public void TriggerRespawn () {
 		respawn = true;
 		gameStarted = true;
-		Invoke ("Respawn", 1.2f);
+		Invoke ("Respawn", spawnDelay);
 	}
 
 	void FixedUpdate () {
@@ -53,16 +52,10 @@ public class FormationController : MonoBehaviour {
 			levelManager.WinBattle();
 		}
 
-	//	if (FormationIsFull()) { respawn = false; }
+		if (FormationIsFull()) { respawn = false; }
 		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
-		if (spawnCount == 0 && !respawn && gameStarted)  { TriggerRespawn(); }
-	}
+		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted)  { TriggerRespawn(); }
 
-	void FillEmptyPosition () { 
-		if(!FormationIsFull()) {
-			FillPosition(NextFreePosition());
-			spawnCount++;
-		}
 	}
 
 	bool FormationIsEmpty () {
@@ -80,7 +73,7 @@ public class FormationController : MonoBehaviour {
 	void Respawn () {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
-		if (NextFreePosition()) Invoke("Respawn", 0.7f);
+		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
 	}
 
 	bool FormationIsFull () {

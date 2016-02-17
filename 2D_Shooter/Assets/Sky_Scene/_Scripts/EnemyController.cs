@@ -80,7 +80,7 @@ public class EnemyController : MonoBehaviour {
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
-		Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
+	//	Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
 		Destroy(this.gameObject, 0.001f);
 	}
 }
