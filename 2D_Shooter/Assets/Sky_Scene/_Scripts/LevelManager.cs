@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour {
 	public GameObject extra_04;
 	public Text loseMessage;
 	public int playerMaxShips;
+	public GameObject playerShip;
 	public Button quitButton;
 	public Button startButton;
 	public Text startMessage;
@@ -112,6 +113,7 @@ public class LevelManager : MonoBehaviour {
 		creditMessage.gameObject.SetActive(false);
 		enemyFormation.gameObject.SetActive(true);
 		loseMessage.gameObject.SetActive(false);
+		playerShip.SetActive(true);
 		quitButton.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
 		startMessage.gameObject.SetActive(false);
