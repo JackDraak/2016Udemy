@@ -1,4 +1,12 @@
-﻿// 2D Sky FREE version: 1.0
+﻿// Disclaimer:
+// I have altered the art assets from this package slightly, and while
+// at first glance it may appear to be used mostly "as-is", you will NOT
+// get the results you see in my game from this asset package "right out 
+// of the box."
+//
+// ^JackDraak
+
+// 2D Sky FREE version: 1.0
 // Author: Gold Experience Team (http://ge-team.com/pages/unity-3d/)
 // Support: geteamdev@gmail.com
 // Please direct any bugs/comments/suggestions to geteamdev@gmail.com
