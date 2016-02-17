@@ -6,10 +6,12 @@ public class FormationController : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
+	public float spawnDelay = 0.8f;
 
 	private float acceleration;
 	private float baseAcceleration;
 	private bool decelerate, right, shoot;
+	private bool gameStarted;
 	private float lateralVelocity;
 	private LevelManager levelManager;
 	private float maxAcceleration;
@@ -19,8 +21,6 @@ public class FormationController : MonoBehaviour {
 	private float xMax, xMin;
 	private bool respawn;
 	private float spawnTime;
-	public float spawnDelay = 1f;
-	private bool gameStarted;
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
