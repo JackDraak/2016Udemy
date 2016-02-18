@@ -10,13 +10,13 @@ public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 
-	private float acceleration, bulletSpeed, chance, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
+	private float acceleration, bulletSpeed, chance, driftScale, driftSpeed, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
-	private bool right;
-	private Vector3 tempPos;
+	private bool right, up;
+	private Vector3 myScale, tempPos;
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "EnemyBomb") {
@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour {
 		moveSpeed = 20f;
 		padding = 0.6f;
 
+		driftScale = 1f;
+		driftSpeed = 0.0017f;
+
 		fireTime = Time.time;
 	}
 
@@ -61,6 +64,21 @@ public class PlayerController : MonoBehaviour {
 		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
 		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
+	}
+
+	// drifter
+	void FixedUpdate () {
+		// toggle direction / set boundary
+		if (driftScale <= 0.97) up = true;
+		if (driftScale >= 1.03) up = false;
+
+		// adjust scale
+		if (up) driftScale += driftSpeed;
+		else driftScale -= driftSpeed;
+
+		// scale
+		myScale = new Vector3 (driftScale, driftScale, 1);
+		transform.localScale = myScale;
 	}
 
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }

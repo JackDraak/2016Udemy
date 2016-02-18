@@ -10,9 +10,9 @@ public class FormationController : MonoBehaviour {
 	public GameObject resetButton;
 
 	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
-	private bool decelerate, gameStarted, respawn, right, shoot;
+	private bool afterMatch, decelerate, gameStarted, respawn, right, shoot;
 	private ArrayList enemies;
-	private int waveNumber;
+	private int finalWave, waveNumber;
 	private LevelManager levelManager;
 	private Vector3 tempPos;
 
@@ -31,6 +31,7 @@ public class FormationController : MonoBehaviour {
 		baseAcceleration = 0.00010f;
 		decelerate = true;
 		enemies = new ArrayList();
+		finalWave = 42;
 		waveNumber = 1;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
@@ -47,14 +48,24 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		SetNextPos();
 		// TODO come up with a *good* win condition
-		if (levelManager.GetScore() > 300f) {
+		if (levelManager.GetScore() > 50000f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
-		bool afterMatch = resetButton.activeSelf;
 
+		// win after X waves?
+		if (waveNumber == finalWave && FormationIsEmpty()) {
+			Despawner();
+			levelManager.WinBattle();
+		}
+
+
+		// formation motion
+		SetNextPos();
+
+		// formation spawn control
+		afterMatch = resetButton.activeSelf;
 		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch) { TriggerRespawn(); }
@@ -77,7 +88,7 @@ public class FormationController : MonoBehaviour {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (FormationIsFull()) waveNumber++;
+		else if (FormationIsFull() && waveNumber < finalWave) waveNumber++;
 	}
 
 	bool FormationIsFull () {
