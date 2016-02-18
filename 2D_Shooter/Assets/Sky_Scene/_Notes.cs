@@ -6,7 +6,9 @@ public class _Notes : MonoBehaviour {
 
 	things to do:
 
-		@ lecture 118?
+		@ lecture 117 - sound effects
+
+
 
 		animate extra ships
 		drop health
