@@ -6,25 +6,18 @@ public class PlayerController : MonoBehaviour {
 	// adjust/set in inspector!
 	public AudioClip damage;
 	public AudioClip scuttle;
+	public GameObject smokeMachine;
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
-	public GameObject smokeMachine;
 
-	private float acceleration;
-	private float bulletSpeed = 10f;
-	private float chance;
+	private float acceleration, bulletSpeed, chance, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
 	private Color currentColor;
-	private float fireDelay = 0.25f;
-	private float fireTime;
 	private LevelManager levelManager;
-	private float moveSpeed = 20f;
 	private SpriteRenderer myRenderer;
-	private float padding = 0.6f;
 	private GameObject playerGun;
 	private bool right;
 	private Text scoreboard;
 	private Vector3 tempPos;
-	private float xMax, xMin;
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "EnemyBomb") {
@@ -49,35 +42,38 @@ public class PlayerController : MonoBehaviour {
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
 
+		bulletSpeed = 10f;
+		fireDelay = 0.25f;
+		moveSpeed = 20f;
+		padding = 0.6f;
+
 		fireTime = Time.time;
 	}
 
 	void Update () {
-		if (acceleration > 0.001f) acceleration =- 0.01f; 
-
+		// fire control
 		if (Input.GetAxis("Fire1") > 0.9f) FireBlaster();
 
+		// movement
 		Vector3 myPos = transform.position;
 		myPos.x += Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
 		myPos.x = SetXClamps(myPos.x);
 		transform.position = myPos;
 
-		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
 		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
 
+		// TODO migrate this to LevelManager
 		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
-	void Unwind () { smokeMachine.SetActive(false); }
+	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
-	void SpawnPlayer () {
-		transform.gameObject.SetActive(true);		
-	}
+	void SpawnPlayer () { transform.gameObject.SetActive(true); }
 
 	void TakeDamage () {
-		// TODO typical time to do a visual & audible effect
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject smoke = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
@@ -85,7 +81,6 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void ScoreAndDestroy () {
-		// TODO typical time to do a visual & audible effect
 		transform.gameObject.SetActive(false);
 		levelManager.PlayerResetHitpoints();
 		levelManager.ChangeScore(-100f);
@@ -93,10 +88,6 @@ public class PlayerController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
 		else Invoke("SpawnPlayer", 1.5f);
-	}
-
-	float SetXClamps (float position) {
-		return Mathf.Clamp(position, xMin, xMax);
 	}
 
 	void FireBlaster () {
@@ -108,9 +99,5 @@ public class PlayerController : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (zappySound, transform.position);
 			fireTime = Time.time;
 		}
-	}
-
-	void InvokeShot () {
-		InvokeRepeating ("FireBlaster", fireDelay, fireDelay);
 	}
 }

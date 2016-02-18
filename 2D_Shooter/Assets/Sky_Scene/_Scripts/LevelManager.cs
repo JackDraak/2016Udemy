@@ -28,7 +28,7 @@ public class LevelManager : MonoBehaviour {
 	private bool bCredit = false;
 	private FormationController formation;
 	private float playerHitPoints;
-	private float playerMaxHealth = 710f;
+	private float playerMaxHealth;
 	private int playerShipCount;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
@@ -48,6 +48,8 @@ public class LevelManager : MonoBehaviour {
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");
+		playerMaxHealth = 710f;
+
 		creditButton.gameObject.SetActive(true);
 		creditMessage.gameObject.SetActive(false);
 		loseMessage.gameObject.SetActive(false);
@@ -62,6 +64,14 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Update () { ShowMyShips(); }
+	
+	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
+	public void EndOfLine() { Application.Quit(); }
+	public float GetScore () { return score; }
+	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
+	
+	void ConfigureAnyLevel () { Cursor.visible = true; }
+	void ConfigureSkyGame () {	Cursor.visible = false;	}
 
 	void ShowMyShips() {
 		if (playerShipCount > 1) extra_01.gameObject.SetActive(true);
@@ -72,22 +82,6 @@ public class LevelManager : MonoBehaviour {
 		else extra_03.gameObject.SetActive(false);
 		if (playerShipCount > 4) extra_04.gameObject.SetActive(true);
 		else extra_04.gameObject.SetActive(false);
-	}
-
-	// TODO this is not working as advertised.... 
-	// the used game objects linger in the effects "folder" game object **some scenes are okay?
-	private ArrayList deadEffects = new ArrayList();
-	public void EffectAdd (GameObject preDE) { deadEffects.Add (preDE); }
-	void ExpungeDeadEffects () {
-		foreach (GameObject de in deadEffects) { // more stuff for REE
-			if (de && !de.GetComponent<ParticleSystem>().IsAlive()) {
-				Destroy (de);
-			}
-		}
-	}
-
-	public void EndOfLine() {
-		Application.Quit();
 	}
 
 	public void StartGameButton () {
@@ -146,13 +140,6 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(false);
 	}
 
-	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
-
-	void ConfigureAnyLevel () { Cursor.visible = true; }
-	void ConfigureSkyGame () {	Cursor.visible = false;	}
-	public float GetScore () { return score; }
-	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
-
 	public void LoadLevel(string name){
 		StoreHighs();
 		ConfigureAnyLevel();
@@ -168,32 +155,4 @@ public class LevelManager : MonoBehaviour {
 	void StoreHighs () {
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 	}
-
-/*	public void ShowMyBalls () {
-		if (GameObject.FindGameObjectWithTag ("ball1")) {
-			ball1 = GameObject.FindGameObjectWithTag ("ball1").GetComponent<SpriteRenderer>();
-			if (ballCount > 0) ball1.color = onColor;
-			if (ballCount < 1) ball1.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball2")) {
-			ball2 = GameObject.FindGameObjectWithTag ("ball2").GetComponent<SpriteRenderer>();
-			if (ballCount > 1) ball2.color = onColor;
-			if (ballCount < 2) ball2.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball3")) {
-			ball3 = GameObject.FindGameObjectWithTag ("ball3").GetComponent<SpriteRenderer>();
-			if (ballCount > 2) ball3.color = onColor;
-			if (ballCount < 3) ball3.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball4")) {
-			ball4 = GameObject.FindGameObjectWithTag ("ball4").GetComponent<SpriteRenderer>();
-			if (ballCount > 3) ball4.color = onColor;
-			if (ballCount < 4) ball4.color = offColor;
-		}
-		if (GameObject.FindGameObjectWithTag ("ball5")) {
-			ball5 = GameObject.FindGameObjectWithTag ("ball5").GetComponent<SpriteRenderer>();
-			if (ballCount > 4) ball5.color = onColor;
-			if (ballCount < 5) ball5.color = offColor;
-		}
-	} */
 }

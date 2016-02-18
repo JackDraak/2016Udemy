@@ -8,19 +8,13 @@ public class FormationController : MonoBehaviour {
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
 
-	private float acceleration;
-	private float baseAcceleration;
-	private bool decelerate, right, shoot;
-	private bool gameStarted;
-	private float lateralVelocity;
+	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
+	private bool decelerate, gameStarted, respawn, right, shoot;
+	private ArrayList enemies = new ArrayList();
 	private LevelManager levelManager;
-	private float maxAcceleration;
-	public float maxSpeed;
-	private float padding = 3.4f;
 	private Vector3 tempPos;
-	private float xMax, xMin;
-	private bool respawn;
-	private float spawnTime;
+
+	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -28,12 +22,14 @@ public class FormationController : MonoBehaviour {
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
+
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
 		maxSpeed = 0.19f;
+		padding = 3.4f;
 		right = true;
 		SetMinMaxX();
 	}
@@ -47,7 +43,7 @@ public class FormationController : MonoBehaviour {
 	void FixedUpdate () {
 		SetNextPos();
 		// TODO come up with a *good* win condition
-		if (levelManager.GetScore() > 3500f) {
+		if (levelManager.GetScore() > 10000f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
@@ -85,18 +81,6 @@ public class FormationController : MonoBehaviour {
 		EnemyAdd(enemy);
 		enemy.transform.parent = pos;
 		levelManager.EnemyUp();
-	}
-
-	// TODO this is not working as advertised.... 
-	// the used game objects linger in the effects "folder" game object **some scenes are okay?
-	private ArrayList enemies = new ArrayList();
-	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
-	void ExpungeDeadEnemies () { // TODO clean this up / get rid of it
-		foreach (GameObject enemy in enemies) {
-			if (enemy && !enemy.gameObject.activeSelf) {
-			Destroy (enemy, 0.001f);
-			}
-		}
 	}
 
 	public void Despawner () {

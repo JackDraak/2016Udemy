@@ -9,16 +9,10 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip scuttle;
 	public GameObject puffMachine;
 
-	private bool armed;
-	private float bombSpeed = 6f;
-	private float chance;
+	private bool armed, dearmed;
+	private float bombSpeed, chance, fireDelay, fireTime, hitPoints, maxHealth;
 	private Color currentColor;
-	private bool dearmed;
-	private float fireDelay = 1.4f;
-	private float fireTime;
-	private float hitPoints;
 	private LevelManager levelManager;
-	private float maxHealth = 111f; // TODO tweak this
 	private SpriteRenderer myRenderer;
 
 	void Start () {
@@ -27,22 +21,30 @@ public class EnemyController : MonoBehaviour {
 		myRenderer = GetComponent<SpriteRenderer>();
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		armed = true;
+		bombSpeed = 6f;
 		dearmed = false;
+		fireDelay = 1.4f;
 		fireTime = Time.time;
+		maxHealth = 111f;
 		hitPoints = maxHealth;
 	}
 
 	void Update () {
+		// fire control
 		if (!dearmed) {
 			if (!armed) {
 				InvokeRepeating ("DropBomb", fireDelay, fireDelay);
 				armed = !armed;
 			}
 		}
+
+		// haptic health indicator
 		float colourChange = maxHealth / hitPoints;
 		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		currentColor = new Vector4 (1f, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
+
+		// fire control reset
 		chance = Random.Range (1, 100);
 		if (chance > 98) armed = !armed;
 	}
@@ -64,17 +66,16 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	public void Disarm () { dearmed = true; }
+
 	public void Rearm () { dearmed = false; }
 	
 	void TakeDamage () {
-		// TODO typical time to do a visual effect
 		hitPoints = (hitPoints * 0.90f) - 17f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject smoke = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
-	// TODO typical time to do a visual effect
 	void ScoreAndDestroy () {
 		// TODO typical time to randomly "drop a bonus"
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
@@ -82,7 +83,6 @@ public class EnemyController : MonoBehaviour {
 		levelManager.ChangeScore(100f);
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
-	//	Debug.Log (this.gameObject + " DestroyMessage @ " + Time.time);
 		Destroy(this.gameObject, 0.001f);
 	}
 }
