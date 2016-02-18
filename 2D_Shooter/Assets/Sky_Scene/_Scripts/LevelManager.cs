@@ -30,7 +30,7 @@ public class LevelManager : MonoBehaviour {
 	private float playerHitPoints;
 	private float playerMaxHealth;
 	private int playerShipCount;
-	private Text scoreboard;
+	private Text scoreboard, waveboard;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }
@@ -52,6 +52,8 @@ public class LevelManager : MonoBehaviour {
 			if (!formation) Debug.Log ("formation 2 pickup error");
 		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
 			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+		waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
+			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
 
 		playerMaxHealth = 710f;
 		playerHitPoints = playerMaxHealth;
@@ -63,6 +65,7 @@ public class LevelManager : MonoBehaviour {
 		startButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(false);
+		waveboard.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
 		ShowMyShips();
 	}
@@ -71,7 +74,14 @@ public class LevelManager : MonoBehaviour {
 		ShowMyShips();
 		scoreboard.text = ("Score: " + score); 
 	}
-	
+
+	public void ShowWave () { 
+		waveboard.gameObject.SetActive(true);
+		int waveNumber = formation.GetWaveNumber();
+		waveboard.text = waveNumber.ToString();
+	}
+
+	public void HideWave () { waveboard.gameObject.SetActive(false); }
 	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
 	public void EndOfLine() { Application.Quit(); }
 	public float GetScore () { return score; }

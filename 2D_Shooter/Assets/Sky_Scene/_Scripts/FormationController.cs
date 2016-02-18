@@ -10,11 +10,13 @@ public class FormationController : MonoBehaviour {
 
 	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
 	private bool decelerate, gameStarted, respawn, right, shoot;
-	private ArrayList enemies = new ArrayList();
+	private ArrayList enemies;
+	private int waveNumber;
 	private LevelManager levelManager;
 	private Vector3 tempPos;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
+	public int GetWaveNumber () { return waveNumber; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -26,6 +28,8 @@ public class FormationController : MonoBehaviour {
 		acceleration = 0f;
 		baseAcceleration = 0.00010f;
 		decelerate = true;
+		enemies = new ArrayList();
+		waveNumber = 1;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
 		maxSpeed = 0.19f;
@@ -35,6 +39,7 @@ public class FormationController : MonoBehaviour {
 	}
 
 	public void TriggerRespawn () {
+		levelManager.ShowWave();
 		respawn = true;
 		gameStarted = true;
 		Invoke ("Respawn", spawnDelay);
@@ -47,7 +52,7 @@ public class FormationController : MonoBehaviour {
 			Despawner();
 			levelManager.WinBattle();
 		}
-		if (FormationIsFull()) { respawn = false; }
+		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
 		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
 		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted) { TriggerRespawn(); }
 	}
@@ -68,6 +73,7 @@ public class FormationController : MonoBehaviour {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
+		else waveNumber++;
 	}
 
 	bool FormationIsFull () {
