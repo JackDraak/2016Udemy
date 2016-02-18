@@ -8,10 +8,8 @@ public class FormationController : MonoBehaviour {
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
 
-	public int lastWave = 10;
-
 	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
-	private bool decelerate, finalWave, gameStarted, respawn, right, shoot;
+	private bool decelerate, gameStarted, respawn, right, shoot;
 	private ArrayList enemies;
 	private int waveNumber;
 	private LevelManager levelManager;
@@ -48,19 +46,13 @@ public class FormationController : MonoBehaviour {
 
 	void FixedUpdate () {
 		SetNextPos();
-/*		// TODO come up with a *good* win condition
+		// TODO come up with a *good* win condition
 		if (levelManager.GetScore() > 10000f) {
 			Despawner();
 			levelManager.WinBattle();
-		} */
-		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
-		if (FormationIsEmpty() && !respawn && !finalWave) { TriggerRespawn(); }
-		else if (finalWave && FormationIsEmpty()) {
-			levelManager.HideWave();
-			waveNumber = 1;
-			finalWave = false;
-			levelManager.WinBattle();
 		}
+		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
+		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
 		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted) { TriggerRespawn(); }
 	}
 
@@ -81,8 +73,7 @@ public class FormationController : MonoBehaviour {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (waveNumber < lastWave) waveNumber++;
-			else finalWave = true;
+		else waveNumber++;
 	}
 
 	bool FormationIsFull () {

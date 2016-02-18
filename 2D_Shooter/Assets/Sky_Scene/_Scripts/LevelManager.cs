@@ -78,7 +78,7 @@ public class LevelManager : MonoBehaviour {
 	public void ShowWave () { 
 		waveboard.gameObject.SetActive(true);
 		int waveNumber = formation.GetWaveNumber();
-		waveboard.text = waveNumber.ToString() + "/10";
+		waveboard.text = waveNumber.ToString();
 	}
 
 	public void HideWave () { waveboard.gameObject.SetActive(false); }
@@ -130,7 +130,6 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.Despawner();
 		formation.TriggerRespawn();
 	}
 
@@ -150,7 +149,6 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void WinBattle () {
-		waveboard.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 		winMessage.gameObject.SetActive(true);
