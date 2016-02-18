@@ -7,6 +7,7 @@ public class FormationController : MonoBehaviour {
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
+	public GameObject resetButton;
 
 	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
 	private bool decelerate, gameStarted, respawn, right, shoot;
@@ -17,6 +18,7 @@ public class FormationController : MonoBehaviour {
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 	public int GetWaveNumber () { return waveNumber; }
+	public void ResetWaveNumber () { waveNumber = 1; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -47,13 +49,15 @@ public class FormationController : MonoBehaviour {
 	void FixedUpdate () {
 		SetNextPos();
 		// TODO come up with a *good* win condition
-		if (levelManager.GetScore() > 10000f) {
+		if (levelManager.GetScore() > 300f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
+		bool afterMatch = resetButton.activeSelf;
+
 		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
-		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
-		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted) { TriggerRespawn(); }
+		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
+		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch) { TriggerRespawn(); }
 	}
 
 	bool FormationIsEmpty () {
@@ -73,7 +77,7 @@ public class FormationController : MonoBehaviour {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
-		else waveNumber++;
+		else if (FormationIsFull()) waveNumber++;
 	}
 
 	bool FormationIsFull () {

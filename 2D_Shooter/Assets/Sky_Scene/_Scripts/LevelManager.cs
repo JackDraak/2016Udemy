@@ -112,7 +112,9 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
+		formation.ResetWaveNumber();
 		formation.TriggerRespawn();
+
 	}
 
 	public void RestartButton () {
@@ -130,6 +132,7 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
+		formation.ResetWaveNumber();
 		formation.TriggerRespawn();
 	}
 
