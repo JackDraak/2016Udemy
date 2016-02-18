@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour {
 	private Color currentColor;
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
+	private Vector3 myScale;
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); 

@@ -66,11 +66,11 @@ public class PlayerController : MonoBehaviour {
 		myRenderer.color = currentColor;
 	}
 
-	// drifter
+	// scale-drifter to give floating appearance to player
 	void FixedUpdate () {
 		// toggle direction / set boundary
-		if (driftScale <= 0.97) up = true;
-		if (driftScale >= 1.03) up = false;
+		if (driftScale <= 0.98) up = true;
+		if (driftScale >= 1.02) up = false;
 
 		// adjust scale
 		if (up) driftScale += driftSpeed;
