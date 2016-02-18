@@ -6,15 +6,19 @@ public class _Notes : MonoBehaviour {
 
 	things to do:
 
-		@ lecture 111
+		@ lecture 118?
+
+		animate extra ships
+		drop health
+		drop power-ups / after giving a power-up ability...., duh :)
+
+		double-check that there is consistent audio when enemy && player weapons fire && hit
 
 		enemy formation now moving in fixedUpdate - does this fully resomve issues around
-			framerate independence?
+			framerate independence? I believe so....
 
 		fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
-		add visual effects for damage to enemy && player
-		double-check that there is consistent audio when enemy && player weapons fire && hit
 
 
 */

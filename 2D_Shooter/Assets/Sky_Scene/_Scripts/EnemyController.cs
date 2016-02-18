@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip bombSound;
 	public AudioClip damage;
 	public AudioClip scuttle;
+	public GameObject puffMachine;
 
 	private bool armed;
 	private float bombSpeed = 6f;
@@ -69,6 +70,7 @@ public class EnemyController : MonoBehaviour {
 		// TODO typical time to do a visual effect
 		hitPoints = (hitPoints * 0.90f) - 17f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
+		GameObject smoke = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
