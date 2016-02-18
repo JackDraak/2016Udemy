@@ -72,7 +72,7 @@ public class EnemyController : MonoBehaviour {
 	void TakeDamage () {
 		hitPoints = (hitPoints * 0.90f) - 17f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		GameObject smoke = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
+		GameObject trash = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 

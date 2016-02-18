@@ -10,7 +10,7 @@ public class _Notes : MonoBehaviour {
 
 
 
-		animate extra ships
+		animate extra ships?
 		drop health
 		drop power-ups / after giving a power-up ability...., duh :)
 

@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour {
 	void TakeDamage () {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		GameObject smoke = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
+		GameObject trash = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
