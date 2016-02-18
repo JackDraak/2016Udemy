@@ -25,12 +25,13 @@ public class LevelManager : MonoBehaviour {
 	public Button startOverButton;
 	public Text winMessage;
 
-	private bool bCredit = false;
+	private bool bCredit, showFramerate;
 	private FormationController formation;
 	private float playerHitPoints;
 	private float playerMaxHealth;
-	private int playerShipCount;
-	private Text scoreboard, waveboard;
+	private int playerShipCount, totalFrames;
+	private Text frameboard, scoreboard, waveboard;
+	private float deltaTime, fps, fpsAverage, totalFrameTime;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }
@@ -50,6 +51,8 @@ public class LevelManager : MonoBehaviour {
 
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");
+		frameboard = GameObject.FindWithTag("Frameboard").GetComponent<Text>();
+			if (!frameboard) Debug.LogError("FAIL tag Frameboard");
 		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
 			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
 		waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
@@ -58,6 +61,7 @@ public class LevelManager : MonoBehaviour {
 		playerMaxHealth = 710f;
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
+		bCredit = false;
 		creditButton.gameObject.SetActive(true);
 		creditMessage.gameObject.SetActive(false);
 		loseMessage.gameObject.SetActive(false);
@@ -68,11 +72,33 @@ public class LevelManager : MonoBehaviour {
 		waveboard.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
 		ShowMyShips();
+		fps = 0.0f;
+		showFramerate = true; // TODO turn off for relase
+		totalFrames = 0;
+		totalFrameTime = 0f;
 	}
 
 	void Update () { 
 		ShowMyShips();
 		scoreboard.text = ("Score: " + score); 
+
+		// frame rate
+		deltaTime += Time.deltaTime;
+		deltaTime /= 2.0f;
+		fps = 1.0f/deltaTime;
+		totalFrameTime += deltaTime;
+		totalFrames++;
+		fpsAverage = totalFrames/totalFrameTime;
+		if (Input.GetKeyDown(KeyCode.F)) showFramerate = !showFramerate;
+		if (showFramerate) {
+			float myFPS = Mathf.Round(fps);
+			float myMean = Mathf.Round(fpsAverage);
+			frameboard.text = myFPS.ToString() + "/" + myMean.ToString() + " (fps/mean)\n[F to hide/show]";
+		} else frameboard.text = "";
+		if (totalFrameTime >= 3.0f) {
+			totalFrames = 0;
+			totalFrameTime = 0;
+		}
 	}
 
 	public void ShowWave () { 
