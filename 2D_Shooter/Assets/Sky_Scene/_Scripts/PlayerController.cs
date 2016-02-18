@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip scuttle;
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
+	public GameObject smokeMachine;
 
 	private float acceleration;
 	private float bulletSpeed = 10f;
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour {
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
 			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+	//	smokeMachine.SetActive(false);
 
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
@@ -69,6 +71,8 @@ public class PlayerController : MonoBehaviour {
 		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
+	void Unwind () { smokeMachine.SetActive(false); }
+
 	void SpawnPlayer () {
 		transform.gameObject.SetActive(true);		
 	}
@@ -77,6 +81,8 @@ public class PlayerController : MonoBehaviour {
 		// TODO typical time to do a visual & audible effect
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
+	//	smokeMachine.SetActive(false); smokeMachine.SetActive(true); //Invoke("Unwind", 1.5f);
+		GameObject smoke = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 

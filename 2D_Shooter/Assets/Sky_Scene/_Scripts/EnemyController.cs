@@ -9,7 +9,7 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip scuttle;
 
 	private bool armed;
-	private float bombSpeed = 8f;
+	private float bombSpeed = 6f;
 	private float chance;
 	private Color currentColor;
 	private bool dearmed;

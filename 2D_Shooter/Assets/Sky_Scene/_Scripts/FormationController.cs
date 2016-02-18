@@ -51,11 +51,9 @@ public class FormationController : MonoBehaviour {
 			Despawner();
 			levelManager.WinBattle();
 		}
-
 		if (FormationIsFull()) { respawn = false; }
 		if (FormationIsEmpty() && !respawn) { TriggerRespawn(); }
-		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted)  { TriggerRespawn(); }
-
+		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted) { TriggerRespawn(); }
 	}
 
 	bool FormationIsEmpty () {
