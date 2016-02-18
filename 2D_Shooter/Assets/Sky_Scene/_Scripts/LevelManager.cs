@@ -30,6 +30,7 @@ public class LevelManager : MonoBehaviour {
 	private float playerHitPoints;
 	private float playerMaxHealth;
 	private int playerShipCount;
+	private Text scoreboard;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }
@@ -46,15 +47,18 @@ public class LevelManager : MonoBehaviour {
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
+
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");
-		playerMaxHealth = 710f;
+		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
+			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
 
+		playerMaxHealth = 710f;
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
 		creditButton.gameObject.SetActive(true);
 		creditMessage.gameObject.SetActive(false);
 		loseMessage.gameObject.SetActive(false);
-		playerHitPoints = playerMaxHealth;
-		playerShipCount = playerMaxShips;
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
@@ -63,7 +67,10 @@ public class LevelManager : MonoBehaviour {
 		ShowMyShips();
 	}
 
-	void Update () { ShowMyShips(); }
+	void Update () { 
+		ShowMyShips();
+		scoreboard.text = ("Score: " + score); 
+	}
 	
 	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
 	public void EndOfLine() { Application.Quit(); }

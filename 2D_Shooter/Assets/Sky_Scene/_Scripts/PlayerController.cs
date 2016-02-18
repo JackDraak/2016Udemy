@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour {
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
 	private bool right;
-	private Text scoreboard;
 	private Vector3 tempPos;
 
 	void OnTriggerEnter2D (Collider2D collider) {
@@ -33,8 +32,6 @@ public class PlayerController : MonoBehaviour {
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
-		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
-			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
 
 		float distance = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
@@ -64,9 +61,6 @@ public class PlayerController : MonoBehaviour {
 		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
 		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
 		myRenderer.color = currentColor;
-
-		// TODO migrate this to LevelManager
-		scoreboard.text = ("Score: " + levelManager.GetScore());
 	}
 
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
