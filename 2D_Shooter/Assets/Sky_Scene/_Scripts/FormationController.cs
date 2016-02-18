@@ -39,7 +39,6 @@ public class FormationController : MonoBehaviour {
 	}
 
 	public void TriggerRespawn () {
-		levelManager.ShowWave();
 		respawn = true;
 		gameStarted = true;
 		Invoke ("Respawn", spawnDelay);
@@ -70,6 +69,7 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void Respawn () {
+		levelManager.ShowWave();
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
