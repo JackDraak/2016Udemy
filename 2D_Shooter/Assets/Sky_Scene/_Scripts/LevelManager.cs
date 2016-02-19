@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour {
 	private FormationController formation;
 	private float playerHitPoints;
 	private float playerMaxHealth;
-	private int playerShipCount, totalFrames;
+	private int playerShipCount, priorShipCount, totalFrames;
 	private Text frameboard, scoreboard, waveboard;
 	private float deltaTime, fps, fpsAverage, totalFrameTime;
 
@@ -73,6 +73,7 @@ public class LevelManager : MonoBehaviour {
 		waveboard.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
 		ShowMyShips();
+		priorShipCount = playerShipCount;
 		fps = 0.0f;
 		showFramerate = true; // TODO turn off for relase
 		totalFrames = 0;
@@ -80,10 +81,10 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Update () { 
-		ShowMyShips();
+		if (priorShipCount != playerShipCount) ShowMyShips();
 		scoreboard.text = ("Score: " + score); 
 
-		// frame rate
+		// frame rate calulator
 		deltaTime += Time.deltaTime;
 		deltaTime /= 2.0f;
 		fps = 1.0f/deltaTime;
@@ -100,6 +101,7 @@ public class LevelManager : MonoBehaviour {
 			totalFrames = 0;
 			totalFrameTime = 0;
 		}
+		priorShipCount = playerShipCount;
 	}
 
 	public void ShowWave () { 

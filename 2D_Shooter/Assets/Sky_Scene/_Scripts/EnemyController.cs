@@ -24,12 +24,14 @@ public class EnemyController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		myRenderer = GetComponent<SpriteRenderer>();
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
+
 		armed = true;
 		bombSpeed = 6f;
 		dearmed = false;
 		fireDelay = 1.4f;
 		fireTime = Time.time;
 		maxHealth = 111f;
+
 		hitPoints = maxHealth;
 	}
 
@@ -42,15 +44,15 @@ public class EnemyController : MonoBehaviour {
 			}
 		}
 
-		// haptic health indicator
-		float colourChange = maxHealth / hitPoints;
-		// desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
-		currentColor = new Vector4 (1f, 1/colourChange, 1/colourChange, 1f);
-		myRenderer.color = currentColor;
-
-		// fire control reset
+		// fire control reset?
 		chance = Random.Range (1, 100);
-		if (chance > 98) armed = !armed;
+		if (chance > 49 && chance < 51) armed = !armed;
+
+		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		Vector4 priorColour = currentColor;
+		float colourDelta = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
+		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
+		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
 	}
 	
 	void OnTriggerEnter2D (Collider2D collider) {
