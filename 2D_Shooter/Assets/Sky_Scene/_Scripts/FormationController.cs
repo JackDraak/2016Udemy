@@ -12,12 +12,10 @@ public class FormationController : MonoBehaviour {
 	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right, shoot;
 	private ArrayList enemies;
-	private int finalWave, waveNumber;
+	private int finalWave;
 	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
-	public int GetWaveNumber () { return waveNumber; }
-	public void ResetWaveNumber () { waveNumber = 1; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -30,7 +28,6 @@ public class FormationController : MonoBehaviour {
 		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 42;
-		waveNumber = 1;
 		maxSpeed = 9f;
 		padding = 3.6f;
 		right = true;
@@ -54,7 +51,7 @@ public class FormationController : MonoBehaviour {
 
 	//	passGo = right;
 		// decelerator
-		if (decelerate) {
+		if (decelerate) { // TODO finish deceleration 
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
 				speed = speed / reverseSquelch;
@@ -69,14 +66,14 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		// TODO come up with a *good* win condition
+		// TODO come up with a *good* win condition, furthermore let levelmanager control wins and losses
 		if (levelManager.GetScore() > 50000f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
 
 		// win after X waves?
-		if (waveNumber == finalWave && FormationIsEmpty()) {
+		if (levelManager.GetWaveNumber() == finalWave && FormationIsEmpty()) {
 			Despawner();
 			levelManager.WinBattle();
 		}
@@ -105,7 +102,7 @@ public class FormationController : MonoBehaviour {
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (FormationIsFull() && waveNumber < finalWave) waveNumber++;
+		else if (FormationIsFull() && levelManager.GetWaveNumber() < finalWave) levelManager.IncrementWaveNumber();
 	}
 
 	bool FormationIsFull () {

@@ -6,6 +6,7 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 	static LevelManager instance = null;
 	public static int enemiesRemaining;
+	public static int waveNumber;
 	public static float score;
 
 	// adjust/set in inspector!
@@ -40,10 +41,23 @@ public class LevelManager : MonoBehaviour {
 	public void PlayerDown () { playerShipCount--; }
 	public void PlayerUp () { playerShipCount++; }
 
+	public int GetWaveNumber () { return waveNumber; }
+	public void ResetWaveNumber () { waveNumber = 1; }
+	public void IncrementWaveNumber () { waveNumber++; }
+
 	public void EnemyUp () { enemiesRemaining++; }
 	public void EnemyDown () { enemiesRemaining--; }
 	public int GetEnemies () { return enemiesRemaining; }
 	public void ZeroEnemies () { enemiesRemaining = 0; }
+
+	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
+	public void EndOfLine() { Application.Quit(); }
+	public float GetScore () { return score; }
+	public void HideWave () { waveboard.gameObject.SetActive(false); }
+	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
+	
+	void ConfigureAnyLevel () { Cursor.visible = true; }
+	void ConfigureSkyGame () {	Cursor.visible = false;	}
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
@@ -78,6 +92,7 @@ public class LevelManager : MonoBehaviour {
 		showFramerate = true; // TODO turn off for relase
 		totalFrames = 0;
 		totalFrameTime = 0f;
+		waveNumber = 1;
 	}
 
 	void Update () { 
@@ -106,18 +121,9 @@ public class LevelManager : MonoBehaviour {
 
 	public void ShowWave () { 
 		waveboard.gameObject.SetActive(true);
-		int waveNumber = formation.GetWaveNumber();
 		waveboard.text = waveNumber.ToString();
 	}
 
-	public void HideWave () { waveboard.gameObject.SetActive(false); }
-	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
-	public void EndOfLine() { Application.Quit(); }
-	public float GetScore () { return score; }
-	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
-	
-	void ConfigureAnyLevel () { Cursor.visible = true; }
-	void ConfigureSkyGame () {	Cursor.visible = false;	}
 
 	void ShowMyShips() {
 		if (playerShipCount > 1) extra_01.gameObject.SetActive(true);
@@ -141,8 +147,8 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.ResetWaveNumber();
 		formation.TriggerRespawn();
+		waveNumber = 1;
 
 	}
 
@@ -161,8 +167,8 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.ResetWaveNumber();
 		formation.TriggerRespawn();
+		waveNumber = 1;
 	}
 
 	public void CreditButton () {

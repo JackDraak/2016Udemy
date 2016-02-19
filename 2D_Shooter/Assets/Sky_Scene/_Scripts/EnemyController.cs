@@ -50,7 +50,7 @@ public class EnemyController : MonoBehaviour {
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		Vector4 priorColour = currentColor;
-		float colourDelta = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
+		float colourDelta = maxHealth / hitPoints;
 		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
 		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
 	}
