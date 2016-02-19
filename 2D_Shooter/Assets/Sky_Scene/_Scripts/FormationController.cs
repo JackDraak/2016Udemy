@@ -9,7 +9,7 @@ public class FormationController : MonoBehaviour {
 	public float spawnDelay = 0.8f;
 	public GameObject resetButton;
 
-	private float acceleration, baseAcceleration, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, xMax, xMin;
+	private float acceleration, baseAcceleration, direction, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, respawn, right, shoot;
 	private ArrayList enemies;
 	private int finalWave, waveNumber;
@@ -28,17 +28,45 @@ public class FormationController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
 		acceleration = 0f;
-		baseAcceleration = 0.00010f;
+		baseAcceleration = 0.10f;
 		decelerate = true;
+		direction = 0f;
 		enemies = new ArrayList();
 		finalWave = 42;
 		waveNumber = 1;
 		lateralVelocity = 0f;
 		maxAcceleration = 0.003f;
-		maxSpeed = 0.19f;
+		maxSpeed = 9f;
 		padding = 3.4f;
 		right = true;
 		SetMinMaxX();
+
+		speed = baseAcceleration;
+	}
+
+	void Update () {
+		// formation motion
+//		SetNextPos();
+
+		// set position
+		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
+
+		// do debugging
+		string bugString = right + " X: " + transform.position.x;
+
+		// test and flip TODO fix this
+		if (transform.position.x >= xMax) { right = !right; speed = -0.1f; }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.1f; }
+
+		// do debugging
+		bugString += right + " -- Speed: " + speed;
+
+		if (right && speed < maxSpeed) speed += baseAcceleration;
+		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
+
+		// do debugging
+		bugString += " : " + speed;
+		Debug.Log (bugString);
 	}
 
 	public void TriggerRespawn () {
@@ -59,10 +87,6 @@ public class FormationController : MonoBehaviour {
 			Despawner();
 			levelManager.WinBattle();
 		}
-
-
-		// formation motion
-		SetNextPos();
 
 		// formation spawn control
 		afterMatch = resetButton.activeSelf;
@@ -121,19 +145,43 @@ public class FormationController : MonoBehaviour {
 
 	void SetNextPos () {
 		BoundaryTestAndFlip ();
-		SetVelocity();
-		if (right) transform.position = new Vector3(SetXClamps(tempPos.x + lateralVelocity), tempPos.y, tempPos.z);
-		else  transform.position = new Vector3(SetXClamps(tempPos.x - lateralVelocity), tempPos.y, tempPos.z);
+//		SetVelocity();
+		// old broken motion system... looked nice at first, but closer inspection reveals odd sprite slicing on some frames
+//		if (right) transform.position = new Vector3(SetXClamps(tempPos.x + lateralVelocity), tempPos.y, tempPos.z);
+//		else  transform.position = new Vector3(SetXClamps(tempPos.x - lateralVelocity), tempPos.y, tempPos.z);
+
+		// formation is kinematic, wont respond to force, I'm quite sure...
+		// how to move it in delta time, while giving it a smoother motion than the binary control 
+		// proposed in the udemy course....
+		// direction should walk from -1 to +1 in small increments to accelerate after direction change
+		// then to decelerate it needs to know when it's getting close to the edge
+
+		transform.position += new Vector3(direction * speed * Time.deltaTime,0,0);
+
 	}
 
 	void BoundaryTestAndFlip () {
+		// flipper
 		tempPos = transform.position;
-		if (tempPos.x <= xMin || tempPos.x >= xMax) {
+		if (tempPos.x + padding <= xMin) {
+			tempPos.x = xMin + 0.001f;
 			right = !right;
-			acceleration = baseAcceleration;
-			decelerate = false;
-			lateralVelocity = 0.00010f;
+			direction = 0f; 
 		}
+		if (tempPos.x - padding >= xMax) {
+			tempPos.x = xMax - 0.001f;
+			right = !right;
+			direction = 0f; 
+		}
+
+
+		// accelerator
+		if (right && direction <= 1.0f) direction += baseAcceleration;
+		if (!right && direction >= -1.0f) direction -= baseAcceleration;
+		Debug.Log (right + " direction: " + direction + "speed: " + speed);
+//			acceleration = baseAcceleration;
+//			decelerate = false;
+//			lateralVelocity = 0.00010f;
 	}
 	
 	void SetVelocity () {

@@ -64,6 +64,7 @@ public class LevelManager : MonoBehaviour {
 		bCredit = false;
 		creditButton.gameObject.SetActive(true);
 		creditMessage.gameObject.SetActive(false);
+		enemyFormation.gameObject.SetActive(false);
 		loseMessage.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
