@@ -9,8 +9,8 @@ public class FormationController : MonoBehaviour {
 	public float spawnDelay = 0.8f;
 	public GameObject resetButton;
 
-	private float baseAcceleration,direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
-	private bool afterMatch, decelerate, gameStarted, respawn, right, shoot;
+	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
+	private bool afterMatch, gameStarted, respawn, right, shoot;
 	private ArrayList enemies;
 	private int finalWave, waveNumber;
 	private LevelManager levelManager;
@@ -28,7 +28,6 @@ public class FormationController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
 		baseAcceleration = 0.10f;
-		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 42;
 		waveNumber = 1;

@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
 	private bool right, up;
-	private Vector3 myScale, tempPos;
+	private Vector3 myScale;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour {
 		string logPosition = "myPos.x (clamped) " + myPos.x;
 		myPos.x = SetXClamps(myPos.x);
 		logPosition += " (" + myPos.x + ")";
-		Debug.Log (logPosition);
+//		Debug.Log (logPosition);
 		transform.position = myPos;
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
@@ -88,13 +88,14 @@ public class PlayerController : MonoBehaviour {
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
-		Debug.Log (leftBoundary + " : " + xMin + " --- " + xMax + " : " + rightBoundary);
+	//	Debug.Log (leftBoundary + " : " + xMin + " --- " + xMax + " : " + rightBoundary);
 	}
 
 	void TakeDamage () {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
+		Destroy (trash, 2);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 

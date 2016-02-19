@@ -15,6 +15,9 @@ public class EnemyController : MonoBehaviour {
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
 	private Vector3 myScale;
+	
+	public void Disarm () { dearmed = true; }
+	public void Rearm () { dearmed = false; }
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
@@ -66,14 +69,11 @@ public class EnemyController : MonoBehaviour {
 		}
 	}
 	
-	public void Disarm () { dearmed = true; }
-
-	public void Rearm () { dearmed = false; }
-	
 	void TakeDamage () {
 		hitPoints = (hitPoints * 0.90f) - 17f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
+		Destroy (trash, 2);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
