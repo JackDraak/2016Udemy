@@ -12,9 +12,13 @@ Development Notes:
 ==================
 things to do:
 
-@ lecture 118 - sorting layers
+@ lecture 119
 
-	time to fix formation motion - still working out squelch for delta motion
+	fix formation motion - still working out squelch for delta motion
+
+	?? put wave counter into level manager? probably a good idea, esp. if oyu want diff. formations, or somesuch
+
+	??? take player health out of level manager and put in player
 
 	tidy IDE
 	tidy C#

@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
 	private bool right, up;
-	private Vector3 myScale;
+	private Vector3 myPos, myScale;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 
 		bulletSpeed = 10f;
-		fireDelay = 0.25f;
+		fireDelay = 0.37f;
 		moveSpeed = 20f;
 		padding = 0.7f;
 
@@ -46,40 +46,40 @@ public class PlayerController : MonoBehaviour {
 
 		fireTime = Time.time;
 		SetMinMaxX();
+
+		myPos = transform.position; // TODO can this go into Start() so it's not hit every damn frame? ((from Update() -- apply movement))
 	}
 
 	void Update () {
 		// fire control
 		if (Input.GetAxis("Fire1") > 0.9f) FireBlaster();
 
-		// movement
-		Vector3 myPos = transform.position;
+		// apply movement
+		float priorX = myPos.x;
 		myPos.x += Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
-		string logPosition = "myPos.x (clamped) " + myPos.x;
 		myPos.x = SetXClamps(myPos.x);
-		logPosition += " (" + myPos.x + ")";
-//		Debug.Log (logPosition);
-		transform.position = myPos;
+		if (priorX != myPos.x) transform.position = myPos; 
+
+		// apply scale
+		myScale = new Vector3 (driftScale, driftScale, 1);
+		transform.localScale = myScale;
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
-		float colourChange = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
-		currentColor = new Vector4 (1, 1/colourChange, 1/colourChange, 1f);
-		myRenderer.color = currentColor;
+		Vector4 priorColour = currentColor;
+		float colourDelta = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
+		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
+		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
 	}
 
 	// scale-drifter to give floating appearance to player
 	void FixedUpdate () {
-		// toggle direction / set boundary
+		// toggle direction / set boundary %
 		if (driftScale <= 0.98) up = true;
 		if (driftScale >= 1.02) up = false;
 
 		// adjust scale
 		if (up) driftScale += driftSpeed;
 		else driftScale -= driftSpeed;
-
-		// scale
-		myScale = new Vector3 (driftScale, driftScale, 1);
-		transform.localScale = myScale;
 	}
 
 	void SetMinMaxX () {
@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour {
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
 		xMin = leftBoundary.x + padding;
 		xMax = rightBoundary.x - padding;
-	//	Debug.Log (leftBoundary + " : " + xMin + " --- " + xMax + " : " + rightBoundary);
 	}
 
 	void TakeDamage () {
@@ -113,7 +112,7 @@ public class PlayerController : MonoBehaviour {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.Euler (0f, 0f, 180f)) as GameObject;
 			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
-			AudioSource.PlayClipAtPoint (zappySound, transform.position);
+			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.5f);
 			fireTime = Time.time;
 		}
 	}
