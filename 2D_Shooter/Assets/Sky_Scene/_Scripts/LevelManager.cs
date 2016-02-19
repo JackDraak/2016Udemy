@@ -58,7 +58,7 @@ public class LevelManager : MonoBehaviour {
 		waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
 			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
 
-		playerMaxHealth = 710f;
+		playerMaxHealth = 420f;
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
 		bCredit = false;

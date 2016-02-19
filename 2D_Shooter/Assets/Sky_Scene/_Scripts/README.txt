@@ -12,9 +12,13 @@ Development Notes:
 ==================
 things to do:
 
-@ lecture 117 - sound effects
+@ lecture 118 - sorting layers
 
-	time to fix formation motion - put on delta-time, it's clearly not working properly
+	time to fix formation motion - still working out squelch for delta motion
+
+	tidy IDE
+	tidy C#
+	tidy interface
 
 	animate extra ships?
 	drop health

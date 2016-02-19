@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void TakeDamage () {
-		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
+		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 60f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
 		Destroy (trash, 2);

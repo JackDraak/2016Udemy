@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour {
 		dearmed = false;
 		fireDelay = 1.4f;
 		fireTime = Time.time;
-		maxHealth = 11f;
+		maxHealth = 111f;
 		hitPoints = maxHealth;
 	}
 
@@ -70,7 +70,7 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	void TakeDamage () {
-		hitPoints = (hitPoints * 0.90f) - 17f;
+		hitPoints = (hitPoints * 0.93f) - 23f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
 		Destroy (trash, 2);
@@ -81,7 +81,7 @@ public class EnemyController : MonoBehaviour {
 		// TODO typical time to randomly "drop a bonus"
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		levelManager.ChangeScore(100f);
+		levelManager.ChangeScore(10f); // TODO multiply by wace#, ergo move wave# into LevelManager
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
 		Destroy(this.gameObject, 0.001f);
