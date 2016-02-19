@@ -9,7 +9,7 @@ public class FormationController : MonoBehaviour {
 	public float spawnDelay = 0.8f;
 	public GameObject resetButton;
 
-	private float acceleration, baseAcceleration, direction, lateralVelocity, maxAcceleration, maxSpeed, padding, spawnTime, speed, xMax, xMin;
+	private float baseAcceleration,direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, respawn, right, shoot;
 	private ArrayList enemies;
 	private int finalWave, waveNumber;
@@ -27,46 +27,39 @@ public class FormationController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
-		acceleration = 0f;
 		baseAcceleration = 0.10f;
 		decelerate = true;
-		direction = 0f;
 		enemies = new ArrayList();
 		finalWave = 42;
 		waveNumber = 1;
-		lateralVelocity = 0f;
-		maxAcceleration = 0.003f;
 		maxSpeed = 9f;
-		padding = 3.4f;
+		padding = 3.6f;
 		right = true;
-		SetMinMaxX();
-
 		speed = baseAcceleration;
+		SetMinMaxX();
 	}
 
 	void Update () {
-		// formation motion
-//		SetNextPos();
-
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
-
-		// do debugging
-		string bugString = right + " X: " + transform.position.x;
+		string bugString = right + " X: " + transform.position.x; // do debugging
 
 		// test and flip TODO fix this
-		if (transform.position.x >= xMax) { right = !right; speed = -0.1f; }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.1f; }
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; }
+		bugString += right + " -- Speed: " + speed; // do debugging
 
-		// do debugging
-		bugString += right + " -- Speed: " + speed;
-
+		// accelerator
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
+		bugString += " : " + speed; // do debugging
 
-		// do debugging
-		bugString += " : " + speed;
-		Debug.Log (bugString);
+		// decelerator
+		if (tempPos.x < xMin - reverseBuffer || tempPos.x > xMax + reverseBuffer)  {
+			Debug.Log ("squelch");
+			speed = speed / reverseSquelch;
+		}
+		//	Debug.Log (bugString);
 	}
 
 	public void TriggerRespawn () {
@@ -141,58 +134,5 @@ public class FormationController : MonoBehaviour {
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
 		xMax = rightBoundary.x - padding;
 		xMin = leftBoundary.x + padding;
-	}
-
-	void SetNextPos () {
-		BoundaryTestAndFlip ();
-//		SetVelocity();
-		// old broken motion system... looked nice at first, but closer inspection reveals odd sprite slicing on some frames
-//		if (right) transform.position = new Vector3(SetXClamps(tempPos.x + lateralVelocity), tempPos.y, tempPos.z);
-//		else  transform.position = new Vector3(SetXClamps(tempPos.x - lateralVelocity), tempPos.y, tempPos.z);
-
-		// formation is kinematic, wont respond to force, I'm quite sure...
-		// how to move it in delta time, while giving it a smoother motion than the binary control 
-		// proposed in the udemy course....
-		// direction should walk from -1 to +1 in small increments to accelerate after direction change
-		// then to decelerate it needs to know when it's getting close to the edge
-
-		transform.position += new Vector3(direction * speed * Time.deltaTime,0,0);
-
-	}
-
-	void BoundaryTestAndFlip () {
-		// flipper
-		tempPos = transform.position;
-		if (tempPos.x + padding <= xMin) {
-			tempPos.x = xMin + 0.001f;
-			right = !right;
-			direction = 0f; 
-		}
-		if (tempPos.x - padding >= xMax) {
-			tempPos.x = xMax - 0.001f;
-			right = !right;
-			direction = 0f; 
-		}
-
-
-		// accelerator
-		if (right && direction <= 1.0f) direction += baseAcceleration;
-		if (!right && direction >= -1.0f) direction -= baseAcceleration;
-		Debug.Log (right + " direction: " + direction + "speed: " + speed);
-//			acceleration = baseAcceleration;
-//			decelerate = false;
-//			lateralVelocity = 0.00010f;
-	}
-	
-	void SetVelocity () {
-		if (acceleration < maxAcceleration) acceleration = acceleration + baseAcceleration;
-		if (lateralVelocity < maxSpeed) lateralVelocity = lateralVelocity + acceleration;
-		else decelerate = true;
-
-		if (decelerate) {
-			if (tempPos.x < xMin - reverseBuffer || tempPos.x > xMax + reverseBuffer)  {
-				lateralVelocity = lateralVelocity / reverseSquelch;
-			}
-		}
 	}
 }

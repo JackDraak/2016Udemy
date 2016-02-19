@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour {
 	private GameObject playerGun;
 	private bool right, up;
 	private Vector3 myScale, tempPos;
+	
+	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
+	void SpawnPlayer () { transform.gameObject.SetActive(true); }
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "EnemyBomb") {
@@ -33,21 +36,16 @@ public class PlayerController : MonoBehaviour {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 
-		float distance = transform.position.z - Camera.main.transform.position.z;
-		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
-		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
-		xMin = leftBoundary.x + padding;
-		xMax = rightBoundary.x - padding;
-
 		bulletSpeed = 10f;
 		fireDelay = 0.25f;
 		moveSpeed = 20f;
-		padding = 0.6f;
+		padding = 0.7f;
 
 		driftScale = 1f;
 		driftSpeed = 0.0017f;
 
 		fireTime = Time.time;
+		SetMinMaxX();
 	}
 
 	void Update () {
@@ -57,7 +55,10 @@ public class PlayerController : MonoBehaviour {
 		// movement
 		Vector3 myPos = transform.position;
 		myPos.x += Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+		string logPosition = "myPos.x (clamped) " + myPos.x;
 		myPos.x = SetXClamps(myPos.x);
+		logPosition += " (" + myPos.x + ")";
+		Debug.Log (logPosition);
 		transform.position = myPos;
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
@@ -81,9 +82,14 @@ public class PlayerController : MonoBehaviour {
 		transform.localScale = myScale;
 	}
 
-	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
-
-	void SpawnPlayer () { transform.gameObject.SetActive(true); }
+	void SetMinMaxX () {
+		float distance = transform.position.z - Camera.main.transform.position.z;
+		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
+		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
+		xMin = leftBoundary.x + padding;
+		xMax = rightBoundary.x - padding;
+		Debug.Log (leftBoundary + " : " + xMin + " --- " + xMax + " : " + rightBoundary);
+	}
 
 	void TakeDamage () {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 20f);
@@ -105,8 +111,6 @@ public class PlayerController : MonoBehaviour {
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
 			GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.Euler (0f, 0f, 180f)) as GameObject;
-		//	Quaternion rot = Quaternion.Euler (0f, 0f, 180f);
-		//	discharge.transform.rotation = rot;
 			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
 			AudioSource.PlayClipAtPoint (zappySound, transform.position);
 			fireTime = Time.time;
