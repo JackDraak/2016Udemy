@@ -10,11 +10,10 @@ public class FormationController : MonoBehaviour {
 	public GameObject resetButton;
 
 	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
-	private bool afterMatch, gameStarted, respawn, right, shoot;
+	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right, shoot;
 	private ArrayList enemies;
 	private int finalWave, waveNumber;
 	private LevelManager levelManager;
-	private Vector3 tempPos;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 	public int GetWaveNumber () { return waveNumber; }
@@ -28,6 +27,7 @@ public class FormationController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
 		baseAcceleration = 0.10f;
+		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 42;
 		waveNumber = 1;
@@ -41,24 +41,25 @@ public class FormationController : MonoBehaviour {
 	void Update () {
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
-		string bugString = right + " X: " + transform.position.x; // do debugging
 
 		// test and flip TODO fix this
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; }
-		bugString += right + " -- Speed: " + speed; // do debugging
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; }
 
 		// accelerator
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
-		bugString += " : " + speed; // do debugging
 
+		if (speed == maxSpeed) decelerate = true;
+
+	//	passGo = right;
 		// decelerator
-		if (tempPos.x < xMin - reverseBuffer || tempPos.x > xMax + reverseBuffer)  {
-			Debug.Log ("squelch");
-			speed = speed / reverseSquelch;
+		if (decelerate) {
+			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
+				Debug.Log ("squelch");
+				speed = speed / reverseSquelch;
+			} //else if (transform.position.x <= xMin || transform.position.x >= xMax ) { right = !right; decelerate = false; }
 		}
-		//	Debug.Log (bugString);
 	}
 
 	public void TriggerRespawn () {

@@ -29,7 +29,7 @@ public class EnemyController : MonoBehaviour {
 		dearmed = false;
 		fireDelay = 1.4f;
 		fireTime = Time.time;
-		maxHealth = 111f;
+		maxHealth = 11f;
 		hitPoints = maxHealth;
 	}
 
