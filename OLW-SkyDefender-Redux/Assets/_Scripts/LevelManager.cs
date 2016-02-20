@@ -141,6 +141,7 @@ public class LevelManager : MonoBehaviour {
 
 	public void StartGameButton () {
 		score = 0;
+		Cursor.visible = false;
 		creditButton.gameObject.SetActive(false);
 		creditMessage.gameObject.SetActive(false);
 		enemyFormation.gameObject.SetActive(true);
@@ -155,6 +156,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void RestartButton () {
+		Cursor.visible = false;
 		Debug.Log (enemiesRemaining + " enemies.");
 		score = 0;
 		playerHitPoints = playerMaxHealth;
@@ -180,6 +182,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoseBattle () {
+		Cursor.visible = true;
 		loseMessage.gameObject.SetActive(true);
 		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
@@ -189,6 +192,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void WinBattle () {
+		Cursor.visible = true;
 		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 		winMessage.gameObject.SetActive(true);
