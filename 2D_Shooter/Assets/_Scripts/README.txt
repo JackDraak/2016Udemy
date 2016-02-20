@@ -20,6 +20,8 @@ things to do:
 
 	do i need to prefab a 'position' with an enemy in it to get past this webGL bug?
 
+	have enemies test for active player before droppping bombs?
+
 	??? take player health out of level manager and put in player
 
 	optimize collision layers
