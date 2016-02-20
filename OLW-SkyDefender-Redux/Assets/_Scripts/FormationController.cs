@@ -17,7 +17,7 @@ public class FormationController : MonoBehaviour {
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
-	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (8,8,1)); }
+	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void Start () {

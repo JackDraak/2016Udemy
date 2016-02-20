@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour {
 		moveSpeed = 20f;
 		padding = 0.7f;
 
-		driftScale = 1f;
+		driftScale = 2.5f;
 		driftSpeed = 0.0017f;
 
 		fireTime = Time.time;
@@ -74,8 +74,8 @@ public class PlayerController : MonoBehaviour {
 	// scale-drifter to give floating appearance to player
 	void FixedUpdate () {
 		// toggle direction / set boundary %
-		if (driftScale <= 0.98) up = true;
-		if (driftScale >= 1.02) up = false;
+		if (driftScale <= 2.45) up = true;
+		if (driftScale >= 2.55) up = false;
 
 		// adjust scale
 		if (up) driftScale += driftSpeed;
