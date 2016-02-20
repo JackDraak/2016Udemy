@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
 
 	void OnTriggerEnter2D (Collider2D collider) {
-		if (collider.tag == "EnemyBomb") {
+		if (collider.tag == "EnemyProjectile") {
 			TakeDamage();
 			Destroy (collider.gameObject);
 		}
