@@ -63,14 +63,7 @@ public class LevelManager : MonoBehaviour {
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 
-		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
-			if (!formation) Debug.Log ("formation 2 pickup error");
-		frameboard = GameObject.FindWithTag("Frameboard").GetComponent<Text>();
-			if (!frameboard) Debug.LogError("FAIL tag Frameboard");
-		scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
-			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
-		waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
-			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
+		Connections();
 
 		playerMaxHealth = 420f;
 		playerHitPoints = playerMaxHealth;
@@ -119,11 +112,21 @@ public class LevelManager : MonoBehaviour {
 		priorShipCount = playerShipCount;
 	}
 
+	void Connections() {
+		if (!waveboard) waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
+			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
+		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
+			if (!formation) Debug.Log ("formation 2 pickup error");
+		if (!frameboard) frameboard = GameObject.FindWithTag("Frameboard").GetComponent<Text>();
+			if (!frameboard) Debug.LogError("FAIL tag Frameboard");
+		if (!scoreboard) scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
+			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+	}
+
 	public void ShowWave () { 
 		waveboard.gameObject.SetActive(true);
 		waveboard.text = waveNumber.ToString();
 	}
-
 
 	void ShowMyShips() {
 		if (playerShipCount > 1) extra_01.gameObject.SetActive(true);
@@ -149,7 +152,6 @@ public class LevelManager : MonoBehaviour {
 		winMessage.gameObject.SetActive(false);
 		formation.TriggerRespawn();
 		waveNumber = 1;
-
 	}
 
 	public void RestartButton () {
