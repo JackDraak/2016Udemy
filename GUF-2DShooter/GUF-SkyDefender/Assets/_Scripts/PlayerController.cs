@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Start () {
-		gameManager = GameObject.FindObjectOfType<LevelManager>();
+		gameManager = GameObject.FindObjectOfType<GameManager>();
 		if (!gameManager) Debug.LogError ("GAME_MANAGER_FAIL");
 		myRenderer = GetComponent<SpriteRenderer>();
 			if (!myRenderer) Debug.LogError ("FAIL renderer");

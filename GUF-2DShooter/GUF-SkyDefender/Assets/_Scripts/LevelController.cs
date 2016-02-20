@@ -7,7 +7,7 @@ public class LevelController : MonoBehaviour {
 	static LevelController instance = null;
 	public static int integerValue;
 
-	void Start () {
+	void Awake () {
 		if (instance != null && instance != this) { Destroy (gameObject); }
 		else {
 			instance = this;
@@ -16,14 +16,12 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void LoadLevel(string name){
-	StoreHighs();
 	ConfigureAnyLevel();
 	if (name == "Game") ConfigureGame (); 
 	SceneManager.LoadScene(name);
 	}
 	
 	void LoadNextLevel() {
-		StoreHighs();
 		ConfigureAnyLevel();
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
 	}
@@ -35,10 +33,5 @@ public class LevelController : MonoBehaviour {
 	public void ChangeIV (int delta) { integerValue += delta; }
 
 	void ConfigureAnyLevel () { Cursor.visible = true; }
-	void ConfigureGame () {	Cursor.visible = false;	}
-
-	void StoreHighs () {
-		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
-	}
-
+	void ConfigureGame () {	} //Cursor.visible = false;	}
 }
