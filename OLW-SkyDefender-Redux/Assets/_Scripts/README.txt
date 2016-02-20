@@ -16,6 +16,21 @@ things to do:
 
 	export a package just in case unity shits on the project in some way like it's done in the past - would be ncie to fix webGL bug first
 
+	Yes the irony in that statement is thick...
+	WebGL builds were unable to load a single texture and in trying to resolve that the entire scene got corrupted by Unity at some point....
+	I had "exported" the full project a couple hours earlier only to find that the export was also corrupted -- thank you, Unity!
+
+	At this point I have created a "new project" into which I've "imported" my c# scripts and other assets, including a prefab of "the sky"
+	that I was able to rip from a backup....
+
+	... so ...
+
+	export the full project now, please....
+
+
+	I think I've managed to rebuild the scene, and glue all the parts back together....
+	the Sky def. needs to be redone for OCD-TIDY but seems to be 100% nominal at this point.
+
 	fix formation motion - still working out squelch for delta motion
 
 	do i need to prefab a 'position' with an enemy in it to get past this webGL bug?

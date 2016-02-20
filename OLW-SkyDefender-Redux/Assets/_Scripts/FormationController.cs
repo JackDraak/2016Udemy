@@ -29,7 +29,7 @@ public class FormationController : MonoBehaviour {
 		enemies = new ArrayList();
 		finalWave = 42;
 		maxSpeed = 9f;
-		padding = 3.6f;
+		padding = 4.6f;
 		right = true;
 		speed = baseAcceleration;
 		SetMinMaxX();

@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour {
 	public AudioClip damage;
 	public AudioClip scuttle;
 	public GameObject puffMachine;
+	public GameObject puffLocation;
 
 	private bool armed, dearmed;
 	private float bombSpeed, chance, fireDelay, fireTime, hitPoints, maxHealth;
@@ -74,7 +75,7 @@ public class EnemyController : MonoBehaviour {
 	void TakeDamage () {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		GameObject trash = Instantiate(puffMachine, transform.position, Quaternion.identity) as GameObject;
+		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
 		Destroy (trash, 2);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}

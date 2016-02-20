@@ -46,7 +46,7 @@ public class SkyBG : MonoBehaviour {
 		FindTheOrthographicCamera();
 
 		// Strength this gameObject to fit the camera view
-		this.transform.localScale = new Vector3((RightMostOfScreen.x-LeftMostOfScreen.x)/this.GetComponent<Renderer>().bounds.size.x, (m_Camera.orthographicSize*2)/this.GetComponent<Renderer>().bounds.size.y, 1);
+		this.transform.localScale = new Vector3((RightMostOfScreen.x-LeftMostOfScreen.x)/this.GetComponent<Renderer>().bounds.size.x, (m_Camera.orthographicSize*2.5f)/this.GetComponent<Renderer>().bounds.size.y, 1);
 	}
 	
 	// Update is called once per frame
@@ -83,7 +83,7 @@ public class SkyBG : MonoBehaviour {
 		if(m_Camera!=null)
 		{
 			LeftMostOfScreen = m_Camera.ScreenToWorldPoint(new Vector3(0, 0, 0));
-			RightMostOfScreen = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0));
+			RightMostOfScreen = m_Camera.ScreenToWorldPoint(new Vector3(Screen.width*2, 0, 0));
 		}
 	}
 	
