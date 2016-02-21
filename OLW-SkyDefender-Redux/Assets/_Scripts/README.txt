@@ -16,13 +16,12 @@ things to do:
 
 	have enemies test for active player before droppping bombs?
 
-	I think I've managed to rebuild the scene, and glue all the parts back together....
+	complete object pooling for: projectiles, effects?
+
 	the Sky def. needs to be redone for OCD-TIDY but seems to be 100% nominal at this point.
+		modify CloudFlow to support a notion of near or far for the micro-clouds... keep near ones low and far ones high when pooling
 
 	fix formation motion - still working out squelch for delta motion
-
-	do i need to prefab a 'position' with an enemy in it to get past this webGL bug? TODO test if WebGL works now that it's a fresh new project
-
 
 	??? take player health out of level manager and put in player
 
@@ -35,7 +34,7 @@ things to do:
 	drop health
 	drop power-ups / after giving a power-up ability...., duh :)
 	create my own art assets
-	double-check that there is consistent audio when enemy && player weapons fire && hit
+
 	fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
 

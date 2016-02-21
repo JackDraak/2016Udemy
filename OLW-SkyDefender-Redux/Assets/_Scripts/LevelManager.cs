@@ -11,28 +11,28 @@ public class LevelManager : MonoBehaviour {
 
 	// adjust/set in inspector!
 	public Button creditButton;
-	public Text creditMessage;
+	public Button quitButton;
+	public Button startButton;
+	public Button startOverButton;
 	public GameObject enemyFormation;
 	public GameObject extra_01;
 	public GameObject extra_02;
 	public GameObject extra_03;
 	public GameObject extra_04;
-	public Text loseMessage;
-	public int playerMaxShips;
 	public GameObject playerShip;
-	public Button quitButton;
-	public Button startButton;
+	public int playerMaxShips;
+	public Text creditMessage;
+	public Text loseMessage;
 	public Text startMessage;
-	public Button startOverButton;
 	public Text winMessage;
 
 	private bool bCredit, showFramerate;
 	private FormationController formation;
-	private float playerHitPoints;
-	private float playerMaxHealth;
-	private int playerShipCount, priorShipCount, totalFrames;
-	private Text frameboard, scoreboard, waveboard;
+	private float playerHitPoints; // TODO migrate to PlayerController
+	private float playerMaxHealth; // TODO migrate to PlayerController
 	private float deltaTime, fps, fpsAverage, totalFrameTime;
+	private Text frameboard, scoreboard, waveboard;
+	private int playerShipCount, priorShipCount, totalFrames;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
 	public float GetPlayerMaxHealth () { return playerMaxHealth; }

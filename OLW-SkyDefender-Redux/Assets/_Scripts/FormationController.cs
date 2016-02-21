@@ -80,7 +80,7 @@ public class FormationController : MonoBehaviour {
 
 		// formation spawn control
 		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { respawn = false; levelManager.HideWave(); }
+		if (FormationIsFull()) { respawn = false; } // levelManager.HideWave(); }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch) { TriggerRespawn(); }
 	}
@@ -97,8 +97,13 @@ public class FormationController : MonoBehaviour {
 		} return null;
 	}
 
+	void HideWave () {
+		levelManager.HideWave();
+	}
+
 	void Respawn () {
 		levelManager.ShowWave();
+		Invoke ("HideWave", 2);
 		Transform freePos = NextFreePosition();
 		if (freePos) FillPosition(freePos);
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);

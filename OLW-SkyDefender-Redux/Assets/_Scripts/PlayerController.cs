@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject smokeMachine;
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
+	public GameObject smokeLoc;
 
 	private float acceleration, bulletSpeed, chance, driftScale, driftSpeed, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
 	private Color currentColor;
@@ -93,7 +94,7 @@ public class PlayerController : MonoBehaviour {
 	void TakeDamage () {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 60f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
-		GameObject trash = Instantiate(smokeMachine, transform.position, Quaternion.identity) as GameObject;
+		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
 		Destroy (trash, 2);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
