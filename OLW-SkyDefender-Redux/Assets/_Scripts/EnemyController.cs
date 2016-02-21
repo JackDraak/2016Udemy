@@ -76,9 +76,7 @@ public class EnemyController : MonoBehaviour {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
-		// i put this here to get rid of a warning message about trash not being used... test to see if it's 
-		// related to the WebGL memory leak but doing a build with it off.... also in Player....
-		// Destroy (trash, 2);
+		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
@@ -86,7 +84,7 @@ public class EnemyController : MonoBehaviour {
 		// TODO typical time to randomly "drop a bonus"
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		levelManager.ChangeScore(10f); // TODO multiply by wace#, ergo move wave# into LevelManager
+		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
 		Destroy(this.gameObject, 0.001f);

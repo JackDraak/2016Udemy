@@ -12,10 +12,11 @@ public class FormationController : MonoBehaviour {
 	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right, shoot;
 	private ArrayList enemies;
-	private int finalWave;
+	private int finalWave, flash;
 	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
+//	public void ResetFlash () { flash = 0; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -28,6 +29,7 @@ public class FormationController : MonoBehaviour {
 		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 42;
+		flash = 0;
 		maxSpeed = 9f;
 		padding = 4.6f;
 		right = true;
@@ -80,7 +82,7 @@ public class FormationController : MonoBehaviour {
 
 		// formation spawn control
 		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { respawn = false; } // levelManager.HideWave(); }
+		if (FormationIsFull()) { respawn = false; flash = 0; }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch) { TriggerRespawn(); }
 	}
@@ -98,7 +100,7 @@ public class FormationController : MonoBehaviour {
 	}
 
 	Transform RandomFreePosition () {
-		Transform trans_1 = NextFreePosition();
+	//	Transform trans_1 = NextFreePosition();
 		// then what, smart guy?
 		// suggestion : replace NextFreePosition with FreePosition[] the array, then you can easily select any random member to fill
 		return null;
@@ -109,8 +111,11 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void Respawn () {
-		levelManager.ShowWave();
-		Invoke ("HideWave", 2);
+		if (flash < 6) {
+			levelManager.ShowWave();
+			Invoke ("HideWave", 2);
+			flash++;
+		}
 		Transform freePos = NextFreePosition();
 		if (Random.Range(0,100) > 30) {
 			Debug.Log (Random.Range(0,100));

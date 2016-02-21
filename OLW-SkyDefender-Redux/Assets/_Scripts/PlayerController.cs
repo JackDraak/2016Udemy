@@ -95,9 +95,7 @@ public class PlayerController : MonoBehaviour {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 60f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
-		// i put this here to get rid of a warning message about trash not being used... test to see if it's 
-		// related to the WebGL memory leak but doing a build with it off.... also in Enemy....
-		// Destroy (trash, 2);
+		Destroy (trash, 2);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 

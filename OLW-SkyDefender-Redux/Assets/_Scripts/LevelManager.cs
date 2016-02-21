@@ -30,7 +30,7 @@ public class LevelManager : MonoBehaviour {
 	private FormationController formation;
 	private float playerHitPoints; // TODO migrate to PlayerController
 	private float playerMaxHealth; // TODO migrate to PlayerController
-	private float deltaTime, fps, fpsAverage, totalFrameTime;
+	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
 	private Text frameboard, scoreboard, waveboard;
 	private int playerShipCount, priorShipCount, totalFrames;
 
@@ -89,17 +89,22 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Update () { 
+		// update extra ships
 		if (priorShipCount != playerShipCount) ShowMyShips();
-		scoreboard.text = ("Score: " + score); 
+		priorShipCount = playerShipCount;
+
+		//update scoreboard
+		if (priorScore != score) scoreboard.text = ("Score: " + score); 
+		priorScore = score;
 
 		// frame rate calulator
+		if (Input.GetKeyDown(KeyCode.F)) showFramerate = !showFramerate;
 		deltaTime += Time.deltaTime;
 		deltaTime /= 2.0f;
 		fps = 1.0f/deltaTime;
 		totalFrameTime += deltaTime;
 		totalFrames++;
 		fpsAverage = totalFrames/totalFrameTime;
-		if (Input.GetKeyDown(KeyCode.F)) showFramerate = !showFramerate;
 		if (showFramerate) {
 			float myFPS = Mathf.Round(fps);
 			float myMean = Mathf.Round(fpsAverage);
@@ -109,7 +114,6 @@ public class LevelManager : MonoBehaviour {
 			totalFrames = 0;
 			totalFrameTime = 0;
 		}
-		priorShipCount = playerShipCount;
 	}
 
 	void Connections() {
@@ -139,9 +143,12 @@ public class LevelManager : MonoBehaviour {
 		else extra_04.gameObject.SetActive(false);
 	}
 
-	public void StartGameButton () {
-		score = 0;
+	public void StartGameButton () { InitGame(); }
+	public void RestartButton () { InitGame(); }
+
+	void InitGame () {
 		Cursor.visible = false;
+		score = 0;
 		creditButton.gameObject.SetActive(false);
 		creditMessage.gameObject.SetActive(false);
 		enemyFormation.gameObject.SetActive(true);
@@ -151,26 +158,9 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
-		formation.TriggerRespawn();
-		waveNumber = 1;
-	}
-
-	public void RestartButton () {
-		Cursor.visible = false;
-		Debug.Log (enemiesRemaining + " enemies.");
-		score = 0;
+		playerShip.SetActive(true);
 		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
-		creditButton.gameObject.SetActive(false);
-		creditMessage.gameObject.SetActive(false);
-		enemyFormation.gameObject.SetActive(true);
-		loseMessage.gameObject.SetActive(false);
-		playerShip.SetActive(true);
-		quitButton.gameObject.SetActive(false);
-		startButton.gameObject.SetActive(false);
-		startMessage.gameObject.SetActive(false);
-		startOverButton.gameObject.SetActive(false);
-		winMessage.gameObject.SetActive(false);
 		formation.TriggerRespawn();
 		waveNumber = 1;
 	}
@@ -182,23 +172,21 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoseBattle () {
-		Cursor.visible = true;
 		loseMessage.gameObject.SetActive(true);
-		quitButton.gameObject.SetActive(true);
-		startOverButton.gameObject.SetActive(true);
-
-		formation.Despawner();
-		enemyFormation.gameObject.SetActive(false);
+		EndBattle();
 	}
 
 	public void WinBattle () {
+		winMessage.gameObject.SetActive(true);
+		EndBattle();
+	}
+
+	void EndBattle () {
 		Cursor.visible = true;
 		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
-		winMessage.gameObject.SetActive(true);
-
-		formation.Despawner();
 		enemyFormation.gameObject.SetActive(false);
+		formation.Despawner();
 	}
 
 	public void LoadLevel(string name){
