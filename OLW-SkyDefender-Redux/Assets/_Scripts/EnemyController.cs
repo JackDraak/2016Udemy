@@ -76,7 +76,9 @@ public class EnemyController : MonoBehaviour {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
-		Destroy (trash, 2);
+		// i put this here to get rid of a warning message about trash not being used... test to see if it's 
+		// related to the WebGL memory leak but doing a build with it off.... also in Player....
+		// Destroy (trash, 2);
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
