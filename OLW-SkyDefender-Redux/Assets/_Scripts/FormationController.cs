@@ -97,6 +97,13 @@ public class FormationController : MonoBehaviour {
 		} return null;
 	}
 
+	Transform RandomFreePosition () {
+		Transform trans_1 = NextFreePosition();
+		// then what, smart guy?
+		// suggestion : replace NextFreePosition with FreePosition[] the array, then you can easily select any random member to fill
+		return null;
+	}
+
 	void HideWave () {
 		levelManager.HideWave();
 	}
@@ -105,7 +112,10 @@ public class FormationController : MonoBehaviour {
 		levelManager.ShowWave();
 		Invoke ("HideWave", 2);
 		Transform freePos = NextFreePosition();
-		if (freePos) FillPosition(freePos);
+		if (Random.Range(0,100) > 30) {
+			Debug.Log (Random.Range(0,100));
+			if (freePos) FillPosition(freePos);
+		}
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
 		else if (FormationIsFull() && levelManager.GetWaveNumber() < finalWave) levelManager.IncrementWaveNumber();
 	}
