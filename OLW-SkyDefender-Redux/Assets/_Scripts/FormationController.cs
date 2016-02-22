@@ -4,13 +4,13 @@ using System.Collections;
 public class FormationController : MonoBehaviour {
 	// adjust/set in inspector!
 	public GameObject enemyPrefab;
+	public GameObject resetButton;
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
-	public GameObject resetButton;
 
-	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
-	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right, shoot;
+	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
+	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right;
 	private ArrayList enemies;
 	private int finalWave, flash;
 	private LevelManager levelManager;
@@ -37,18 +37,19 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void Update () {
-		// set position
-		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
-
-		// test and flip TODO fix this
+		// test boundary and flip if needed
 		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; }
 		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; }
 
+		// set position
+		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
+		
 		// accelerator
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
 		if (speed == maxSpeed) decelerate = true;
+		Debug.Log (this + " decelerate(" + decelerate +")");
 
 	//	passGo = right;
 		// decelerator
@@ -56,13 +57,13 @@ public class FormationController : MonoBehaviour {
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
 				speed = speed / reverseSquelch;
-			} //else if (transform.position.x <= xMin || transform.position.x >= xMax ) { right = !right; decelerate = false; }
+			}
 		}
 	}
 
 	public void TriggerRespawn () {
-		respawn = true;
 		gameStarted = true;
+		respawn = true;
 		Invoke ("Respawn", spawnDelay);
 	}
 
@@ -117,7 +118,6 @@ public class FormationController : MonoBehaviour {
 		}
 		Transform freePos = NextFreePosition();
 		if (Random.Range(0,100) > 30) {
-			Debug.Log (Random.Range(0,100));
 			if (freePos) FillPosition(freePos);
 		}
 		if (NextFreePosition()) Invoke("Respawn", spawnDelay);

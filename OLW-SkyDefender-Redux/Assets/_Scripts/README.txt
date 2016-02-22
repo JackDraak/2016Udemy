@@ -1,13 +1,5 @@
-﻿// Disclaimer:
-// I have altered the art assets from this package* slightly, and while
-// at first glance it may appear to be used mostly "as-is", you will NOT
-// get the results you see in my game from this asset package "right out 
-// of the box."
-//
-// ^JackDraak
-//
-// *Reference: 2D Sky FREE version: 1.0
-/*
+﻿/*
+
 Development Notes:
 ==================
 things to do:
@@ -15,6 +7,7 @@ things to do:
 @ lecture 119
 
 	nudge player gun transform a bit higher in Y
+	finish setting up collision layers
 
 	have enemies test for active player before droppping bombs?
 
@@ -39,5 +32,14 @@ things to do:
 
 	fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
+*/
 
-	*/
+// Disclaimer:
+// I have altered the art assets from this package* slightly, and while
+// at first glance it may appear to be used mostly "as-is", you will NOT
+// get the results you see in my game from this asset package "right out 
+// of the box."
+//
+// ^JackDraak
+//
+// *Reference: 2D Sky FREE version: 1.0

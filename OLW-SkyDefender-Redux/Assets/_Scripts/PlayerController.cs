@@ -6,19 +6,19 @@ public class PlayerController : MonoBehaviour {
 	// adjust/set in inspector!
 	public AudioClip damage;
 	public AudioClip scuttle;
+	public GameObject smokeLoc;
 	public GameObject smokeMachine;
 	public GameObject thruster;
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
-	public GameObject smokeLoc;
 
-	private float acceleration, bulletSpeed, chance, driftScale, driftSpeed, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
+	private float bulletSpeed, driftScale, driftSpeed, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
+	private Vector3 myPos, myScale;
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
 	private bool right, up;
-	private Vector3 myPos, myScale;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
@@ -99,28 +99,27 @@ public class PlayerController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
-		//Destroy (trash, 2);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
+		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		transform.gameObject.SetActive(false);
-		levelManager.PlayerResetHitpoints();
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
-		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+		levelManager.PlayerResetHitpoints();
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
 		else Invoke("SpawnPlayer", 1.5f);
 	}
 
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
+			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.5f);
 			GameObject obj = GenericPooler.current.GetPooledObject();
 			obj.transform.position = playerGun.transform.position;
 			obj.transform.localRotation = Quaternion.Euler (0f, 0f, 180f);
 			obj.SetActive(true);
 			obj.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
-			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.5f);
 			fireTime = Time.time;
 		}
 	}

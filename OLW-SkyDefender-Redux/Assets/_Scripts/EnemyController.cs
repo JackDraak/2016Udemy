@@ -15,7 +15,6 @@ public class EnemyController : MonoBehaviour {
 	private Color currentColor;
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
-	private Vector3 myScale;
 	
 	public void Disarm () { dearmed = true; }
 	public void Rearm () { dearmed = false; }
@@ -58,34 +57,34 @@ public class EnemyController : MonoBehaviour {
 	
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "PlayerProjectile") {
+			collider.gameObject.SetActive(false);
 			TakeDamage();
-			if (collider.gameObject) collider.gameObject.SetActive(false);
 		}
 	}
 	
 	void DropBomb () {
 		if (fireTime + fireDelay <= Time.time) {
+			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			GameObject discharge = Instantiate(bomb, transform.position, Quaternion.identity) as GameObject;
 			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
-			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			fireTime = Time.time + Random.Range(0.0f, 4.0f);
 		}
 	}
 	
 	void TakeDamage () {
-		hitPoints = (hitPoints * 0.93f) - 23f;
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
+		hitPoints = (hitPoints * 0.93f) - 23f;
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
 		// TODO typical time to randomly "drop a bonus"
+		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
-		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.EnemyDown();
 		Destroy(this.gameObject, 0.001f);
 	}

@@ -63,29 +63,48 @@ public class LevelManager : MonoBehaviour {
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 
-		Connections();
-
 		playerMaxHealth = 420f;
-		playerHitPoints = playerMaxHealth;
-		playerShipCount = playerMaxShips;
 		bCredit = false;
+
+		Connections();
+		SharedStart();
+		ShowMyShips();
+
 		creditButton.gameObject.SetActive(true);
-		creditMessage.gameObject.SetActive(false);
 		enemyFormation.gameObject.SetActive(false);
-		loseMessage.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
-		startOverButton.gameObject.SetActive(false);
 		waveboard.gameObject.SetActive(false);
-		winMessage.gameObject.SetActive(false);
-		ShowMyShips();
-		priorShipCount = playerShipCount;
+
 		fps = 0.0f;
 		showFramerate = true; // TODO turn off for relase
 		totalFrames = 0;
 		totalFrameTime = 0f;
+
+	}
+
+	void SharedStart () {
 		waveNumber = 1;
+		score = 0;
+		playerHitPoints = playerMaxHealth;
+		playerShipCount = playerMaxShips;
+		playerShip.SetActive(true);
+		creditButton.gameObject.SetActive(false);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+	}
+
+	void InitGame () {
+		SharedStart();
+		Cursor.visible = false;
+		enemyFormation.gameObject.SetActive(true);
+		quitButton.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		startMessage.gameObject.SetActive(false);
+		formation.TriggerRespawn();
 	}
 
 	void Update () { 
@@ -94,6 +113,7 @@ public class LevelManager : MonoBehaviour {
 		priorShipCount = playerShipCount;
 
 		//update scoreboard
+		if (score == 0) scoreboard.text = ("Score: Zip");
 		if (priorScore != score) scoreboard.text = ("Score: " + score); 
 		priorScore = score;
 
@@ -145,25 +165,6 @@ public class LevelManager : MonoBehaviour {
 
 	public void StartGameButton () { InitGame(); }
 	public void RestartButton () { InitGame(); }
-
-	void InitGame () {
-		Cursor.visible = false;
-		score = 0;
-		creditButton.gameObject.SetActive(false);
-		creditMessage.gameObject.SetActive(false);
-		enemyFormation.gameObject.SetActive(true);
-		loseMessage.gameObject.SetActive(false);
-		quitButton.gameObject.SetActive(false);
-		startButton.gameObject.SetActive(false);
-		startMessage.gameObject.SetActive(false);
-		startOverButton.gameObject.SetActive(false);
-		winMessage.gameObject.SetActive(false);
-		playerShip.SetActive(true);
-		playerHitPoints = playerMaxHealth;
-		playerShipCount = playerMaxShips;
-		formation.TriggerRespawn();
-		waveNumber = 1;
-	}
 
 	public void CreditButton () {
 		bCredit = !bCredit;
