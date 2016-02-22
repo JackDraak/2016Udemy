@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class FormationController : MonoBehaviour {
 	// adjust/set in inspector!
@@ -10,14 +9,14 @@ public class FormationController : MonoBehaviour {
 	public float spawnDelay = 0.8f;
 	public GameObject resetButton;
 
-	private List<GameObject> enemyPool;
 	private float baseAcceleration, direction, maxSpeed, padding, spawnTime, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right, shoot;
 	private ArrayList enemies;
-	private int finalWave, flash, enemyPoolSize = 12;
+	private int finalWave, flash;
 	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
+//	public void ResetFlash () { flash = 0; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -36,13 +35,6 @@ public class FormationController : MonoBehaviour {
 		right = true;
 		speed = baseAcceleration;
 		SetMinMaxX();
-
-		enemyPool = new List<GameObject>();
-		for (int i = 0; i < enemyPoolSize; i++) {
-			GameObject obj = (GameObject)Instantiate(enemyPrefab);
-			obj.SetActive(false);
-			enemyPool.Add(obj);
-		}
 	}
 
 	void Update () {
@@ -140,17 +132,10 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void FillPosition (Transform pos) {
-		for (int i = 0; i < enemyPool.Count; i++) { // TODO should this be <= ??
-			if (!enemyPool[i].activeInHierarchy) {
-				enemyPool[i].transform.position = transform.position;
-				enemyPool[i].transform.rotation = transform.rotation;
-				enemyPool[i].SetActive(true);
-				EnemyAdd(enemyPool[i]);
-				enemyPool[i].transform.parent = pos;
-				levelManager.EnemyUp();
-				break;
-			}
-		}
+		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
+		EnemyAdd(enemy);
+		enemy.transform.parent = pos;
+		levelManager.EnemyUp();
 	}
 
 	public void Despawner () {
