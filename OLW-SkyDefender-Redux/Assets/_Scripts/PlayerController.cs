@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip damage;
 	public AudioClip scuttle;
 	public GameObject smokeMachine;
+	public GameObject thruster;
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 	public GameObject smokeLoc;
@@ -48,7 +49,9 @@ public class PlayerController : MonoBehaviour {
 		fireTime = Time.time;
 		SetMinMaxX();
 
-		myPos = transform.position; // TODO can this go into Start() so it's not hit every damn frame? ((from Update() -- apply movement))
+		smokeMachine.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
+		thruster.GetComponent<Renderer>().sortingLayerName = "Projectiles";
+		myPos = transform.position;
 	}
 
 	void Update () {
@@ -95,7 +98,8 @@ public class PlayerController : MonoBehaviour {
 		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 60f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
-		Destroy (trash, 2);
+		trash.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
+		//Destroy (trash, 2);
 		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
 	}
 
@@ -116,8 +120,6 @@ public class PlayerController : MonoBehaviour {
 			obj.transform.localRotation = Quaternion.Euler (0f, 0f, 180f);
 			obj.SetActive(true);
 			obj.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
-	//		GameObject discharge = Instantiate(zappyBolt, playerGun.transform.position, Quaternion.Euler (0f, 0f, 180f)) as GameObject;
-	//		discharge.GetComponent<Rigidbody2D>().velocity += Vector2.up * bulletSpeed;
 			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.5f);
 			fireTime = Time.time;
 		}

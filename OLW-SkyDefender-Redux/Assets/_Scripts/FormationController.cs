@@ -16,7 +16,6 @@ public class FormationController : MonoBehaviour {
 	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
-//	public void ResetFlash () { flash = 0; }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }

@@ -14,6 +14,8 @@ things to do:
 
 @ lecture 119
 
+	nudge player gun transform a bit higher in Y
+
 	have enemies test for active player before droppping bombs?
 
 	complete object pooling for: projectiles, effects?
