@@ -74,14 +74,15 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
+		Debug.Log ( startMessage.gameObject.activeInHierarchy );
 		startMessage.gameObject.SetActive(true);
+		Debug.Log ( startMessage.gameObject.activeInHierarchy );
 		waveboard.gameObject.SetActive(false);
 
 		fps = 0.0f;
 		showFramerate = true; // TODO turn off for relase
 		totalFrames = 0;
 		totalFrameTime = 0f;
-
 	}
 
 	void SharedStart () {
@@ -137,7 +138,10 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Connections() {
-		if (!waveboard) waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
+		if (!waveboard) {
+			waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
+		}
+//		if (!waveboard) waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
 			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");
@@ -167,6 +171,7 @@ public class LevelManager : MonoBehaviour {
 	public void RestartButton () { InitGame(); }
 
 	public void CreditButton () {
+		bCredit = creditMessage.gameObject.activeInHierarchy;
 		bCredit = !bCredit;
 		startMessage.gameObject.SetActive(!bCredit);
 		creditMessage.gameObject.SetActive(bCredit);
