@@ -39,8 +39,8 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// test boundary and flip if needed
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.3f)); }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.3f)); }
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f)); }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f)); }
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);

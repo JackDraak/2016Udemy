@@ -15,6 +15,6 @@ public class RandomAnimationSpeed : MonoBehaviour {
 	}
 
 	void Update () {
-		if (slowDown && animator.speed > 0.02) animator.speed -= 0.01f;
+		if (slowDown && animator.speed > 0.03) animator.speed -= 0.01f;
 	}
 }
