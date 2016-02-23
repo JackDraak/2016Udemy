@@ -3,9 +3,9 @@ using System.Collections;
 
 public class SpriteController : MonoBehaviour {
 	public Sprite[] mySprite;  // adjust/set in inspector!
+	public int frameBuffer = 1;
 
 	private int spriteIndex;
-	private int frameBuffer = 1;
 	private int frameCounter = 0;
 
 	void Start () { spriteIndex = 0; }
