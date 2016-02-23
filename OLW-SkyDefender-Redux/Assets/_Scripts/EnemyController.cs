@@ -66,7 +66,7 @@ public class EnemyController : MonoBehaviour {
 		float progressiveDelay = fireDelay; /// (8.20f * levelManager.GetWaveNumber());
 		if (fireTime + progressiveDelay <= Time.time) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
-			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.Euler (0f, 0f, 0f)) as GameObject;
+			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.Euler (45f, 45f, 45f)) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
 			fireTime = Time.time + (Random.Range(0.3f, 3.0f)); /// (8.20f * levelManager.GetWaveNumber()));
 		}
