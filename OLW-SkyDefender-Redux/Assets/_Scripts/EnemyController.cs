@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour {
 	private Color currentColor;
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
+	private int myWave;
 	
 	public void Disarm () { dearmed = true; }
 	public void Rearm () { dearmed = false; }
@@ -31,6 +32,12 @@ public class EnemyController : MonoBehaviour {
 		fireDelay = 0.2f;
 		fireTime = Time.time;
 		maxHealth = 111f;
+
+		myWave = levelManager.GetWaveNumber();
+
+		// difficulty tuning: increase each wave
+		maxHealth += (myWave * 1.7f);
+		fireDelay = 1 / (myWave * 0.3f);
 
 		hitPoints = maxHealth;
 	}
@@ -63,12 +70,12 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	void DropBomb () {
-		float progressiveDelay = fireDelay; /// (8.20f * levelManager.GetWaveNumber());
+		float progressiveDelay = fireDelay; // / ( 1 / myWave);
 		if (fireTime + progressiveDelay <= Time.time) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
-			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.Euler (45f, 45f, 45f)) as GameObject;
+			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
-			fireTime = Time.time + (Random.Range(0.3f, 3.0f)); /// (8.20f * levelManager.GetWaveNumber()));
+			fireTime = Time.time + (Random.Range(0.1f, 24f / (myWave * 1.3f)));
 		}
 	}
 

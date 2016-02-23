@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right;
 	private ArrayList enemies;
-	private int finalWave, flash;
+	private int finalWave, myWave, flash;
 	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
@@ -24,6 +24,7 @@ public class FormationController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
+		myWave = levelManager.GetWaveNumber();
 		baseAcceleration = 0.10f;
 		decelerate = true;
 		enemies = new ArrayList();
@@ -38,13 +39,14 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// test boundary and flip if needed
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; }
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.3f)); }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.3f)); }
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
 		
 		// accelerator
+		baseAcceleration = 0.10f + (myWave * 0.01f); // difficulty tuning
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
