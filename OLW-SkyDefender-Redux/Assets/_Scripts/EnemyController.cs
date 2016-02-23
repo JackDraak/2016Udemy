@@ -36,9 +36,8 @@ public class EnemyController : MonoBehaviour {
 		myWave = levelManager.GetWaveNumber();
 
 		// difficulty tuning: increase each wave
-		maxHealth += (myWave * 1.7f);
 		fireDelay = 1 / (myWave * 0.3f);
-
+		maxHealth += (myWave * 1.7f);
 		hitPoints = maxHealth;
 	}
 
@@ -70,12 +69,12 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	void DropBomb () {
-		float progressiveDelay = fireDelay; // / ( 1 / myWave);
+		float progressiveDelay = fireDelay;
 		if (fireTime + progressiveDelay <= Time.time) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
-			fireTime = Time.time + (Random.Range(0.1f, 24f / (myWave * 1.3f)));
+			fireTime = Time.time + (Random.Range(0.3f, 36f / (myWave * 1.3f)));
 		}
 	}
 

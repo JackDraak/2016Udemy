@@ -24,13 +24,13 @@ public class FormationController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
-		myWave = levelManager.GetWaveNumber();
+		myWave = 10 +levelManager.GetWaveNumber();
 		baseAcceleration = 0.10f;
 		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 42;
 		flash = 0;
-		maxSpeed = 9f;
+		maxSpeed = Random.Range(6f, 8f);
 		padding = 4.6f;
 		right = true;
 		speed = baseAcceleration;
@@ -39,14 +39,13 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// test boundary and flip if needed
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f)); }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f)); }
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; }
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; }
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
 		
 		// accelerator
-		baseAcceleration = 0.10f + (myWave * 0.01f); // difficulty tuning
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
@@ -58,7 +57,8 @@ public class FormationController : MonoBehaviour {
 		if (decelerate) { // TODO finish deceleration 
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
-				speed = speed / reverseSquelch;
+				if (speed > 0.1f) speed = speed / reverseSquelch;
+				if (maxSpeed > 1f) maxSpeed = maxSpeed / reverseSquelch;
 			}
 		}
 	}
@@ -66,6 +66,11 @@ public class FormationController : MonoBehaviour {
 	public void TriggerRespawn () {
 		gameStarted = true;
 		respawn = true;
+
+		// difficulty tuning
+		maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f));
+		baseAcceleration = 0.10f + (myWave * 0.01f); 
+
 		Invoke ("Respawn", spawnDelay);
 	}
 

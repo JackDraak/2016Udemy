@@ -2,17 +2,23 @@
 using System.Collections;
 
 public class SpriteController : MonoBehaviour {
-	public Sprite[] mySprite;  // adjust/set in inspector!
+	// adjust/set in inspector!
+	public Sprite[] mySprite;
 	public int frameBuffer = 1;
 	public bool randomSpeed;
 
 	private int spriteIndex;
 	private int frameCounter = 0;
+	private SpriteRenderer myRenderer;
 
-	void Start () { spriteIndex = 0; if (randomSpeed) frameBuffer = Random.Range(1,8); }
+	void Start () {
+		spriteIndex = 0;
+		myRenderer = this.GetComponent<SpriteRenderer>();
+		if (randomSpeed) frameBuffer = Random.Range(1,8);
+	}
 
 	void LoadSprite () {
-		if (mySprite[spriteIndex]) { this.GetComponent<SpriteRenderer>().sprite = mySprite[spriteIndex]; } 
+		if (mySprite[spriteIndex]) { myRenderer.sprite = mySprite[spriteIndex]; } 
 		else { Debug.LogError ("SpriteController.cs ERROR: " + this + " spriteIndex " + spriteIndex + " mismatch."); }
 	}
 

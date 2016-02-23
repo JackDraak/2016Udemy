@@ -6,6 +6,8 @@ public class RandomAnimationSpeed : MonoBehaviour {
 	public float high = 2f;
 	public float low = 1f;
 	public bool slowDown;
+	public float squelch = 0.01f;
+	public float minSpeed = 0.3f;
 
 	private Animator animator;
 
@@ -15,6 +17,6 @@ public class RandomAnimationSpeed : MonoBehaviour {
 	}
 
 	void Update () {
-		if (slowDown && animator.speed > 0.03) animator.speed -= 0.01f;
+		if (slowDown && animator.speed > minSpeed) animator.speed -= squelch;
 	}
 }
