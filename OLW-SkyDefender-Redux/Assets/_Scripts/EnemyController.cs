@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour {
 		armed = true;
 		bombSpeed = 6f;
 		dearmed = false;
-		fireDelay = 2f;
+		fireDelay = 0.2f;
 		fireTime = Time.time;
 		maxHealth = 111f;
 
@@ -63,16 +63,15 @@ public class EnemyController : MonoBehaviour {
 	}
 	
 	void DropBomb () {
-		
-		float progressiveDelay = fireDelay / (0.10f * levelManager.GetWaveNumber());
+		float progressiveDelay = fireDelay; /// (8.20f * levelManager.GetWaveNumber());
 		if (fireTime + progressiveDelay <= Time.time) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
-			GameObject discharge = Instantiate(bomb, transform.position, Quaternion.identity) as GameObject;
-			discharge.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
-			fireTime = Time.time + (Random.Range(2.0f, 6.0f) / 0.10f * levelManager.GetWaveNumber());
+			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.Euler (0f, 0f, 0f)) as GameObject;
+			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
+			fireTime = Time.time + (Random.Range(0.3f, 3.0f)); /// (8.20f * levelManager.GetWaveNumber()));
 		}
 	}
-	
+
 	void TakeDamage () {
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
