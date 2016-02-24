@@ -1,6 +1,7 @@
 ﻿/*
+0.120.01 - 2016 Feb 24 - half custom artwork
 
-Development Notes:
+Development Notes: 0.120.01
 ==================
 things to do:
 
@@ -17,17 +18,15 @@ things to do:
 
 	??? take player health out of level manager and put in player
 
-	optimize collision layers
 	tidy IDE
 	tidy C#
-	tidy interface
+	tidy game interface
 
-	difficulty scaling: more/faster enemies? more bombs? more formations?
-	drop power-ups - double fiting rate for 20 seconds? health boost?
+	difficulty scaling: fast enough? out of sync between formation speed and bomb freqeuency?
+	drop power-ups - double damae and/or fiting rate for 20 seconds? health boost?
 
-	replace the rocket graphics with my own art?
-	get or create some HUD graphcis for the score board, shipboard, etc... buttons...
-	create my own art assets for everything? at the least, tidy-up the sky assets
+	get or create some HUD graphcis for the buttons...
+	create my own art assets for clouds too? if not, it still needs more work anyway
 
 	fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
