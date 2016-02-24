@@ -24,7 +24,7 @@ public class FormationController : MonoBehaviour {
 		levelManager = GameObject.FindObjectOfType<LevelManager>();
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
 
-		myWave = 10 +levelManager.GetWaveNumber();
+		myWave = levelManager.GetWaveNumber();
 		baseAcceleration = 0.10f;
 		decelerate = true;
 		enemies = new ArrayList();
@@ -54,13 +54,13 @@ public class FormationController : MonoBehaviour {
 
 	//	passGo = right;
 		// decelerator
-		if (decelerate) { // TODO finish deceleration 
+	/*	if (decelerate) { // TODO finish deceleration 
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
 				if (speed > 0.1f) speed = speed / reverseSquelch;
 				if (maxSpeed > 1f) maxSpeed = maxSpeed / reverseSquelch;
 			}
-		}
+		} */
 	}
 
 	public void TriggerRespawn () {

@@ -23,6 +23,7 @@ public class LevelManager : MonoBehaviour {
 	public int playerMaxShips;
 	public Text creditMessage;
 	public Text loseMessage;
+	public Text scoreboard;
 	public Text startMessage;
 	public Text winMessage;
 
@@ -31,7 +32,7 @@ public class LevelManager : MonoBehaviour {
 	private float playerHitPoints; // TODO migrate to PlayerController
 	private float playerMaxHealth; // TODO migrate to PlayerController
 	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
-	private Text frameboard, scoreboard, waveboard;
+	private Text frameboard, waveboard;
 	private int playerShipCount, priorShipCount, totalFrames;
 
 	public float GetPlayerHealth () { return playerHitPoints; }
@@ -114,8 +115,8 @@ public class LevelManager : MonoBehaviour {
 		priorShipCount = playerShipCount;
 
 		//update scoreboard
-		if (score == 0) scoreboard.text = ("Score: Zip");
-		if (priorScore != score) scoreboard.text = ("Score: " + score); 
+		if (score == 0) scoreboard.text = ("Zip");
+		if (priorScore != score) scoreboard.text = (score.ToString()); 
 		priorScore = score;
 
 		// frame rate calulator
