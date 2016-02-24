@@ -12,11 +12,8 @@ things to do:
 		modify CloudFlow to support a notion of near or far for the micro-clouds... keep near ones low and far ones high when pooling
 
 	fix formation motion - still working out squelch for delta motion
-	give it (formation motions) some more interest?
 
 	complete object pooling for: projectiles, effects?
-
-	animate extra ships?
 
 	??? take player health out of level manager and put in player
 

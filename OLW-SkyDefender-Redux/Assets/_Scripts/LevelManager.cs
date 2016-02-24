@@ -139,10 +139,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Connections() {
-		if (!waveboard) {
-			waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
-		}
-//		if (!waveboard) waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>();
+		if (!waveboard) { waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>(); }
 			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
 			if (!formation) Debug.Log ("formation 2 pickup error");

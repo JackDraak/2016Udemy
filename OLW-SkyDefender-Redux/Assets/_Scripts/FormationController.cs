@@ -50,7 +50,7 @@ public class FormationController : MonoBehaviour {
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
 		if (speed == maxSpeed) decelerate = true;
-		Debug.Log (this + " decelerate(" + decelerate +")");
+	//	Debug.Log (this + " decelerate(" + decelerate +")");
 
 	//	passGo = right;
 		// decelerator
@@ -61,6 +61,10 @@ public class FormationController : MonoBehaviour {
 				if (maxSpeed > 1f) maxSpeed = maxSpeed / reverseSquelch;
 			}
 		} */
+	}
+
+	void StopWarn () {
+		if (decelerate) return;
 	}
 
 	public void TriggerRespawn () {
