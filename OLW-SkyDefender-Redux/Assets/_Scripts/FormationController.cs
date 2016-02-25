@@ -5,6 +5,7 @@ public class FormationController : MonoBehaviour {
 	// adjust/set in inspector!
 	public GameObject enemyPrefab;
 	public GameObject resetButton;
+	public LevelManager levelManager;
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
@@ -13,7 +14,7 @@ public class FormationController : MonoBehaviour {
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right;
 	private ArrayList enemies;
 	private int finalWave, myWave, flash;
-	private LevelManager levelManager;
+//	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
@@ -30,7 +31,7 @@ public class FormationController : MonoBehaviour {
 		enemies = new ArrayList();
 		finalWave = 42;
 		flash = 0;
-		maxSpeed = Random.Range(6f, 8f);
+		maxSpeed = Random.Range(5f, 6f);
 		padding = 4.6f;
 		right = true;
 		speed = baseAcceleration;
@@ -39,8 +40,8 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// test boundary and flip if needed
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; }
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; }
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(5f + (myWave * 0.2f), 6f + (myWave * 1.15f));}
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(5f + (myWave * 0.2f), 6f + (myWave * 1.15f));}
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
@@ -50,11 +51,10 @@ public class FormationController : MonoBehaviour {
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
 		if (speed == maxSpeed) decelerate = true;
-	//	Debug.Log (this + " decelerate(" + decelerate +")");
 
-	//	passGo = right;
-		// decelerator
-	/*	if (decelerate) { // TODO finish deceleration 
+
+	/*	// TODO finish deceleration 
+		if (decelerate) {
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
 				if (speed > 0.1f) speed = speed / reverseSquelch;
@@ -72,8 +72,8 @@ public class FormationController : MonoBehaviour {
 		respawn = true;
 
 		// difficulty tuning
-		maxSpeed = Random.Range(6f + (myWave * 0.3f), 7f + (myWave * 1.5f));
-		baseAcceleration = 0.10f + (myWave * 0.01f); 
+		myWave = levelManager.GetWaveNumber();
+		baseAcceleration = 0.10f + (myWave * 0.02f); 
 
 		Invoke ("Respawn", spawnDelay);
 	}
@@ -111,9 +111,7 @@ public class FormationController : MonoBehaviour {
 	}
 
 	Transform RandomFreePosition () {
-	//	Transform trans_1 = NextFreePosition();
-		// then what, smart guy?
-		// suggestion : replace NextFreePosition with FreePosition[] the array, then you can easily select any random member to fill
+	// TODO random-free-position function
 		return null;
 	}
 

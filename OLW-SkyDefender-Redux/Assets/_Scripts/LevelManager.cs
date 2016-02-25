@@ -81,7 +81,7 @@ public class LevelManager : MonoBehaviour {
 		waveboard.gameObject.SetActive(false);
 
 		fps = 0.0f;
-		showFramerate = true; // TODO turn off for relase
+		showFramerate = true; // TODO turn off for final relase
 		totalFrames = 0;
 		totalFrameTime = 0f;
 	}

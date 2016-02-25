@@ -7,6 +7,8 @@ things to do:
 
 @ lecture 119
 
+	drop power-ups - double damae and/or fiting rate for 20 seconds? health boost?
+
 	have enemies test for active player before droppping bombs?
 
 	the Sky def. needs to be redone for OCD-TIDY but seems to be 100% nominal at this point.
@@ -22,14 +24,11 @@ things to do:
 	tidy C#
 	tidy game interface
 
-	difficulty scaling: fast enough? out of sync between formation speed and bomb freqeuency?
-	drop power-ups - double damae and/or fiting rate for 20 seconds? health boost?
-
-	get or create some HUD graphcis for the buttons...
 	create my own art assets for clouds too? if not, it still needs more work anyway
 
 	fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
+	difficulty scaling: fast enough? out of sync between formation speed and bomb freqeuency?
 */
 
 // *Reference: 2D Sky FREE version: 1.0

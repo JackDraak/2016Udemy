@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour {
 		levelManager.PlayerDown();
 		levelManager.PlayerResetHitpoints();
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
-		else Invoke("SpawnPlayer", 1.5f);
+		else Invoke("SpawnPlayer", 1.8f);
 	}
 
 	void FireBlaster () {
