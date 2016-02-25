@@ -8,13 +8,15 @@ public class TitleManager : MonoBehaviour {
 	public GameObject startMessage;
 	public Text buttonText;
 
+	private string myTitle;
+
 	void Start () {
 		SetTitle();
 	}
 
 	public void SetTitle () {
-		if (creditMessage.activeInHierarchy) buttonText.text = "Help";
-		else if (startMessage.activeInHierarchy) buttonText.text = "Credits";
+		if (creditMessage.activeInHierarchy && buttonText.text == "Credits") buttonText.text = "Help";
+		else if (startMessage.activeInHierarchy &&  buttonText.text == "Help") buttonText.text = "Credits";
 	}
 
 	void Update () {

@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour {
 		if (collider.tag == "EnemyProjectile") {
 			TakeDamage();
 			Destroy (collider.gameObject);
+		} else if (collider.tag == "PowerUp") {
+			PowerUp();
+			Destroy (collider.gameObject);
 		}
 	}
 
@@ -84,6 +87,16 @@ public class PlayerController : MonoBehaviour {
 		// adjust scale
 		if (up) driftScale += driftSpeed;
 		else driftScale -= driftSpeed;
+	}
+
+	void PowerUp () {
+		CancelInvoke();
+		fireDelay = 0.185f;
+		Invoke("PowerDown", 20f);
+	}
+
+	void PowerDown () {
+		fireDelay = 0.37f;
 	}
 
 	void SetMinMaxX () {

@@ -4,6 +4,7 @@ using System.Collections;
 public class EnemyController : MonoBehaviour {
 	// adjust/set in inspector!
 	public GameObject bomb;
+	public GameObject powerUp;
 	public AudioClip bombSound;
 	public AudioClip damage;
 	public AudioClip scuttle;
@@ -78,6 +79,11 @@ public class EnemyController : MonoBehaviour {
 		}
 	}
 
+	void DropPowerBonus () {
+		GameObject bonus = Instantiate(powerUp, transform.position,  Quaternion.identity) as GameObject;
+		bonus.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed * 0.85f;
+	}
+
 	void TakeDamage () {
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
@@ -93,6 +99,8 @@ public class EnemyController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
+		int chance = Random.Range (0,99);
+		if (chance > 20 && chance <= 80) DropPowerBonus(); 
 		Destroy(this.gameObject, 0.001f);
 	}
 }
