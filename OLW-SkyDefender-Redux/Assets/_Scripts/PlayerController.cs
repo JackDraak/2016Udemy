@@ -4,6 +4,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 	// adjust/set in inspector!
+	public Text boostMessage;
 	public AudioClip damage;
 	public AudioClip scuttle;
 	public GameObject smokeLoc;
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour {
 
 		fireTime = Time.time;
 		SetMinMaxX();
+		ClearBoostMessage();
 
 		smokeMachine.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
 		thruster.GetComponent<Renderer>().sortingLayerName = "Projectiles";
@@ -89,16 +91,34 @@ public class PlayerController : MonoBehaviour {
 		else driftScale -= driftSpeed;
 	}
 
+	void ClearBoostMessage () {
+		boostMessage.text = "";
+	}
+
 	void PowerUp () { // TODO finish this
-		GunBoost();
+		int selection = Random.Range (1,3);
+		Debug.Log (selection);
+		switch (selection) {
+			case 1:
+				GunBoost();
+				Debug.Log ("gunBoost " + Time.time);
+				boostMessage.text = "Firepower Up!";
+				Invoke ("ClearBoostMessage", 3);
+				break;
+			case 2:
+				SpeedBoost();
+				Debug.Log ("speedBoost " + Time.time);
+				boostMessage.text = "Speed up!";
+				Invoke ("ClearBoostMessage", 3);
+				break;
+		}
 	//	HealthBoost();
-		SpeedBoost();
 	}
 
 	void SpeedBoost () {
 		CancelInvoke();
-		moveSpeed = 45f;
-		Invoke("SpeedDown", 20f);
+		moveSpeed = 40f;
+		Invoke("SpeedDown", 15f);
 	}
 
 	void SpeedDown () {
@@ -112,7 +132,8 @@ public class PlayerController : MonoBehaviour {
 	void GunBoost () {
 		CancelInvoke();
 		fireDelay = 0.185f;
-		Invoke("GunDown", 20f);
+		Invoke("GunDown", 15f);
+		Debug.Log ("gunDOWN" + Time.time);
 	}
 
 	void GunDown () {

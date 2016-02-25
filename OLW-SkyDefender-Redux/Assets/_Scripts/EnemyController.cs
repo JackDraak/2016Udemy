@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
@@ -36,7 +37,7 @@ public class EnemyController : MonoBehaviour {
 
 		myWave = levelManager.GetWaveNumber();
 
-		// difficulty tuning: increase each wave
+		// difficulty tuning: increases each wave
 		fireDelay = 1 / (myWave * 0.3f);
 		maxHealth += (myWave * 1.7f);
 		hitPoints = maxHealth;
@@ -52,7 +53,7 @@ public class EnemyController : MonoBehaviour {
 		}
 
 		// fire control reset?
-		chance = Random.Range (1, 100);
+		chance = Random.Range (1, 101);
 		if (chance > 49 && chance < 51) armed = !armed;
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
@@ -93,14 +94,13 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void ScoreAndDestroy () {
-		// TODO typical time to randomly "drop a bonus"
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
-		int chance = Random.Range (0,99);
-		if (chance > 20 && chance <= 80) DropPowerBonus(); 
+		int chance = Random.Range (0,100);
+		if (chance > 40 && chance <= 60) DropPowerBonus(); 
 		Destroy(this.gameObject, 0.001f);
 	}
 }
