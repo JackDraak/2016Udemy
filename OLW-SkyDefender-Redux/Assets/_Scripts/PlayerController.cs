@@ -89,13 +89,33 @@ public class PlayerController : MonoBehaviour {
 		else driftScale -= driftSpeed;
 	}
 
-	void PowerUp () {
-		CancelInvoke();
-		fireDelay = 0.185f;
-		Invoke("PowerDown", 20f);
+	void PowerUp () { // TODO finish this
+		GunBoost();
+	//	HealthBoost();
+		SpeedBoost();
 	}
 
-	void PowerDown () {
+	void SpeedBoost () {
+		CancelInvoke();
+		moveSpeed = 45f;
+		Invoke("SpeedDown", 20f);
+	}
+
+	void SpeedDown () {
+		moveSpeed = 20f;
+	}
+
+	void HealthBoost () {
+		levelManager.PlayerChangeHealth(levelManager.GetPlayerMaxHealth() * 0.25f);
+	}
+
+	void GunBoost () {
+		CancelInvoke();
+		fireDelay = 0.185f;
+		Invoke("GunDown", 20f);
+	}
+
+	void GunDown () {
 		fireDelay = 0.37f;
 	}
 

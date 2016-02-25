@@ -7,7 +7,8 @@ things to do:
 
 @ lecture 119
 
-	drop power-ups - double damae and/or fiting rate for 20 seconds? health boost?
+	drop power-ups - double damgae and/or fire rate for 20 seconds? health boost?
+		 one power-up to rule them all? let playerController give random bonus and flash text to show what it was?
 
 	have enemies test for active player before droppping bombs?
 
