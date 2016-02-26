@@ -97,7 +97,6 @@ public class PlayerController : MonoBehaviour {
 
 	void PowerUp () { // TODO finish this
 		int selection = Random.Range (1,3);
-		Debug.Log (selection);
 		switch (selection) {
 			case 1:
 				GunBoost();

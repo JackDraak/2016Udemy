@@ -75,9 +75,7 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
-		Debug.Log ( startMessage.gameObject.activeInHierarchy );
 		startMessage.gameObject.SetActive(true);
-		Debug.Log ( startMessage.gameObject.activeInHierarchy );
 		waveboard.gameObject.SetActive(false);
 
 		fps = 0.0f;
