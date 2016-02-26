@@ -101,13 +101,11 @@ public class PlayerController : MonoBehaviour {
 		switch (selection) {
 			case 1:
 				GunBoost();
-				Debug.Log ("gunBoost " + Time.time);
 				boostMessage.text = "Firepower Up!";
 				Invoke ("ClearBoostMessage", 3);
 				break;
 			case 2:
 				SpeedBoost();
-				Debug.Log ("speedBoost " + Time.time);
 				boostMessage.text = "Speed up!";
 				Invoke ("ClearBoostMessage", 3);
 				break;
@@ -133,7 +131,6 @@ public class PlayerController : MonoBehaviour {
 		CancelInvoke();
 		fireDelay = 0.185f;
 		Invoke("GunDown", 15f);
-		Debug.Log ("gunDOWN" + Time.time);
 	}
 
 	void GunDown () {

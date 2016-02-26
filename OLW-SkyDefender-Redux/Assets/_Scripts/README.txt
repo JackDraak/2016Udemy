@@ -1,5 +1,6 @@
 ﻿/*
 0.120.01 - 2016 Feb 24 - half custom artwork
+0.120.10 - 2016 Feb 25 - mostly custom artwork (still undone: clouds)
 
 Development Notes: 0.120.01
 ==================
@@ -15,6 +16,8 @@ things to do:
 	the Sky def. needs to be redone for OCD-TIDY but seems to be 100% nominal at this point.
 		modify CloudFlow to support a notion of near or far for the micro-clouds... keep near ones low and far ones high when pooling
 
+	Add procedural music from that side project?
+
 	fix formation motion - still working out squelch for delta motion
 
 	complete object pooling for: projectiles, effects?
@@ -26,10 +29,12 @@ things to do:
 	tidy game interface
 
 	create my own art assets for clouds too? if not, it still needs more work anyway
+	replace cheesy button graphics with "crayola"?
 
 	fix singleton (menuing) issue with levelmanager destroying | losing links on scene reloads
 
 	difficulty scaling: fast enough? out of sync between formation speed and bomb freqeuency?
+
 */
 
 // *Reference: 2D Sky FREE version: 1.0
