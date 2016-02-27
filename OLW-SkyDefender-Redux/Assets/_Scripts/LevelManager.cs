@@ -19,6 +19,8 @@ public class LevelManager : MonoBehaviour {
 	public GameObject extra_02;
 	public GameObject extra_03;
 	public GameObject extra_04;
+	public ProceduralMusic music_Menu;
+	public ProceduralMusic music_Game;
 	public GameObject playerShip;
 	public int playerMaxShips;
 	public Text creditMessage;
@@ -77,6 +79,8 @@ public class LevelManager : MonoBehaviour {
 		startButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
 		waveboard.gameObject.SetActive(false);
+		music_Menu.Begin();
+		music_Game.End();
 
 		fps = 0.0f;
 		showFramerate = true; // TODO turn off for final relase
@@ -95,6 +99,8 @@ public class LevelManager : MonoBehaviour {
 		loseMessage.gameObject.SetActive(false);
 		startOverButton.gameObject.SetActive(false);
 		winMessage.gameObject.SetActive(false);
+		music_Menu.End();
+		music_Game.Begin();
 	}
 
 	void InitGame () {
@@ -188,6 +194,8 @@ public class LevelManager : MonoBehaviour {
 		quitButton.gameObject.SetActive(true);
 		startOverButton.gameObject.SetActive(true);
 		enemyFormation.gameObject.SetActive(false);
+		music_Menu.Begin();
+		music_Game.End();
 		formation.Despawner();
 	}
 

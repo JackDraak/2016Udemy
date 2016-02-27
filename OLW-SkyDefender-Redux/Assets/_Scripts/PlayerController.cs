@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour {
 
 	void SpeedBoost () {
 		CancelInvoke();
+		CancelInvoke();
 		moveSpeed = 40f;
 		Invoke("SpeedDown", 15f);
 	}
@@ -127,6 +128,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void GunBoost () {
+		CancelInvoke();
 		CancelInvoke();
 		fireDelay = 0.185f;
 		Invoke("GunDown", 15f);

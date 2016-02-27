@@ -100,7 +100,7 @@ public class EnemyController : MonoBehaviour {
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
 		int chance = Random.Range (0,100);
-		if (chance > 40 && chance <= 60) DropPowerBonus(); 
+		if (chance > 45 && chance <= 55) DropPowerBonus(); 
 		Destroy(this.gameObject, 0.001f);
 	}
 }
