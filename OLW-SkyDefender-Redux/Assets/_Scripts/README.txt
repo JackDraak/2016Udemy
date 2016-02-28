@@ -8,18 +8,17 @@ things to do:
 
 @ lecture 119
 
-	re-do how speed-up/boosts work... should deactivate on death but isnt... 
-		suggest getting away from that invoke bullshit and just using booleans, eh?
-
-	drop power-ups - double damgae and/or fire rate for 20 seconds? health boost?
+	drop power-ups - health boost?
 		 one power-up to rule them all? let playerController give random bonus and flash text to show what it was?
+
+	alternative enemy prefabs?
+	alternative enemy projectiles?
+	bosses? intermissions?
 
 	have enemies test for active player before droppping bombs?
 
 	the Sky def. needs to be redone for OCD-TIDY but seems to be 100% nominal at this point.
 		modify CloudFlow to support a notion of near or far for the micro-clouds... keep near ones low and far ones high when pooling
-
-	Add procedural music from that side project?
 
 	fix formation motion - still working out squelch for delta motion
 
