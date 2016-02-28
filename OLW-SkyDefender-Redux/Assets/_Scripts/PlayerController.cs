@@ -13,13 +13,13 @@ public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 
-	private float bulletSpeed, driftScale, driftSpeed, fireDelay, fireTime, moveSpeed, padding, xMax, xMin;
+	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireBoostTime, fireDelay, fireTime, moveSpeed, padding, speedBoostTime, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
-	private bool right, up;
+	private bool boostSpeed, boostFire, right, up;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
@@ -41,6 +41,12 @@ public class PlayerController : MonoBehaviour {
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
+
+		boostSpeed = false;
+		boostFire = false;
+		boostDelay = 15f;
+		speedBoostTime = Time.time - boostDelay;
+		fireBoostTime = speedBoostTime;
 
 		bulletSpeed = 10f;
 		fireDelay = 0.37f;
@@ -78,6 +84,10 @@ public class PlayerController : MonoBehaviour {
 		float colourDelta = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
 		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
 		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
+
+		// conform boost states
+		if (boostSpeed && speedBoostTime + boostDelay > Time.time) moveSpeed = 40f; else { moveSpeed = 20f; boostSpeed = false; }
+		if (boostFire && fireBoostTime + boostDelay > Time.time) fireDelay = 0.185f; else { fireDelay = 0.37f; boostFire = false; }
 	}
 
 	// scale-drifter to give floating appearance to player
@@ -95,45 +105,22 @@ public class PlayerController : MonoBehaviour {
 		boostMessage.text = "";
 	}
 
-	void PowerUp () { // TODO finish this
+	void PowerUp () { // TODO add health boost option? should migrate health to Player, eh?
 		int selection = Random.Range (1,3);
 		switch (selection) {
 			case 1:
-				GunBoost();
+				boostFire = true;
+				fireBoostTime = Time.time;
 				boostMessage.text = "Firepower Up!";
-				Invoke ("ClearBoostMessage", 3);
+				Invoke ("ClearBoostMessage", 2.5f);
 				break;
 			case 2:
-				SpeedBoost();
+				boostSpeed = true;
+				speedBoostTime = Time.time;
 				boostMessage.text = "Speed up!";
-				Invoke ("ClearBoostMessage", 3);
+				Invoke ("ClearBoostMessage", 2.5f);
 				break;
 		}
-	//	HealthBoost();
-	}
-
-	void SpeedBoost () {
-		Debuff();
-		moveSpeed = 40f;
-		Invoke("SpeedDown", 15f);
-	}
-
-	void SpeedDown () {
-		moveSpeed = 20f;
-	}
-
-	void HealthBoost () {
-		levelManager.PlayerChangeHealth(levelManager.GetPlayerMaxHealth() * 0.25f);
-	}
-
-	void GunBoost () {
-		Debuff();
-		fireDelay = 0.185f;
-		Invoke("GunDown", 15f);
-	}
-
-	void GunDown () {
-		fireDelay = 0.37f;
 	}
 
 	void SetMinMaxX () {
@@ -160,22 +147,10 @@ public class PlayerController : MonoBehaviour {
 		levelManager.PlayerResetHitpoints();
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
 		else {
-			Debuff();
+			boostFire = false;
+			boostSpeed = false;
 			Invoke("SpawnPlayer", 1.8f);
 		}
-	}
-
-	void Debuff () {
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
-		CancelInvoke();
 	}
 
 	void FireBlaster () {
