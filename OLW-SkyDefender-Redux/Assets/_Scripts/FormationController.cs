@@ -104,15 +104,17 @@ public class FormationController : MonoBehaviour {
 		} return true;
 	}
 
-	Transform NextFreePosition () {
-		foreach(Transform childPosition in transform) {
-			if (childPosition.childCount == 0) return childPosition;
-		} return null;
-	}
-
 	Transform RandomFreePosition () {
-	// TODO random-free-position function
-		return null;
+		Transform[] myEmptyChildren = new Transform[transform.childCount];
+		int inCount = 0;
+		foreach(Transform childPosition in transform) {
+			if (childPosition.childCount == 0) {
+				myEmptyChildren[inCount] = childPosition;
+				inCount++;
+			}
+		}
+		if (inCount > 0) return myEmptyChildren[Random.Range(0, inCount)];
+		else return null;
 	}
 
 	void HideWave () {
@@ -125,11 +127,11 @@ public class FormationController : MonoBehaviour {
 			Invoke ("HideWave", 2);
 			flash++;
 		}
-		Transform freePos = NextFreePosition();
+		Transform freePos = RandomFreePosition();
 		if (Random.Range(0,100) > 30) {
 			if (freePos) FillPosition(freePos);
 		}
-		if (NextFreePosition()) Invoke("Respawn", spawnDelay);
+		if (RandomFreePosition()) Invoke("Respawn", spawnDelay);
 		else if (FormationIsFull() && levelManager.GetWaveNumber() < finalWave) levelManager.IncrementWaveNumber();
 	}
 

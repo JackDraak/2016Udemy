@@ -90,6 +90,7 @@ public class EnemyController : MonoBehaviour {
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
 		hitPoints = (hitPoints * 0.93f) - 23f;
+		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		if (hitPoints <= 0f) ScoreAndDestroy();
 	}
 
@@ -97,10 +98,10 @@ public class EnemyController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
-		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
+		levelManager.ChangeScore(25 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
 		int chance = Random.Range (0,100);
-		if (chance > 45 && chance <= 55) DropPowerBonus(); 
+		if (chance > 42 && chance <= 58) DropPowerBonus(); 
 		Destroy(this.gameObject, 0.001f);
 	}
 }

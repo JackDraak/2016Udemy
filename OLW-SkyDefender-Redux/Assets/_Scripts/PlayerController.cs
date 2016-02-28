@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void PowerUp () { // TODO add health boost option? should migrate health to Player, eh?
+		levelManager.ChangeScore(levelManager.GetWaveNumber() * 50);
 		int selection = Random.Range (1,3);
 		switch (selection) {
 			case 1:
