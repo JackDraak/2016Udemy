@@ -113,8 +113,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void SpeedBoost () {
-		CancelInvoke();
-		CancelInvoke();
+		Debuff();
 		moveSpeed = 40f;
 		Invoke("SpeedDown", 15f);
 	}
@@ -128,8 +127,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void GunBoost () {
-		CancelInvoke();
-		CancelInvoke();
+		Debuff();
 		fireDelay = 0.185f;
 		Invoke("GunDown", 15f);
 	}
@@ -161,7 +159,23 @@ public class PlayerController : MonoBehaviour {
 		levelManager.PlayerDown();
 		levelManager.PlayerResetHitpoints();
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
-		else Invoke("SpawnPlayer", 1.8f);
+		else {
+			Debuff();
+			Invoke("SpawnPlayer", 1.8f);
+		}
+	}
+
+	void Debuff () {
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
+		CancelInvoke();
 	}
 
 	void FireBlaster () {

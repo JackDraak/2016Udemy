@@ -8,6 +8,9 @@ things to do:
 
 @ lecture 119
 
+	re-do how speed-up/boosts work... should deactivate on death but isnt... 
+		suggest getting away from that invoke bullshit and just using booleans, eh?
+
 	drop power-ups - double damgae and/or fire rate for 20 seconds? health boost?
 		 one power-up to rule them all? let playerController give random bonus and flash text to show what it was?
 
