@@ -96,8 +96,6 @@ public class EnemyController : MonoBehaviour {
 
 	void ScoreAndDestroy () {
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
-		levelManager = GameObject.FindObjectOfType<LevelManager>(); // why the heck do I need this here to prevent exception faults?
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		levelManager.ChangeScore(25 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
 		int chance = Random.Range (0,100);

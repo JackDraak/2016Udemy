@@ -5,25 +5,24 @@ using System.Collections;
 
 public class SplashManager : MonoBehaviour {
 	public float autoLoadNextLevelDelay = 3;  // adjust/set in inspector!
-	public Slider slider;
-//	public float GetDelay () { return Time.time - (startTime + autoLoadNextLevelDelay); }
+//	public Slider slider;
 
-	private float delta, startTime;
+//	private float delta, startTime;
 
 	void Start () {
-		startTime = Time.time;
-		slider.value = Time.time - startTime;
+//		startTime = Time.time;
+//		slider.value = Time.time - startTime;
 		Cursor.visible = false;
 		Invoke("LoadNextLevel", autoLoadNextLevelDelay);
 	}
 
-	void Update () {
+/*	void Update () {
 		if (delta < autoLoadNextLevelDelay) {
 			delta = Time.time - startTime;
 			slider.value = delta;
 		}
 	}
-
+*/
 	public void LoadNextLevel() {
 		Cursor.visible = true;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);

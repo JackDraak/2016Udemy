@@ -1,6 +1,7 @@
 ﻿/*
 0.120.01 - 2016 Feb 24 - half custom artwork
 0.120.10 - 2016 Feb 25 - mostly custom artwork (still undone: clouds)
+0.120.2	- 2016 Feb 29 - now even the splash screen transition has broken... seriously annoying: all for simply tyrying to add a UI slider to said splash
 
 Development Notes: 0.120.01
 ==================
@@ -11,8 +12,11 @@ things to do:
 	drop power-ups - health boost?
 		 one power-up to rule them all? let playerController give random bonus and flash text to show what it was?
 
+	survey formation mid-wave to confirm enemy# to prevent 'halfmations' :)
+
 	alternative enemy prefabs?
 	alternative enemy projectiles?
+	alternative enemy formations?
 	bosses? intermissions?
 
 	have enemies test for active player before droppping bombs?
