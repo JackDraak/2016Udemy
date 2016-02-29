@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 
-	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireBoostTime, fireDelay, fireTime, moveSpeed, padding, speedBoostTime, xMax, xMin;
+	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireBoostTime, fireDelay, fireTime, moveSpeed, padding, playerMaxHealth, playerHitPoints, speedBoostTime, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour {
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
+
+		playerMaxHealth = 420f;
+		playerHitPoints = playerMaxHealth;
 
 		boostSpeed = false;
 		boostFire = false;
@@ -81,7 +84,7 @@ public class PlayerController : MonoBehaviour {
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		Vector4 priorColour = currentColor;
-		float colourDelta = levelManager.GetPlayerMaxHealth() / levelManager.GetPlayerHealth();
+		float colourDelta = playerMaxHealth / playerHitPoints;
 		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
 		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
 
@@ -133,11 +136,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void TakeDamage () {
-		levelManager.PlayerChangeHealth(-(levelManager.GetPlayerHealth() * 0.1f) - 60f);
+		playerHitPoints -= ((playerHitPoints * 0.1f) + 60f);
 		AudioSource.PlayClipAtPoint (damage, transform.position);
 		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
-		if (levelManager.GetPlayerHealth() <= 0f) ScoreAndDestroy();
+		if (playerHitPoints <= 0f) ScoreAndDestroy();
 	}
 
 	void ScoreAndDestroy () {
@@ -145,7 +148,7 @@ public class PlayerController : MonoBehaviour {
 		transform.gameObject.SetActive(false);
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
-		levelManager.PlayerResetHitpoints();
+		playerHitPoints = playerMaxHealth;
 		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
 		else {
 			boostFire = false;

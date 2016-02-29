@@ -31,16 +31,11 @@ public class LevelManager : MonoBehaviour {
 
 	private bool bCredit, showFramerate;
 	private FormationController formation;
-	private float playerHitPoints; // TODO migrate to PlayerController
-	private float playerMaxHealth; // TODO migrate to PlayerController
 	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
 	private Text frameboard, waveboard;
 	private int playerShipCount, priorShipCount, totalFrames;
 
-	public float GetPlayerHealth () { return playerHitPoints; }
-	public float GetPlayerMaxHealth () { return playerMaxHealth; }
-	public int GetPlayerShips () { return playerShipCount; }
-	public void PlayerChangeHealth (float pips) { playerHitPoints += pips; }
+	public int GetPlayerShips () { return playerShipCount; } 
 	public void PlayerDown () { playerShipCount--; }
 	public void PlayerUp () { playerShipCount++; }
 
@@ -57,7 +52,6 @@ public class LevelManager : MonoBehaviour {
 	public void EndOfLine() { Application.Quit(); }
 	public float GetScore () { return score; }
 	public void HideWave () { waveboard.gameObject.SetActive(false); }
-	public void PlayerResetHitpoints () { playerHitPoints = playerMaxHealth; }
 	
 	void ConfigureAnyLevel () { Cursor.visible = true; }
 	void ConfigureSkyGame () {	Cursor.visible = false;	}
@@ -66,7 +60,6 @@ public class LevelManager : MonoBehaviour {
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 
-		playerMaxHealth = 420f;
 		bCredit = false;
 
 		Connections();
@@ -91,7 +84,6 @@ public class LevelManager : MonoBehaviour {
 	void SharedStart () {
 		waveNumber = 1;
 		score = 0;
-		playerHitPoints = playerMaxHealth;
 		playerShipCount = playerMaxShips;
 		playerShip.SetActive(true);
 		creditButton.gameObject.SetActive(false);

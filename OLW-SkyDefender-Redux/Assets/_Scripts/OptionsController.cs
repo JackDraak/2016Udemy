@@ -9,6 +9,17 @@ public class OptionsController : MonoBehaviour {
 
 	private LevelManager levelManager;
 	
+	void Start () {
+		if (SceneManager.GetActiveScene().buildIndex != 0) {
+			levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
+		}
+		speedSlider.value = PlayerPrefsManager.GetSpeed ();
+		if (PlayerPrefsManager.GetAutoplay () == true) autoplaySlider.value = 1; else autoplaySlider.value = 0;
+		if (PlayerPrefsManager.GetEasy () == true) easySlider.value = 1; else easySlider.value = 0;
+		if (PlayerPrefsManager.GetFireBalls () == true) fireballsSlider.value = 1; else fireballsSlider.value = 0;
+		if (PlayerPrefsManager.GetTrails () == true) trailsSlider.value = 1; else trailsSlider.value = 0;
+	}
+
 	public void Save () {
 		PlayerPrefsManager.SetSpeed (speedSlider.value);
 		if (autoplaySlider.value == 1) PlayerPrefsManager.SetAutoplay(true); else PlayerPrefsManager.SetAutoplay(false);
@@ -29,15 +40,5 @@ public class OptionsController : MonoBehaviour {
 		speedSlider.value = 0.7f;
 		trailsSlider.value = 1;
 	}
-
-	void Start () {
-		if (SceneManager.GetActiveScene().buildIndex != 0) {
-			levelManager = GameObject.FindObjectOfType<LevelManager>(); if (!levelManager) Debug.LogError (this + ": unable to attach to LevelManager");
-		}
-		speedSlider.value = PlayerPrefsManager.GetSpeed ();
-		if (PlayerPrefsManager.GetAutoplay () == true) autoplaySlider.value = 1; else autoplaySlider.value = 0;
-		if (PlayerPrefsManager.GetEasy () == true) easySlider.value = 1; else easySlider.value = 0;
-		if (PlayerPrefsManager.GetFireBalls () == true) fireballsSlider.value = 1; else fireballsSlider.value = 0;
-		if (PlayerPrefsManager.GetTrails () == true) trailsSlider.value = 1; else trailsSlider.value = 0;
-	}
 }
+
