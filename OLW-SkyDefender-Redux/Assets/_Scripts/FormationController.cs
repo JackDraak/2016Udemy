@@ -14,7 +14,6 @@ public class FormationController : MonoBehaviour {
 	private bool afterMatch, decelerate, gameStarted, passGo, respawn, right;
 	private ArrayList enemies;
 	private int finalWave, myWave, flash;
-//	private LevelManager levelManager;
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
@@ -22,9 +21,6 @@ public class FormationController : MonoBehaviour {
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void Start () {
-		levelManager = GameObject.FindObjectOfType<LevelManager>();
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL_Start");
-
 		myWave = levelManager.GetWaveNumber();
 		baseAcceleration = 0.10f;
 		decelerate = true;
@@ -61,6 +57,24 @@ public class FormationController : MonoBehaviour {
 				if (maxSpeed > 1f) maxSpeed = maxSpeed / reverseSquelch;
 			}
 		} */
+
+		// TODO come up with a *good* win condition, furthermore let levelmanager control wins and losses?
+		if (levelManager.GetScore() > 5000000f) {
+			Despawner();
+			levelManager.WinBattle();
+		}
+
+		// win after X waves?
+		if (levelManager.GetWaveNumber() == finalWave && FormationIsEmpty()) {
+			Despawner();
+			levelManager.WinBattle();
+		}
+
+		// formation spawn control
+		afterMatch = resetButton.activeSelf;
+		if (FormationIsFull()) { respawn = false; flash = 0; }
+		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
+		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn();
 	}
 
 	void StopWarn () {
@@ -76,26 +90,6 @@ public class FormationController : MonoBehaviour {
 		baseAcceleration = 0.10f + (myWave * 0.02f); 
 
 		Invoke ("Respawn", spawnDelay);
-	}
-
-	void FixedUpdate () {
-		// TODO come up with a *good* win condition, furthermore let levelmanager control wins and losses
-		if (levelManager.GetScore() > 50000f) {
-			Despawner();
-			levelManager.WinBattle();
-		}
-
-		// win after X waves?
-		if (levelManager.GetWaveNumber() == finalWave && FormationIsEmpty()) {
-			Despawner();
-			levelManager.WinBattle();
-		}
-
-		// formation spawn control
-		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { respawn = false; flash = 0; }
-		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
-		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch) { TriggerRespawn(); }
 	}
 
 	bool FormationIsEmpty () {

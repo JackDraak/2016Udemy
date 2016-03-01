@@ -117,13 +117,12 @@ public class LevelManager : MonoBehaviour {
 
 		// frame rate calulator
 		if (Input.GetKeyDown(KeyCode.F)) showFramerate = !showFramerate;
-		deltaTime += Time.deltaTime;
-		deltaTime /= 2.0f;
-		fps = 1.0f/deltaTime;
-		totalFrameTime += deltaTime;
-		totalFrames++;
-		fpsAverage = totalFrames/totalFrameTime;
 		if (showFramerate) {
+			float myDelta = Time.deltaTime;
+			fps = 1 / myDelta;
+			totalFrameTime += myDelta;
+			totalFrames++;
+			fpsAverage = totalFrames/totalFrameTime;
 			float myFPS = Mathf.Round(fps);
 			float myMean = Mathf.Round(fpsAverage);
 			frameboard.text = myFPS.ToString() + "/" + myMean.ToString() + " (fps/mean)\n[F to hide/show]";
@@ -194,7 +193,7 @@ public class LevelManager : MonoBehaviour {
 	public void LoadLevel(string name){
 		StoreHighs();
 		ConfigureAnyLevel();
-		if (name == "SkyGame") ConfigureSkyGame (); 
+		if (name == "SkyDefender") ConfigureSkyGame (); 
 		SceneManager.LoadScene(name);
 	}
 	

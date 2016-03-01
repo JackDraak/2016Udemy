@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour {
 
 		// fire control reset?
 		chance = Random.Range (1, 101);
-		if (chance > 49 && chance < 51) armed = !armed;
+		if (chance > 47 && chance < 53) armed = !armed;
 
 		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
 		Vector4 priorColour = currentColor;
@@ -92,6 +92,7 @@ public class EnemyController : MonoBehaviour {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		if (hitPoints <= 0f) ScoreAndDestroy();
+		DropPowerBonus(); 
 	}
 
 	void ScoreAndDestroy () {
