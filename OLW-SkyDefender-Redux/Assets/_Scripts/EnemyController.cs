@@ -98,8 +98,8 @@ public class EnemyController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint (scuttle, transform.position);
 		levelManager.ChangeScore(25 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
-		int chance = Random.Range (0,100);
-		if (chance > 42 && chance <= 58) DropPowerBonus(); 
+		int chance = Random.Range (1,101);
+		if (chance > 43 && chance <= 57) DropPowerBonus(); 
 		Destroy(this.gameObject, 0.001f);
 	}
 }

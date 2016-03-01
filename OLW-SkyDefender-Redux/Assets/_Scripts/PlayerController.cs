@@ -108,20 +108,25 @@ public class PlayerController : MonoBehaviour {
 		boostMessage.text = "";
 	}
 
-	void PowerUp () { // TODO add health boost option? should migrate health to Player, eh?
+	void PowerUp () { // TODO add health boost option?
 		levelManager.ChangeScore(levelManager.GetWaveNumber() * 50);
-		int selection = Random.Range (1,3);
+		int selection = Random.Range (1,4);
 		switch (selection) {
 			case 1:
 				boostFire = true;
 				fireBoostTime = Time.time;
-				boostMessage.text = "Firepower Up!";
+				boostMessage.text = "Firepower Boost!";
 				Invoke ("ClearBoostMessage", 2.5f);
 				break;
 			case 2:
 				boostSpeed = true;
 				speedBoostTime = Time.time;
-				boostMessage.text = "Speed up!";
+				boostMessage.text = "Speed Boost!";
+				Invoke ("ClearBoostMessage", 2.5f);
+				break;
+		case 3:
+				playerHitPoints = playerMaxHealth;
+				boostMessage.text = "Health Boost!";
 				Invoke ("ClearBoostMessage", 2.5f);
 				break;
 		}
