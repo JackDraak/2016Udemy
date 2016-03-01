@@ -13,13 +13,16 @@ public class PlayerController : MonoBehaviour {
 	public GameObject zappyBolt;
 	public AudioClip zappySound;
 
+	[SerializeField]
 	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireBoostTime, fireDelay, fireTime, moveSpeed, padding, playerMaxHealth, playerHitPoints, speedBoostTime, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
-	private bool boostSpeed, boostFire, right, up;
+	[SerializeField]
+	private bool boostSpeed, boostFire; 
+	private bool up;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 	void SpawnPlayer () { transform.gameObject.SetActive(true); }
