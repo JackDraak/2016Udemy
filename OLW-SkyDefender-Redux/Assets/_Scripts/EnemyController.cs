@@ -92,7 +92,7 @@ public class EnemyController : MonoBehaviour {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		if (hitPoints <= 0f) ScoreAndDestroy();
-		DropPowerBonus(); 
+//		DropPowerBonus(); 
 	}
 
 	void ScoreAndDestroy () {

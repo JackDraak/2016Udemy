@@ -9,7 +9,7 @@ public class FormationController : MonoBehaviour {
 	public float reverseBuffer = -2.12f;
 	public float reverseSquelch = 1.12f;
 	public float spawnDelay = 0.8f;
-
+	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
 	private bool afterMatch, decelerate, gameStarted, respawn, right;

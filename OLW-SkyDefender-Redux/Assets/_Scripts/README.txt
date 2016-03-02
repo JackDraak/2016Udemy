@@ -9,11 +9,6 @@ things to do:
 
 @ lecture 119
 
-	drop power-ups - health boost?
-		 one power-up to rule them all? let playerController give random bonus and flash text to show what it was?
-
-	survey formation mid-wave to confirm enemy# to prevent 'halfmations' :)
-
 	alternative enemy prefabs?
 	alternative enemy projectiles?
 	alternative enemy formations?
@@ -27,8 +22,6 @@ things to do:
 	fix formation motion - still working out squelch for delta motion
 
 	complete object pooling for: projectiles, effects?
-
-	??? take player health out of level manager and put in player
 
 	tidy IDE
 	tidy C#

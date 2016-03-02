@@ -14,14 +14,22 @@ public class PlayerController : MonoBehaviour {
 	public AudioClip zappySound;
 
 	[SerializeField]
-	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireBoostTime, fireDelay, fireTime, moveSpeed, padding, playerMaxHealth, playerHitPoints, speedBoostTime, xMax, xMin;
+	private float playerHitPoints, moveSpeed;
+	[SerializeField]
+	private bool boostFire;
+	[SerializeField]
+	private float fireBoostTime;
+	[SerializeField]
+	private bool boostSpeed;
+	[SerializeField]
+	private float speedBoostTime;
+
+	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireDelay, fireTime, padding, playerMaxHealth, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
-	[SerializeField]
-	private bool boostSpeed, boostFire; 
 	private bool up;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
@@ -111,7 +119,7 @@ public class PlayerController : MonoBehaviour {
 		boostMessage.text = "";
 	}
 
-	void PowerUp () { // TODO add health boost option?
+	void PowerUp () {
 		levelManager.ChangeScore(levelManager.GetWaveNumber() * 50);
 		int selection = Random.Range (1,4);
 		switch (selection) {
@@ -128,7 +136,7 @@ public class PlayerController : MonoBehaviour {
 				Invoke ("ClearBoostMessage", 2.5f);
 				break;
 		case 3:
-				playerHitPoints = playerMaxHealth;
+				playerHitPoints = Mathf.Clamp((playerHitPoints +  (0.5f * playerMaxHealth)), 1, playerMaxHealth);
 				boostMessage.text = "Health Boost!";
 				Invoke ("ClearBoostMessage", 2.5f);
 				break;
