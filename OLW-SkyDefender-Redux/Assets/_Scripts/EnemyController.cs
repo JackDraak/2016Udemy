@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour {
 	private LevelManager levelManager;
 	private SpriteRenderer myRenderer;
 	private int myWave;
+//	private PlayerController player;
 	
 	public void Disarm () { dearmed = true; }
 	public void Rearm () { dearmed = false; }
@@ -27,6 +28,8 @@ public class EnemyController : MonoBehaviour {
 			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
 		myRenderer = GetComponent<SpriteRenderer>();
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
+//		player = FindObjectOfType<PlayerController>();
+//			if (!player) Debug.LogError ("FAIL player from enemy: start()");
 
 		armed = true;
 		bombSpeed = 6f;
@@ -72,7 +75,8 @@ public class EnemyController : MonoBehaviour {
 	
 	void DropBomb () {
 		float progressiveDelay = fireDelay;
-		if (fireTime + progressiveDelay <= Time.time) {
+
+		if (fireTime + progressiveDelay <= Time.time) { // && player.isActiveAndEnabled) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
