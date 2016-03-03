@@ -161,7 +161,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void StartGameButton () { InitGame(); }
-	public void RestartButton () { InitGame(); }
+	public void RestartButton () { StoreHighs(); InitGame(); } 
 
 	public void CreditButton () {
 		bCredit = creditMessage.gameObject.activeInHierarchy;
