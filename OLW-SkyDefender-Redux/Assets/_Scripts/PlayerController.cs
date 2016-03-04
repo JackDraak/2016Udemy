@@ -33,7 +33,10 @@ public class PlayerController : MonoBehaviour {
 	private bool up;
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
-	void SpawnPlayer () { transform.gameObject.SetActive(true); }
+
+	void SpawnPlayer () { 
+		transform.gameObject.SetActive(true);
+	}
 
 	void OnTriggerEnter2D (Collider2D collider) {
 		if (collider.tag == "EnemyProjectile") {
@@ -169,7 +172,7 @@ public class PlayerController : MonoBehaviour {
 		else {
 			boostFire = false;
 			boostSpeed = false;
-			Invoke("SpawnPlayer", 1.8f);
+			Invoke("SpawnPlayer", 2.1f);
 		}
 	}
 
