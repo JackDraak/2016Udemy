@@ -9,6 +9,9 @@ public class LevelManager : MonoBehaviour {
 	public static int waveNumber;
 	public static float score;
 
+	//[HideInInspector]
+	public bool insane;
+
 	// adjust/set in inspector!
 	public Button creditButton;
 	public Button quitButton;
@@ -61,6 +64,7 @@ public class LevelManager : MonoBehaviour {
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 
+		insane = false;
 		bCredit = false;
 
 		Connections();
@@ -107,6 +111,8 @@ public class LevelManager : MonoBehaviour {
 		startMessage.gameObject.SetActive(false);
 		formation.TriggerRespawn();
 	}
+
+	public void InsaneMode () { insane = true; InitGame(); }
 
 	void Update () { 
 		// update extra ships
