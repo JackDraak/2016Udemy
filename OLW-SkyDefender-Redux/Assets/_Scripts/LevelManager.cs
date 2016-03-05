@@ -180,13 +180,15 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoseBattle () {
-		loseMessage.gameObject.SetActive(true);
-		EndBattle();
+		EndBattle(); // mostly depreciated now that menues are back
+		//loseMessage.gameObject.SetActive(true);
+		SceneManager.LoadScene("GameLost");
 	}
 
 	public void WinBattle () {
-		winMessage.gameObject.SetActive(true);
 		EndBattle();
+		//winMessage.gameObject.SetActive(true);
+		SceneManager.LoadScene("GameWon");
 	}
 
 	void EndBattle () {

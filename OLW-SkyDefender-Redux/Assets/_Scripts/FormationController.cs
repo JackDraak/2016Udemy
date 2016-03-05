@@ -60,7 +60,7 @@ public class FormationController : MonoBehaviour {
 		} */
 
 		// TODO come up with a *good* win condition, furthermore let levelmanager control wins and losses?
-		if (levelManager.GetScore() > 5000000f) {
+		if (levelManager.GetScore() > 500f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
