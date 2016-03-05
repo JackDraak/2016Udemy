@@ -9,14 +9,10 @@ public class LevelManager : MonoBehaviour {
 	public static int waveNumber;
 	public static float score;
 
-	//[HideInInspector]
-	public bool insane;
-
 	// adjust/set in inspector!
 	public Button creditButton;
 	public Button quitButton;
 	public Button startButton;
-	public Button startInsaneButton;
 	public Button startOverButton;
 	public GameObject enemyFormation;
 	public GameObject extra_01;
@@ -64,7 +60,6 @@ public class LevelManager : MonoBehaviour {
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 
-		insane = false;
 		bCredit = false;
 
 		Connections();
@@ -75,7 +70,6 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
-		startInsaneButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
 		waveboard.gameObject.SetActive(false);
 		music_Menu.Begin();
@@ -107,12 +101,9 @@ public class LevelManager : MonoBehaviour {
 		enemyFormation.gameObject.SetActive(true);
 		quitButton.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
-		startInsaneButton.gameObject.SetActive(false);
 		startMessage.gameObject.SetActive(false);
 		formation.TriggerRespawn();
 	}
-
-	public void InsaneMode () { insane = true; InitGame(); }
 
 	void Update () { 
 		// update extra ships
@@ -180,15 +171,13 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public void LoseBattle () {
-		EndBattle(); // mostly depreciated now that menues are back
-		//loseMessage.gameObject.SetActive(true);
-		SceneManager.LoadScene("GameLost");
+		loseMessage.gameObject.SetActive(true);
+		EndBattle();
 	}
 
 	public void WinBattle () {
+		winMessage.gameObject.SetActive(true);
 		EndBattle();
-		//winMessage.gameObject.SetActive(true);
-		SceneManager.LoadScene("GameWon");
 	}
 
 	void EndBattle () {
