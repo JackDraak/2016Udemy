@@ -10,7 +10,10 @@ things to do:
 
 @ lecture 119
 
-	formation control: 1/~400 waves game doesnt respawn..... why? FIX
+	formation control: 1/~400 waves game doesnt respawn..... why? FIX... first stab at fixing it seems to have made no change
+		have granted 'R'espawn ability from keyboard for now...
+
+	consider WebGL audio warning... good idea, dont blow speakers....
 
 	alternative enemy prefabs?
 	alternative enemy projectiles?

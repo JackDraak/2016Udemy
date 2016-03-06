@@ -80,6 +80,7 @@ public class FormationController : MonoBehaviour {
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 //		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn();
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
+		if (Input.GetKeyDown(KeyCode.R)) Respawn();
 	}
 
 	void StopWarn () {
