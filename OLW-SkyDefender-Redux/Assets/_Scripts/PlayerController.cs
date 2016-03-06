@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 
-		playerMaxHealth = 420f;
+		playerMaxHealth = 120f; // TODO set to 420a
 		playerHitPoints = playerMaxHealth;
 
 		boostSpeed = false;
@@ -168,7 +168,11 @@ public class PlayerController : MonoBehaviour {
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
 		playerHitPoints = playerMaxHealth;
-		if (levelManager.GetPlayerShips() <= 0) levelManager.LoseBattle();
+		if (levelManager.GetPlayerShips() <= 0) {
+			boostFire = false;
+			boostSpeed = false;
+			levelManager.LoseBattle();
+		}
 		else {
 			boostFire = false;
 			boostSpeed = false;

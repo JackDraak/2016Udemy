@@ -9,8 +9,12 @@ public class LevelManager : MonoBehaviour {
 	public static int waveNumber;
 	public static float score;
 
+	[HideInInspector]
+	public bool insane;
+
 	// adjust/set in inspector!
 	public Button creditButton;
+	public Button insaneButton;
 	public Button quitButton;
 	public Button startButton;
 	public Button startOverButton;
@@ -59,24 +63,28 @@ public class LevelManager : MonoBehaviour {
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
-
-		bCredit = false;
+		insane = false;
+		showFramerate = true; // TODO turn off for final relase
 
 		Connections();
 		SharedStart();
-		ShowMyShips();
+		HeadStart();
+	}
 
+	void HeadStart () {
+		ShowMyShips();
+		bCredit = false;
 		creditButton.gameObject.SetActive(true);
 		enemyFormation.gameObject.SetActive(false);
 		quitButton.gameObject.SetActive(true);
 		startButton.gameObject.SetActive(true);
 		startMessage.gameObject.SetActive(true);
+		insaneButton.gameObject.SetActive(true);
 		waveboard.gameObject.SetActive(false);
 		music_Menu.Begin();
 		music_Game.End();
-
+		
 		fps = 0.0f;
-		showFramerate = true; // TODO turn off for final relase
 		totalFrames = 0;
 		totalFrameTime = 0f;
 	}
@@ -102,6 +110,7 @@ public class LevelManager : MonoBehaviour {
 		quitButton.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
 		startMessage.gameObject.SetActive(false);
+		insaneButton.gameObject.SetActive(false);
 		formation.TriggerRespawn();
 	}
 
@@ -160,8 +169,16 @@ public class LevelManager : MonoBehaviour {
 		else extra_04.gameObject.SetActive(false);
 	}
 
-	public void StartGameButton () { InitGame(); }
-	public void RestartButton () { StoreHighs(); InitGame(); } 
+	public void StartGameButton () { insane = false; InitGame(); }
+	public void RestartButton () { 
+		StoreHighs(); 
+		HeadStart(); 
+		winMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+	}
+
+	public void InsaneButton () { insane = true; InitGame(); }
 
 	public void CreditButton () {
 		bCredit = creditMessage.gameObject.activeInHierarchy;

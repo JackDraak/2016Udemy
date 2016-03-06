@@ -2,8 +2,9 @@
 0.120.01 - 2016 Feb 24 - half custom artwork
 0.120.10 - 2016 Feb 25 - mostly custom artwork (still undone: clouds)
 0.120.2	- 2016 Feb 29 - now even the splash screen transition has broken... seriously annoying: all for simply tyrying to add a UI slider to said splash
+0.120.3 - 2016 Mar 5 - okay, seriously: fuck Unity3d scene management for failing to load scene states saved with full prefabs, et. al.  W T F... fixed splash at least....
 
-Development Notes: 0.120.01
+Development Notes: 0.120.3
 ==================
 things to do:
 

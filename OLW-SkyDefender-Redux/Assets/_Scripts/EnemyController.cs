@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour {
 	public GameObject puffMachine;
 	public GameObject puffLocation;
 
-	private bool armed, dearmed;
+	private bool armed, dearmed, insane;
 	private float bombSpeed, chance, fireDelay, fireTime, hitPoints, maxHealth;
 	private Color currentColor;
 	private LevelManager levelManager;
@@ -30,6 +30,8 @@ public class EnemyController : MonoBehaviour {
 			if (!myRenderer) Debug.LogError ("FAIL renderer");
 //		player = FindObjectOfType<PlayerController>();
 //			if (!player) Debug.LogError ("FAIL player from enemy: start()");
+
+		insane = levelManager.insane;
 
 		armed = true;
 		bombSpeed = 6f;
@@ -96,7 +98,7 @@ public class EnemyController : MonoBehaviour {
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
 		if (hitPoints <= 0f) ScoreAndDestroy();
-//		DropPowerBonus(); 
+		if (insane) DropPowerBonus(); 
 	}
 
 	void ScoreAndDestroy () {
