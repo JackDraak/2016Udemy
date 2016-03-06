@@ -97,6 +97,7 @@ public class EnemyController : MonoBehaviour {
 		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
+
 		if (hitPoints <= 0f) ScoreAndDestroy();
 		if (insane) {
 			if (Random.Range(0,2) < 1) DropPowerBonus(); 

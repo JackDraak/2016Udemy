@@ -44,7 +44,6 @@ public class LevelManager : MonoBehaviour {
 	public void PlayerUp () { playerShipCount++; }
 
 	public int GetWaveNumber () { return waveNumber; }
-	public void ResetWaveNumber () { waveNumber = 1; }
 	public void IncrementWaveNumber () { waveNumber++; }
 
 	public void EnemyUp () { enemiesRemaining++; }
@@ -91,6 +90,7 @@ public class LevelManager : MonoBehaviour {
 
 	void SharedStart () {
 		waveNumber = 1;
+		bonusShipCount = 0;
 		score = 0;
 		playerShipCount = playerMaxShips;
 		playerShip.SetActive(true);
