@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, respawn, right;
+	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
 	private ArrayList enemies;
 	private int finalWave, myWave, flash;
 
@@ -23,22 +23,22 @@ public class FormationController : MonoBehaviour {
 
 	void Start () {
 		myWave = levelManager.GetWaveNumber();
-		baseAcceleration = 0.10f;
-		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 100;
 		flash = 0;
-		maxSpeed = Random.Range(5f, 6f);
-		padding = 4.6f;
 		right = true;
+		decelerate = true;
+		baseAcceleration = 0.10f;
+		maxSpeed = Random.Range(5f, 6f);
 		speed = baseAcceleration;
+		padding = 4.6f;
 		SetMinMaxX();
 	}
 
 	void Update () {
 		// test boundary and flip if needed
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Random.Range(5f + (myWave * 0.2f), 6f + (myWave * 1.15f));}
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Random.Range(5f + (myWave * 0.2f), 6f + (myWave * 1.15f));}
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
@@ -50,7 +50,8 @@ public class FormationController : MonoBehaviour {
 		if (speed >= maxSpeed) decelerate = true;
 
 		if (myWave > 29 && !rePaddedA) { padding = 5.1f; rePaddedA = true; SetMinMaxX(); }
-		if (myWave > 74 && !rePaddedB) { padding = 5.4f; rePaddedB = true; SetMinMaxX(); }
+		if (myWave > 49 && !rePaddedB) { padding = 5.8f; rePaddedB = true; SetMinMaxX(); }
+		if (myWave > 69 && !rePaddedC) { padding = 6.4f; rePaddedC = true; SetMinMaxX(); }
 
 	/*	// TODO finish deceleration 
 		if (decelerate) {
@@ -61,8 +62,8 @@ public class FormationController : MonoBehaviour {
 			}
 		} */
 
-		// TODO come up with a *good* win condition, furthermore let levelmanager control wins and losses?
-		if (levelManager.GetScore() > 5000000f) {
+		// TODO come up with a *good* win condition set, furthermore let levelmanager control wins and losses?
+		if (levelManager.GetScore() > 25000000f) {
 			Despawner();
 			levelManager.WinBattle();
 		}

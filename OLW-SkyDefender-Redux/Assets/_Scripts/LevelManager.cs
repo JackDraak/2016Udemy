@@ -89,7 +89,7 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void SharedStart () {
-		waveNumber = 1;
+		waveNumber = 1; // TODO bugtestiung
 		bonusShipCount = 0;
 		score = 0;
 		playerShipCount = playerMaxShips;
