@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, decelerate, gameStarted, respawn, right;
+	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, respawn, right;
 	private ArrayList enemies;
 	private int finalWave, myWave, flash;
 
@@ -49,6 +49,8 @@ public class FormationController : MonoBehaviour {
 
 		if (speed >= maxSpeed) decelerate = true;
 
+		if (myWave > 29 && !rePaddedA) { padding = 4.9f; rePaddedA = true; SetMinMaxX(); }
+		if (myWave > 74 && !rePaddedB) { padding = 5.1f; rePaddedB = true; SetMinMaxX(); }
 
 	/*	// TODO finish deceleration 
 		if (decelerate) {
