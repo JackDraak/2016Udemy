@@ -26,7 +26,7 @@ public class FormationController : MonoBehaviour {
 		baseAcceleration = 0.10f;
 		decelerate = true;
 		enemies = new ArrayList();
-		finalWave = 42;
+		finalWave = 100;
 		flash = 0;
 		maxSpeed = Random.Range(5f, 6f);
 		padding = 4.6f;

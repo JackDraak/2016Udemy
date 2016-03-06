@@ -10,7 +10,7 @@ things to do:
 
 @ lecture 119
 
-	bonus player ship @ 25k & 100k? (also @ 500k, 2,000,000?)
+	todo: after ~level 25 increase padding a bit?
 
 	alternative enemy prefabs?
 	alternative enemy projectiles?
