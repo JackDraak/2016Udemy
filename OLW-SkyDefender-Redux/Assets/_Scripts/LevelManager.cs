@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour {
 	private FormationController formation;
 	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
 	private Text frameboard, waveboard;
-	private int playerShipCount, priorShipCount, totalFrames;
+	private int bonusShipCount, playerShipCount, priorShipCount, totalFrames;
 
 	public int GetPlayerShips () { return playerShipCount; } 
 	public void PlayerDown () { playerShipCount--; }
@@ -115,9 +115,28 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Update () { 
+		// grant bonus ships at: 25,000 | 100,000 | 500,000 | 2,500,000
+		if (score > 25000 && bonusShipCount == 0) {
+			playerShipCount++;
+			bonusShipCount++;
+		}
+		if (score > 100000 && bonusShipCount == 1) {
+			playerShipCount++;
+			bonusShipCount++;
+		}
+		if (score > 500000 && bonusShipCount == 2) {
+			playerShipCount++;
+			bonusShipCount++;
+		}
+		if (score > 2500000 && bonusShipCount == 3) {
+			playerShipCount++;
+			bonusShipCount++;
+		}
+
 		// update extra ships
 		if (priorShipCount != playerShipCount) ShowMyShips();
 		priorShipCount = playerShipCount;
+		
 
 		//update scoreboard
 		if (score == 0) scoreboard.text = ("Zip");
