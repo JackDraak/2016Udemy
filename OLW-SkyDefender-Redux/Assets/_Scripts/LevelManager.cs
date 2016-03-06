@@ -194,6 +194,8 @@ public class LevelManager : MonoBehaviour {
 
 	public void WinBattle () {
 		winMessage.gameObject.SetActive(true);
+		if (playerShip) playerShip.GetComponent<PlayerController>().Debuff();
+		else Debug.LogError("ERROR - null reference to PLayer, can't debuff");
 		EndBattle();
 	}
 
@@ -210,7 +212,7 @@ public class LevelManager : MonoBehaviour {
 	public void LoadLevel(string name){
 		StoreHighs();
 		ConfigureAnyLevel();
-		if (name == "SkyDefender") ConfigureSkyGame (); 
+		if (name == "SkyDefender") ConfigureSkyGame(); 
 		SceneManager.LoadScene(name);
 	}
 	

@@ -31,7 +31,9 @@ public class PlayerController : MonoBehaviour {
 	private SpriteRenderer myRenderer;
 	private GameObject playerGun;
 	private bool up;
-	
+
+	public void Debuff () { boostFire = false; boostSpeed = false; }
+
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void SpawnPlayer () { 
@@ -56,7 +58,7 @@ public class PlayerController : MonoBehaviour {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError (this + " cant attach to PlayerGun. ERROR");
 
-		playerMaxHealth = 120f; // TODO set to 420a
+		playerMaxHealth = 420f;
 		playerHitPoints = playerMaxHealth;
 
 		boostSpeed = false;

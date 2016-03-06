@@ -10,6 +10,8 @@ things to do:
 
 @ lecture 119
 
+	bonus player ship @ 25k & 100k? (also @ 500k, 2,000,000?)
+
 	alternative enemy prefabs?
 	alternative enemy projectiles?
 	alternative enemy formations?
