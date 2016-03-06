@@ -49,8 +49,8 @@ public class FormationController : MonoBehaviour {
 
 		if (speed >= maxSpeed) decelerate = true;
 
-		if (myWave > 29 && !rePaddedA) { padding = 4.9f; rePaddedA = true; SetMinMaxX(); }
-		if (myWave > 74 && !rePaddedB) { padding = 5.1f; rePaddedB = true; SetMinMaxX(); }
+		if (myWave > 29 && !rePaddedA) { padding = 5.1f; rePaddedA = true; SetMinMaxX(); }
+		if (myWave > 74 && !rePaddedB) { padding = 5.4f; rePaddedB = true; SetMinMaxX(); }
 
 	/*	// TODO finish deceleration 
 		if (decelerate) {
@@ -77,7 +77,8 @@ public class FormationController : MonoBehaviour {
 		afterMatch = resetButton.activeSelf;
 		if (FormationIsFull()) { respawn = false; flash = 0; }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
-		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn();
+//		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn();
+		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 	}
 
 	void StopWarn () {

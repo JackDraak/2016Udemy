@@ -10,7 +10,7 @@ things to do:
 
 @ lecture 119
 
-	todo: after ~level 25 increase padding a bit?
+	formation control: 1/~400 waves game doesnt respawn..... why? FIX
 
 	alternative enemy prefabs?
 	alternative enemy projectiles?
