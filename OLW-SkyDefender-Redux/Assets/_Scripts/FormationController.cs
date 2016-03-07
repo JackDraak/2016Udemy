@@ -2,58 +2,76 @@
 using System.Collections;
 
 public class FormationController : MonoBehaviour {
+
 	// adjust/set in inspector!
 	public GameObject enemyPrefab;
 	public GameObject resetButton;
 	public LevelManager levelManager;
-	public float reverseBuffer = -2.12f;
-	public float reverseSquelch = 1.12f;
+	public float reverseBuffer = -2.12f; // TODO someday, fix or get rid of this
+	public float reverseSquelch = 1.12f; // TODO someday, fix or get rid of this
 	public float spawnDelay = 0.8f;
+
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
 	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
+
 	private ArrayList enemies;
-	private int finalWave, myWave, flash;
+	private int finalWave, flash, myWave;
+
+	// public function(s)
+	public void Despawner () {
+		foreach (GameObject enemy in enemies) { Destroy (enemy, 0.001f); }
+		levelManager.ZeroEnemies();
+	}
 
 	public void EnemyAdd (GameObject enemy) { enemies.Add (enemy); }
 
-	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
-	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
+	public void TriggerRespawn () {
+		// difficulty tuning
+		myWave = levelManager.GetWaveNumber();
+		baseAcceleration = 0.10f + (myWave * 0.02f); 
+
+		gameStarted = true;
+		respawn = true;
+		Invoke ("Respawn", spawnDelay);
+	}
 
 	void Start () {
-		myWave = levelManager.GetWaveNumber();
+		baseAcceleration = 0.10f;
+		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 100;
 		flash = 0;
-		right = true;
-		decelerate = true;
-		baseAcceleration = 0.10f;
 		maxSpeed = Random.Range(5f, 6f);
-		speed = baseAcceleration;
+		myWave = levelManager.GetWaveNumber();
 		padding = 4.6f;
+		right = true;
+		speed = baseAcceleration;
 		SetMinMaxX();
 	}
 
 	void Update () {
-		// test boundary and flip if needed
+		// test boundary, set direction
 		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
 		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
 		
-		// accelerator
+		// set acceleration
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
+		// set speed
 		if (speed >= maxSpeed) decelerate = true;
 
+		// set padding
 		if (myWave > 29 && !rePaddedA) { padding = 5.1f; rePaddedA = true; SetMinMaxX(); }
 		if (myWave > 49 && !rePaddedB) { padding = 5.8f; rePaddedB = true; SetMinMaxX(); }
 		if (myWave > 69 && !rePaddedC) { padding = 6.4f; rePaddedC = true; SetMinMaxX(); }
 
-	/*	// TODO finish deceleration 
+		/*	// TODO finish deceleration 
 		if (decelerate) {
 			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
 				Debug.Log ("squelch");
@@ -62,50 +80,54 @@ public class FormationController : MonoBehaviour {
 			}
 		} */
 
-		// TODO come up with a *good* win condition set, furthermore let levelmanager control wins and losses?
+		// win condition: ludicrous score
 		if (levelManager.GetScore() > 25000000f) {
 			Despawner();
 			levelManager.WinBattle();
 		}
 
-		// win after X waves?
+		// win condition: x waves to copmplete
 		if (levelManager.GetWaveNumber() == finalWave && FormationIsEmpty()) {
 			Despawner();
 			levelManager.WinBattle();
 		}
 
-		// formation spawn control
+		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
 		afterMatch = resetButton.activeSelf;
 		if (FormationIsFull()) { respawn = false; flash = 0; }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
-//		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn();
+//		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn(); // can't trust GetEnemies().. use it only for despawns
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
+
+		// formation !respawn debugging
 		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
 		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
 		if (Input.GetKeyDown(KeyCode.R)) Respawn();
 	}
-
-	void StopWarn () {
-		if (decelerate) return;
+	
+	void FillPosition (Transform pos) {
+		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
+		EnemyAdd(enemy);
+		enemy.transform.parent = pos;
+		levelManager.EnemyUp();
 	}
-
-	public void TriggerRespawn () {
-		gameStarted = true;
-		respawn = true;
-
-		// difficulty tuning
-		myWave = levelManager.GetWaveNumber();
-		baseAcceleration = 0.10f + (myWave * 0.02f); 
-
-		Invoke ("Respawn", spawnDelay);
-	}
-
+	
 	bool FormationIsEmpty () {
 		foreach(Transform childPositionGameObject in transform) {
 			if (childPositionGameObject.childCount > 0) return false;
 		} return true;
 	}
 
+	bool FormationIsFull () {
+		foreach(Transform childPosition in transform) {
+			if (childPosition.childCount == 0) return false;
+		} return true;
+	}
+
+	void HideWave () { levelManager.HideWave(); }
+
+	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
+	
 	Transform RandomFreePosition () {
 		Transform[] myEmptyChildren = new Transform[transform.childCount];
 		int inCount = 0;
@@ -117,10 +139,6 @@ public class FormationController : MonoBehaviour {
 		}
 		if (inCount > 0) return myEmptyChildren[Random.Range(0, inCount)];
 		else return null;
-	}
-
-	void HideWave () {
-		levelManager.HideWave();
 	}
 
 	void Respawn () {
@@ -136,26 +154,8 @@ public class FormationController : MonoBehaviour {
 		if (RandomFreePosition()) Invoke("Respawn", spawnDelay);
 		else if (FormationIsFull() && levelManager.GetWaveNumber() < finalWave) levelManager.IncrementWaveNumber();
 	}
-
-	bool FormationIsFull () {
-		foreach(Transform childPosition in transform) {
-			if (childPosition.childCount == 0) return false;
-		} return true;
-	}
-
-	void FillPosition (Transform pos) {
-		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
-		EnemyAdd(enemy);
-		enemy.transform.parent = pos;
-		levelManager.EnemyUp();
-	}
-
-	public void Despawner () {
-		foreach (GameObject enemy in enemies) {
-			Destroy (enemy, 0.001f);
-		}
-		levelManager.ZeroEnemies();
-	}
+	
+	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
 
 	void SetMinMaxX () {
 		float distance = transform.position.z - Camera.main.transform.position.z;
@@ -164,4 +164,6 @@ public class FormationController : MonoBehaviour {
 		xMax = rightBoundary.x - padding;
 		xMin = leftBoundary.x + padding;
 	}
+
+	void StopWarn () { if (decelerate) return; }
 }
