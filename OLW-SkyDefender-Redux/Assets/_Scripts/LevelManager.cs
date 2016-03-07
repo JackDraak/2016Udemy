@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
+
 	static LevelManager instance = null;
 	public static int enemiesRemaining;
 	public static int waveNumber;
@@ -34,11 +35,22 @@ public class LevelManager : MonoBehaviour {
 	public Text winMessage;
 
 	private bool bCredit, showFramerate;
-	private FormationController formation;
-	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
-	private Text frameboard, waveboard;
 	private int bonusShipCount, playerShipCount, priorShipCount, totalFrames;
+	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
+	private FormationController formation;
+	private Text frameboard, waveboard;
 
+	// public function(s)
+	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
+	public void EndOfLine() { Application.Quit(); }
+	public float GetScore () { return score; }
+	public void HideWave () { waveboard.gameObject.SetActive(false); }
+
+	public void EnemyUp () { enemiesRemaining++; }
+	public void EnemyDown () { enemiesRemaining--; }
+	public int GetEnemies () { return enemiesRemaining; }
+	public void ZeroEnemies () { enemiesRemaining = 0; }
+	
 	public int GetPlayerShips () { return playerShipCount; } 
 	public void PlayerDown () { playerShipCount--; }
 	public void PlayerUp () { playerShipCount++; }
@@ -46,72 +58,57 @@ public class LevelManager : MonoBehaviour {
 	public int GetWaveNumber () { return waveNumber; }
 	public void IncrementWaveNumber () { waveNumber++; }
 
-	public void EnemyUp () { enemiesRemaining++; }
-	public void EnemyDown () { enemiesRemaining--; }
-	public int GetEnemies () { return enemiesRemaining; }
-	public void ZeroEnemies () { enemiesRemaining = 0; }
+	public void CreditButton () {
+		bCredit = creditMessage.gameObject.activeInHierarchy;
+		bCredit = !bCredit;
+		startMessage.gameObject.SetActive(!bCredit);
+		creditMessage.gameObject.SetActive(bCredit);
+	}
 
-	public void ChangeScore (float scoreDelta) { score += scoreDelta; }
-	public void EndOfLine() { Application.Quit(); }
-	public float GetScore () { return score; }
-	public void HideWave () { waveboard.gameObject.SetActive(false); }
+	public void InsaneButton () { insane = true; InitGame(); }
 	
-	void ConfigureAnyLevel () { Cursor.visible = true; }
-	void ConfigureSkyGame () {	Cursor.visible = false;	}
+	public void LoadLevel(string name){
+		StoreHighs();
+		ConfigureAnyLevel();
+		if (name == "SkyDefender") ConfigureSkyGame(); 
+		SceneManager.LoadScene(name);
+	}
+
+	public void LoseBattle () {
+		loseMessage.gameObject.SetActive(true);
+		EndBattle();
+	}
+	
+	public void RestartButton () { 
+		StoreHighs(); 
+		HeadStart(); 
+		winMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		startOverButton.gameObject.SetActive(false);
+	}
+
+	public void ShowWave () { 
+		waveboard.gameObject.SetActive(true);
+		waveboard.text = waveNumber.ToString();
+	}
+	
+	public void StartGameButton () { insane = false; InitGame(); }
+
+	public void WinBattle () {
+		winMessage.gameObject.SetActive(true);
+		if (playerShip) playerShip.GetComponent<PlayerController>().Debuff();
+		else Debug.LogError("ERROR - null reference to PLayer, can't debuff");
+		EndBattle();
+	}
 
 	void Start () {	
 		if (instance != null && instance != this) { Destroy (gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 		insane = false;
 		showFramerate = true; // TODO turn off for final relase
-
 		Connections();
 		SharedStart();
 		HeadStart();
-	}
-
-	void HeadStart () {
-		ShowMyShips();
-		bCredit = false;
-		creditButton.gameObject.SetActive(true);
-		enemyFormation.gameObject.SetActive(false);
-		quitButton.gameObject.SetActive(true);
-		startButton.gameObject.SetActive(true);
-		startMessage.gameObject.SetActive(true);
-		insaneButton.gameObject.SetActive(true);
-		waveboard.gameObject.SetActive(false);
-		music_Menu.Begin();
-		music_Game.End();
-		
-		fps = 0.0f;
-		totalFrames = 0;
-		totalFrameTime = 0f;
-	}
-
-	void SharedStart () {
-		waveNumber = 1; // TODO bugtestiung
-		bonusShipCount = 0;
-		score = 0;
-		playerShipCount = playerMaxShips;
-		playerShip.SetActive(true);
-		creditButton.gameObject.SetActive(false);
-		creditMessage.gameObject.SetActive(false);
-		loseMessage.gameObject.SetActive(false);
-		startOverButton.gameObject.SetActive(false);
-		winMessage.gameObject.SetActive(false);
-		music_Menu.End();
-		music_Game.Begin();
-	}
-
-	void InitGame () {
-		SharedStart();
-		Cursor.visible = false;
-		enemyFormation.gameObject.SetActive(true);
-		quitButton.gameObject.SetActive(false);
-		startButton.gameObject.SetActive(false);
-		startMessage.gameObject.SetActive(false);
-		insaneButton.gameObject.SetActive(false);
-		formation.TriggerRespawn();
 	}
 
 	void Update () { 
@@ -133,17 +130,17 @@ public class LevelManager : MonoBehaviour {
 			bonusShipCount++;
 		}
 
-		// update extra ships
+		// copnform extra ships display
 		if (priorShipCount != playerShipCount) ShowMyShips();
 		priorShipCount = playerShipCount;
 		
 
-		//update scoreboard
+		// conform scoreboard display
 		if (score == 0) scoreboard.text = ("Zip");
 		if (priorScore != score) scoreboard.text = (score.ToString()); 
 		priorScore = score;
 
-		// frame rate calulator
+		// process: frame rate calulator
 		if (Input.GetKeyDown(KeyCode.F)) showFramerate = !showFramerate;
 		if (showFramerate) {
 			float myDelta = Time.deltaTime;
@@ -161,20 +158,77 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 
+	void ConfigureAnyLevel () { Cursor.visible = true; }
+
+	void ConfigureSkyGame () {	Cursor.visible = false;	}
+
 	void Connections() {
 		if (!waveboard) { waveboard = GameObject.FindWithTag("Waveboard").GetComponent<Text>(); }
-			if (!waveboard) Debug.LogError("FAIL tag Waveboard");
+			if (!waveboard) Debug.LogError("Level Manager Connections !waveboard");
 		if (!formation) formation = enemyFormation.GetComponent<FormationController>();
-			if (!formation) Debug.Log ("formation 2 pickup error");
+			if (!formation) Debug.Log ("Level Manager Connections !formation");
 		if (!frameboard) frameboard = GameObject.FindWithTag("Frameboard").GetComponent<Text>();
-			if (!frameboard) Debug.LogError("FAIL tag Frameboard");
+			if (!frameboard) Debug.LogError("Level Manager Connections !frameboard");
 		if (!scoreboard) scoreboard = GameObject.FindWithTag("Scoreboard").GetComponent<Text>();
-			if (!scoreboard) Debug.LogError("FAIL tag Scoreboard");
+			if (!scoreboard) Debug.LogError("Level Manager Connections !scoreboard");
+	}
+	
+	void EndBattle () {
+		Cursor.visible = true;
+		enemyFormation.gameObject.SetActive(false);
+		quitButton.gameObject.SetActive(true);
+		startOverButton.gameObject.SetActive(true);
+		music_Menu.Begin();
+		music_Game.End();
+		formation.Despawner();
+	}
+	
+	void HeadStart () {
+		ShowMyShips();
+		bCredit = false;
+		creditButton.gameObject.SetActive(true);
+		enemyFormation.gameObject.SetActive(false);
+		insaneButton.gameObject.SetActive(true);
+		quitButton.gameObject.SetActive(true);
+		startButton.gameObject.SetActive(true);
+		startMessage.gameObject.SetActive(true);
+		waveboard.gameObject.SetActive(false);
+		music_Menu.Begin();
+		music_Game.End();
+		fps = 0.0f;
+		totalFrames = 0;
+		totalFrameTime = 0f;
 	}
 
-	public void ShowWave () { 
-		waveboard.gameObject.SetActive(true);
-		waveboard.text = waveNumber.ToString();
+	void InitGame () {
+		SharedStart();
+		Cursor.visible = false;
+		enemyFormation.gameObject.SetActive(true);
+		insaneButton.gameObject.SetActive(false);
+		quitButton.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		startMessage.gameObject.SetActive(false);
+		formation.TriggerRespawn();
+	}
+
+	void LoadNextLevel() {
+		StoreHighs();
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
+	}
+
+	void SharedStart () {
+		waveNumber = 1;
+		bonusShipCount = 0;
+		score = 0;
+		playerShipCount = playerMaxShips;
+		creditButton.gameObject.SetActive(false);
+		creditMessage.gameObject.SetActive(false);
+		loseMessage.gameObject.SetActive(false);
+		playerShip.SetActive(true);
+		startOverButton.gameObject.SetActive(false);
+		winMessage.gameObject.SetActive(false);
+		music_Menu.End();
+		music_Game.Begin();
 	}
 
 	void ShowMyShips() {
@@ -188,58 +242,6 @@ public class LevelManager : MonoBehaviour {
 		else extra_04.gameObject.SetActive(false);
 	}
 
-	public void StartGameButton () { insane = false; InitGame(); }
-	public void RestartButton () { 
-		StoreHighs(); 
-		HeadStart(); 
-		winMessage.gameObject.SetActive(false);
-		loseMessage.gameObject.SetActive(false);
-		startOverButton.gameObject.SetActive(false);
-	}
-
-	public void InsaneButton () { insane = true; InitGame(); }
-
-	public void CreditButton () {
-		bCredit = creditMessage.gameObject.activeInHierarchy;
-		bCredit = !bCredit;
-		startMessage.gameObject.SetActive(!bCredit);
-		creditMessage.gameObject.SetActive(bCredit);
-	}
-
-	public void LoseBattle () {
-		loseMessage.gameObject.SetActive(true);
-		EndBattle();
-	}
-
-	public void WinBattle () {
-		winMessage.gameObject.SetActive(true);
-		if (playerShip) playerShip.GetComponent<PlayerController>().Debuff();
-		else Debug.LogError("ERROR - null reference to PLayer, can't debuff");
-		EndBattle();
-	}
-
-	void EndBattle () {
-		Cursor.visible = true;
-		quitButton.gameObject.SetActive(true);
-		startOverButton.gameObject.SetActive(true);
-		enemyFormation.gameObject.SetActive(false);
-		music_Menu.Begin();
-		music_Game.End();
-		formation.Despawner();
-	}
-
-	public void LoadLevel(string name){
-		StoreHighs();
-		ConfigureAnyLevel();
-		if (name == "SkyDefender") ConfigureSkyGame(); 
-		SceneManager.LoadScene(name);
-	}
-	
-	void LoadNextLevel() {
-		StoreHighs();
-		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1);
-	}
-	
 	void StoreHighs () {
 		if (PlayerPrefsManager.GetTopscore () < score) PlayerPrefsManager.SetTopscore (score);
 	}
