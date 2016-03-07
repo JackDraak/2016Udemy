@@ -11,7 +11,7 @@ public class SkyLight : MonoBehaviour {
         lightComp.type = LightType.Directional;
 
 //		lightComp.intensity = 1.17f;
-		lightComp.intensity = 1.0f;
+		lightComp.intensity = 0.86f;
 		lightComp.bounceIntensity = 1f;
 		lightComp.shadowStrength = 1f;
 		lightComp.shadowBias = 0.05f;

@@ -3,33 +3,32 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class EnemyController : MonoBehaviour {
+
 	// adjust/set in inspector!
-	public GameObject bomb;
-	public GameObject powerUp;
+	public GameObject bomb, powerUp;
 	public AudioClip bombSound;
 	public AudioClip damage;
-	public AudioClip scuttle;
-	public GameObject puffMachine;
 	public GameObject puffLocation;
+	public GameObject puffMachine;
+	public AudioClip scuttle;
 
 	private bool armed, dearmed, insane;
 	private float bombSpeed, chance, fireDelay, fireTime, hitPoints, maxHealth;
 	private Color currentColor;
 	private LevelManager levelManager;
+//	private EnemyController myController;
 	private SpriteRenderer myRenderer;
-	private int myWave;
-//	private PlayerController player;
-	
+	private int myWave,_instance;
+
+	// public function(s)
 	public void Disarm () { dearmed = true; }
 	public void Rearm () { dearmed = false; }
 
 	void Start () {
 		levelManager = GameObject.FindObjectOfType<LevelManager>(); 
-			if (!levelManager) Debug.LogError ("LEVEL_MANAGER_FAIL");
+			if (!levelManager) Debug.LogError ("Enemy Controller Start !levelManager");
 		myRenderer = GetComponent<SpriteRenderer>();
-			if (!myRenderer) Debug.LogError ("FAIL renderer");
-//		player = FindObjectOfType<PlayerController>();
-//			if (!player) Debug.LogError ("FAIL player from enemy: start()");
+			if (!myRenderer) Debug.LogError ("Enemy Controller Start !myRenderer");
 
 		insane = levelManager.insane;
 
@@ -49,7 +48,7 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void Update () {
-		// fire control
+		// AI: fire control init
 		if (!dearmed) {
 			if (!armed) {
 				InvokeRepeating ("DropBomb", fireDelay, fireDelay);
@@ -57,11 +56,11 @@ public class EnemyController : MonoBehaviour {
 			}
 		}
 
-		// fire control reset?
+		// AI: fire control resetter
 		chance = Random.Range (1, 101);
 		if (chance > 47 && chance < 53) armed = !armed;
 
-		// damage haptics -- desire: colour 1, 1, 1, 1 at full health slipping to 1, 0, 0, 1 at death
+		// conform damage haptics
 		Vector4 priorColour = currentColor;
 		float colourDelta = maxHealth / hitPoints;
 		currentColor = new Vector4 (1, 1/colourDelta, 1/colourDelta, 1f);
@@ -77,8 +76,7 @@ public class EnemyController : MonoBehaviour {
 	
 	void DropBomb () {
 		float progressiveDelay = fireDelay;
-
-		if (fireTime + progressiveDelay <= Time.time) { // && player.isActiveAndEnabled) {
+		if (fireTime + progressiveDelay <= Time.time) {
 			AudioSource.PlayClipAtPoint (bombSound, transform.position);
 			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
@@ -97,7 +95,6 @@ public class EnemyController : MonoBehaviour {
 		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
 		hitPoints = (hitPoints * 0.93f) - 23f;
 		levelManager.ChangeScore(5 * levelManager.GetWaveNumber());
-
 		if (hitPoints <= 0f) ScoreAndDestroy();
 		if (insane) {
 			if (Random.Range(0,2) < 1) DropPowerBonus(); 
@@ -110,6 +107,6 @@ public class EnemyController : MonoBehaviour {
 		levelManager.EnemyDown();
 		int chance = Random.Range (1,101);
 		if (chance > 38 && chance <= 62) DropPowerBonus(); 
-		Destroy(this.gameObject, 0.001f);
+		Destroy(this.gameObject, 0.05f);
 	}
 }
