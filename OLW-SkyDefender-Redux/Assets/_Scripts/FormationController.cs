@@ -96,14 +96,38 @@ public class FormationController : MonoBehaviour {
 		afterMatch = resetButton.activeSelf;
 		if (FormationIsFull()) { respawn = false; flash = 0; }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
-//		if (levelManager.GetEnemies() == 0 && !respawn && gameStarted && !afterMatch && FormationIsEmpty()) TriggerRespawn(); // can't trust GetEnemies().. use it only for despawns
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 
 		// formation !respawn debugging
+		if (FormationIsEmpty() && !afterMatch) SlowTriggerRespawn(); // this ought to fix it....? saw `respawn` was true in inspector during a hang 
+
 		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
 		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
-		if (Input.GetKeyDown(KeyCode.R)) Respawn();
+		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) SlowTriggerRespawn();
 	}
+
+	void SlowTriggerRespawn () {
+		Debug.Log("STR_Phase_1 ENTER");
+		if (FormationIsEmpty()) {
+			CancelInvoke("STR"); // will this stop the wave# going up? doubt it... good idea anyway though methinks
+			Invoke("STR", 2f);
+		}
+	}
+
+	void STR () {
+		Debug.Log("STR_Phase_2 ENTER");
+		if (FormationIsEmpty()) { 
+			Debug.Log("STR_Phase_2 EXIT"); // TODO determine if this causes wave# to go up artifically? Sure seems like it....
+			// difficulty tuning
+			myWave = levelManager.GetWaveNumber();
+			baseAcceleration = 0.10f + (myWave * 0.02f); 
+
+			gameStarted = true;
+			respawn = true;
+			Invoke ("Respawn", spawnDelay); 
+		}
+	}
+
 	
 	void FillPosition (Transform pos) {
 		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
@@ -152,7 +176,7 @@ public class FormationController : MonoBehaviour {
 			if (freePos) FillPosition(freePos);
 		}
 		if (RandomFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (FormationIsFull() && levelManager.GetWaveNumber() < finalWave) levelManager.IncrementWaveNumber();
+		else if (FormationIsFull() && levelManager.GetWaveNumber() <= finalWave) levelManager.IncrementWaveNumber(); // can this formationcheck be leading to the zombie waves? !RandomFreePos then...
 	}
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }

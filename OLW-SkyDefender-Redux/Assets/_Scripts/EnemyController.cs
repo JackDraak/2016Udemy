@@ -16,7 +16,6 @@ public class EnemyController : MonoBehaviour {
 	private float bombSpeed, chance, fireDelay, fireTime, hitPoints, maxHealth;
 	private Color currentColor;
 	private LevelManager levelManager;
-//	private EnemyController myController;
 	private SpriteRenderer myRenderer;
 	private int myWave,_instance;
 
@@ -37,7 +36,7 @@ public class EnemyController : MonoBehaviour {
 		dearmed = false;
 		fireDelay = 0.2f;
 		fireTime = Time.time;
-		maxHealth = 111f;
+		maxHealth = 111f; // 111
 
 		myWave = levelManager.GetWaveNumber();
 

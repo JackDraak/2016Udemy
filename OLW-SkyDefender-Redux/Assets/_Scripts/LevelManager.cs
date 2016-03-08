@@ -109,11 +109,6 @@ public class LevelManager : MonoBehaviour {
 		Connections();
 		SharedStart();
 		HeadStart();
-
-		string one = "string one ";
-		string two = "string two ";
-		one += two;
-		Debug.Log (one);
 	}
 
 	void Update () { 
@@ -141,7 +136,7 @@ public class LevelManager : MonoBehaviour {
 		
 
 		// conform scoreboard display
-		if (score == 0) scoreboard.text = ("Zip");
+		if (score == 0) scoreboard.text = ("Zilch");
 		if (priorScore != score) scoreboard.text = (score.ToString()); 
 		priorScore = score;
 
