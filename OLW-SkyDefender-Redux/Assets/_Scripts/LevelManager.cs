@@ -109,6 +109,11 @@ public class LevelManager : MonoBehaviour {
 		Connections();
 		SharedStart();
 		HeadStart();
+
+		string one = "string one ";
+		string two = "string two ";
+		one += two;
+		Debug.Log (one);
 	}
 
 	void Update () { 
