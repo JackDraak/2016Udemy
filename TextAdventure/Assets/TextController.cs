@@ -135,5 +135,4 @@ public class TextController : MonoBehaviour {
 			"space to restart";
 		if (Input.GetKeyDown(KeyCode.Space)) MyState = States.Bed;
 	}
-
 }
