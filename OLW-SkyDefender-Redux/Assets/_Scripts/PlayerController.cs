@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	private float speedBoostTime;
 
-	private float bulletSpeed, boostDelay, driftScale, driftSpeed, fireDelay, fireTime, padding, playerMaxHealth, xMax, xMin;
+	private float bulletSpeed, boostDelay, boostMessageTime, driftScale, driftSpeed, fireDelay, fireTime, padding, playerMaxHealth, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 
 		boostSpeed = false;
 		boostFire = false;
-		boostDelay = 15f;
+		boostDelay = 10f;
 		speedBoostTime = Time.time - boostDelay;
 		fireBoostTime = speedBoostTime;
 
@@ -71,6 +71,9 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+		// clear boost mesasge when needed
+		if (boostMessageTime + 2.5f < Time.time) ClearBoostMessage();
+
 		// conform fire control
 		if (Input.GetAxis("Fire1") > 0.9f) FireBlaster();
 
@@ -138,18 +141,21 @@ public class PlayerController : MonoBehaviour {
 				boostFire = true;
 				fireBoostTime = Time.time;
 				boostMessage.text = "Firepower Boost!";
-				Invoke ("ClearBoostMessage", 2.5f);
+//				Invoke ("ClearBoostMessage", 2.5f);
+				boostMessageTime = Time.time;
 				break;
 			case 2:
 				boostSpeed = true;
 				speedBoostTime = Time.time;
 				boostMessage.text = "Speed Boost!";
-				Invoke ("ClearBoostMessage", 2.5f);
+//				Invoke ("ClearBoostMessage", 2.5f);
+				boostMessageTime = Time.time;
 				break;
 		case 3:
-				playerHitPoints = Mathf.Clamp((playerHitPoints +  (0.5f * playerMaxHealth)), 1, playerMaxHealth);
+				playerHitPoints = Mathf.Clamp((playerHitPoints +  (0.25f * playerMaxHealth)), 1, playerMaxHealth);
 				boostMessage.text = "Health Boost!";
-				Invoke ("ClearBoostMessage", 2.5f);
+//				Invoke ("ClearBoostMessage", 2.5f);
+				boostMessageTime = Time.time;
 				break;
 		}
 	}

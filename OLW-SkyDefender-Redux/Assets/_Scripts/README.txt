@@ -11,7 +11,7 @@ things to do:
 
 @ lecture 119
 
-	more formation serializing: childcounts etc
+	more formation serializing: childcounts etc?
 
 	consider WebGL audio warning... good idea, dont blow speakers.... !!! DO BEFORE NEXT RELEASE
 	consider adding elements for "start up load timer" to give audio time to load before menus are shown....

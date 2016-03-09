@@ -14,7 +14,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
+	private bool afterMatch, stRespawn, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
 
 	private ArrayList enemies;
 	private int finalWave, flash, myWave;
@@ -94,22 +94,23 @@ public class FormationController : MonoBehaviour {
 
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
 		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { respawn = false; flash = 0; }
+		if (FormationIsFull()) { respawn = false; stRespawn = false; flash = 0; }
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 
 		// formation !respawn debugging
 		if (FormationIsEmpty() && !afterMatch) SlowTriggerRespawn(); // this ought to fix it....? saw `respawn` was true in inspector during a hang 
 
-		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
-		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
+//		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
+//		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
 		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) SlowTriggerRespawn();
 	}
 
 	void SlowTriggerRespawn () {
 		Debug.Log("STR_Phase_1 ENTER");
-		if (FormationIsEmpty()) {
-			CancelInvoke("STR"); // will this stop the wave# going up? doubt it... good idea anyway though methinks
+		if (FormationIsEmpty() && !stRespawn) {
+	//		CancelInvoke("STR"); // will this stop the wave# going up? doubt it... good idea anyway though methinks
+			stRespawn = true;
 			Invoke("STR", 2f);
 		}
 	}
