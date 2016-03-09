@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 	[SerializeField]
 	private float speedBoostTime;
 
-	private float bulletSpeed, boostDelay, boostMessageTime, driftScale, driftSpeed, fireDelay, fireTime, padding, playerMaxHealth, xMax, xMin;
+	private float bulletSpeed, boostTerm, boostMessageTime, driftScale, driftSpeed, fireDelay, fireTime, padding, playerMaxHealth, xMax, xMin;
 	private Color currentColor;
 	private LevelManager levelManager;
 	private Vector3 myPos, myScale;
@@ -49,8 +49,8 @@ public class PlayerController : MonoBehaviour {
 
 		boostSpeed = false;
 		boostFire = false;
-		boostDelay = 10f;
-		speedBoostTime = Time.time - boostDelay;
+		boostTerm = 10f;
+		speedBoostTime = Time.time - boostTerm;
 		fireBoostTime = speedBoostTime;
 
 		bulletSpeed = 10f;
@@ -94,8 +94,8 @@ public class PlayerController : MonoBehaviour {
 		if (!Mathf.Approximately(priorColour.y, currentColor.g))  myRenderer.color = currentColor;
 
 		// conform boost states
-		if (boostSpeed && speedBoostTime + boostDelay > Time.time) moveSpeed = 40f; else { moveSpeed = 20f; boostSpeed = false; }
-		if (boostFire && fireBoostTime + boostDelay > Time.time) fireDelay = 0.185f; else { fireDelay = 0.37f; boostFire = false; }
+		if (boostSpeed && speedBoostTime + boostTerm > Time.time) moveSpeed = 40f; else { moveSpeed = 20f; boostSpeed = false; }
+		if (boostFire && fireBoostTime + boostTerm > Time.time) fireDelay = 0.185f; else { fireDelay = 0.37f; boostFire = false; }
 	}
 	
 	// scale-drifter to give floating appearance to player sprite
@@ -141,20 +141,17 @@ public class PlayerController : MonoBehaviour {
 				boostFire = true;
 				fireBoostTime = Time.time;
 				boostMessage.text = "Firepower Boost!";
-//				Invoke ("ClearBoostMessage", 2.5f);
 				boostMessageTime = Time.time;
 				break;
 			case 2:
 				boostSpeed = true;
 				speedBoostTime = Time.time;
 				boostMessage.text = "Speed Boost!";
-//				Invoke ("ClearBoostMessage", 2.5f);
 				boostMessageTime = Time.time;
 				break;
 		case 3:
 				playerHitPoints = Mathf.Clamp((playerHitPoints +  (0.25f * playerMaxHealth)), 1, playerMaxHealth);
 				boostMessage.text = "Health Boost!";
-//				Invoke ("ClearBoostMessage", 2.5f);
 				boostMessageTime = Time.time;
 				break;
 		}

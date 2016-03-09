@@ -36,7 +36,7 @@ public class EnemyController : MonoBehaviour {
 		dearmed = false;
 		fireDelay = 0.2f;
 		fireTime = Time.time;
-		maxHealth = 111f; // 111
+		maxHealth = 111f;
 
 		myWave = levelManager.GetWaveNumber();
 

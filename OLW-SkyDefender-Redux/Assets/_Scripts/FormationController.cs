@@ -14,10 +14,10 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, stRespawn, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
+	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right, stRespawn;
 
 	private ArrayList enemies;
-	private int finalWave, flash, myWave;
+	private int checkWave, finalWave, flash, thisWave, myWave;
 
 	// public function(s)
 	public void Despawner () {
@@ -94,7 +94,15 @@ public class FormationController : MonoBehaviour {
 
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
 		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { respawn = false; stRespawn = false; flash = 0; }
+		if (FormationIsFull()) { 
+			respawn = false; 
+			stRespawn = false; 
+			flash = 0; 
+			checkWave = thisWave;
+			thisWave = levelManager.GetWaveNumber();
+			if (checkWave != thisWave) Debug.Log("Full Fomration " + levelManager.GetWaveNumber()  + " @ " + Time.time.ToString());
+		}
+
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 
@@ -109,26 +117,19 @@ public class FormationController : MonoBehaviour {
 	void SlowTriggerRespawn () {
 		Debug.Log("STR_Phase_1 ENTER");
 		if (FormationIsEmpty() && !stRespawn) {
-	//		CancelInvoke("STR"); // will this stop the wave# going up? doubt it... good idea anyway though methinks
 			stRespawn = true;
 			Invoke("STR", 2f);
 		}
 	}
 
+	// does this solve non-spawning waves? Does the wave# increment extra times using it?
 	void STR () {
 		Debug.Log("STR_Phase_2 ENTER");
 		if (FormationIsEmpty()) { 
-			Debug.Log("STR_Phase_2 EXIT"); // TODO determine if this causes wave# to go up artifically? Sure seems like it....
-			// difficulty tuning
-			myWave = levelManager.GetWaveNumber();
-			baseAcceleration = 0.10f + (myWave * 0.02f); 
-
-			gameStarted = true;
-			respawn = true;
-			Invoke ("Respawn", spawnDelay); 
+			Debug.Log("STR_Phase_2 EXIT"); 
+			TriggerRespawn();
 		}
 	}
-
 	
 	void FillPosition (Transform pos) {
 		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
