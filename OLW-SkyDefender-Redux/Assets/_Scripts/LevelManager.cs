@@ -56,6 +56,7 @@ public class LevelManager : MonoBehaviour {
 	public void PlayerUp () { playerShipCount++; }
 
 	public int GetWaveNumber () { return waveNumber; }
+	public void DecrementWaveNumber () { waveNumber--; }
 	public void IncrementWaveNumber () { waveNumber++; }
 
 	public void CreditButton () {

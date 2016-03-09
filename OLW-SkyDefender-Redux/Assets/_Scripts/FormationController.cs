@@ -124,11 +124,12 @@ public class FormationController : MonoBehaviour {
 		}
 	}
 
-	// does this solve non-spawning waves? Does the wave# increment extra times using it? have added stage-logging to debug output for monitoring
+	// have added wave-logging to debug output for monitoring purposes; seems to keep the spawner in the proper grove now....
 	void STR () {
 		Debug.Log("STR_Phase_2 ENTER");
 		if (FormationIsEmpty()) { 
 			Debug.Log("STR_Phase_2 EXIT"); 
+			levelManager.DecrementWaveNumber();
 			TriggerRespawn();
 		}
 	}
