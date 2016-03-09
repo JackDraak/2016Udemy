@@ -39,6 +39,8 @@ public class FormationController : MonoBehaviour {
 
 	void Start () {
 		baseAcceleration = 0.10f;
+//		checkWave = 1;
+		thisWave = 1;
 		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 100;
@@ -100,7 +102,7 @@ public class FormationController : MonoBehaviour {
 			flash = 0; 
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
-			if (checkWave != thisWave) Debug.Log("Full Fomration " + levelManager.GetWaveNumber()  + " @ " + Time.time.ToString());
+			if (checkWave != thisWave) Debug.Log("Full Formation " + checkWave  + " @ " + Time.time.ToString());
 		}
 
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
@@ -122,7 +124,7 @@ public class FormationController : MonoBehaviour {
 		}
 	}
 
-	// does this solve non-spawning waves? Does the wave# increment extra times using it?
+	// does this solve non-spawning waves? Does the wave# increment extra times using it? have added stage-logging to debug output for monitoring
 	void STR () {
 		Debug.Log("STR_Phase_2 ENTER");
 		if (FormationIsEmpty()) { 
