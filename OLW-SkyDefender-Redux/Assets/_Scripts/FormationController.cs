@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, timeWaveboard, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
+	private bool afterMatch, rePaddedA, rePaddedB, rePaddedC, respawn, right;
 
 	private ArrayList enemies;
 	private int checkWave, finalWave, flash, thisWave;
@@ -30,9 +30,8 @@ public class FormationController : MonoBehaviour {
 		thisWave = levelManager.GetWaveNumber();
 		baseAcceleration = 0.10f + (thisWave * 0.02f); 
 
-		gameStarted = true;
+		if (!respawn) Invoke ("Respawn", spawnDelay);
 		respawn = true;
-		Invoke ("Respawn", spawnDelay);
 	}
 
 	void Start () {
@@ -68,15 +67,6 @@ public class FormationController : MonoBehaviour {
 		if (thisWave > 49 && !rePaddedB) { padding = 5.8f; rePaddedB = true; SetMinMaxX(); }
 		if (thisWave > 69 && !rePaddedC) { padding = 6.4f; rePaddedC = true; SetMinMaxX(); }
 
-		/*	// TODO finish deceleration 
-		if (decelerate) {
-			if (transform.position.x < xMin - reverseBuffer || transform.position.x > xMax + reverseBuffer)  {
-				Debug.Log ("squelch");
-				if (speed > 0.1f) speed = speed / reverseSquelch;
-				if (maxSpeed > 1f) maxSpeed = maxSpeed / reverseSquelch;
-			}
-		} */
-
 		// win condition: ludicrous score
 		if (levelManager.GetScore() > 25000000f) {
 			Despawner();
@@ -101,15 +91,12 @@ public class FormationController : MonoBehaviour {
 			}
 		}
 
-		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
-		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
-
 		// formation !respawn debugging
-		if (FormationIsEmpty() && !afterMatch) Debug.LogError("formation is empty && !afterMatch"); 
-
+		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) Respawn();
+		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
+//		if (FormationIsEmpty() && !afterMatch) Debug.LogError("formation is empty && !afterMatch"); 
 //		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
 //		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
-		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) Respawn();
 	}
 
 	void FillPosition (Transform pos) {
@@ -152,7 +139,6 @@ public class FormationController : MonoBehaviour {
 		if (flash < 6) {
 			levelManager.ShowWave();
 			timeWaveboard = Time.time;
-		//	Invoke ("HideWaveboard", 2); // TODO replace this invoke cludge with timestamps after you get the formations working again
 			flash++;
 		}
 		Transform freePos = RandomFreePosition();
