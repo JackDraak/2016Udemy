@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, timeWaveboard, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, rePaddedA, rePaddedB, rePaddedC, respawn, right;
+	private bool afterMatch, rePaddedA, rePaddedB, rePaddedC, respawn, right, showWave;
 
 	private ArrayList enemies;
 	private int checkWave, finalWave, flash, thisWave;
@@ -49,7 +49,8 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// set Waveboard visability
-		if (timeWaveboard + 0.5f < Time.time) HideWaveboard();
+		if (timeWaveboard + 0.5f < Time.time) showWave = false;
+		if (!showWave) HideWaveboard();
 
 		// test boundary, set direction
 		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; maxSpeed = Mathf.Clamp(Random.Range(4f + (thisWave * 0.2f), 6f + (thisWave * 1.15f)), 4f, (thisWave/3)+6);}
@@ -136,9 +137,10 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void Respawn () {
-		if (flash < 6) {
-			levelManager.ShowWave();
+		if (flash < 5) {
+			showWave = true;
 			timeWaveboard = Time.time;
+			levelManager.ShowWave();
 			flash++;
 		}
 		Transform freePos = RandomFreePosition();
