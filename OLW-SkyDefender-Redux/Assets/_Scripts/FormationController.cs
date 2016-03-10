@@ -7,17 +7,15 @@ public class FormationController : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public GameObject resetButton;
 	public LevelManager levelManager;
-	public float reverseBuffer = -2.12f; // TODO someday, fix or get rid of this
-	public float reverseSquelch = 1.12f; // TODO someday, fix or get rid of this
 	public float spawnDelay = 0.8f;
 
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right, stRespawn, yoloSpawn;
+	private bool afterMatch, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
 
 	private ArrayList enemies;
-	private int checkWave, finalWave, flash, thisWave, myWave; // how fucking silly is this? and that ^^^ 
+	private int checkWave, finalWave, flash, thisWave;
 
 	// public function(s)
 	public void Despawner () {
@@ -29,8 +27,8 @@ public class FormationController : MonoBehaviour {
 
 	public void TriggerRespawn () {
 		// difficulty tuning
-		myWave = levelManager.GetWaveNumber();
-		baseAcceleration = 0.10f + (myWave * 0.02f); 
+		thisWave = levelManager.GetWaveNumber();
+		baseAcceleration = 0.10f + (thisWave * 0.02f); 
 
 		gameStarted = true;
 		respawn = true;
@@ -40,12 +38,10 @@ public class FormationController : MonoBehaviour {
 	void Start () {
 		baseAcceleration = 0.10f;
 		thisWave = 1;
-		decelerate = true;
 		enemies = new ArrayList();
 		finalWave = 100;
 		flash = 0;
 		maxSpeed = Random.Range(5f, 6f);
-		myWave = levelManager.GetWaveNumber();
 		padding = 4.6f;
 		right = true;
 		speed = baseAcceleration;
@@ -54,8 +50,8 @@ public class FormationController : MonoBehaviour {
 
 	void Update () {
 		// test boundary, set direction
-		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
-		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; decelerate = false; maxSpeed = Mathf.Clamp(Random.Range(4f + (myWave * 0.2f), 6f + (myWave * 1.15f)), 4f, (myWave/3)+6);}
+		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; maxSpeed = Mathf.Clamp(Random.Range(4f + (thisWave * 0.2f), 6f + (thisWave * 1.15f)), 4f, (thisWave/3)+6);}
+		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; maxSpeed = Mathf.Clamp(Random.Range(4f + (thisWave * 0.2f), 6f + (thisWave * 1.15f)), 4f, (thisWave/3)+6);}
 
 		// set position
 		transform.position += new Vector3 (speed * Time.deltaTime, 0f, 0f);
@@ -64,13 +60,10 @@ public class FormationController : MonoBehaviour {
 		if (right && speed < maxSpeed) speed += baseAcceleration;
 		else if (!right && speed > -maxSpeed) speed -= baseAcceleration;
 
-		// set speed
-		if (speed >= maxSpeed) decelerate = true;
-
 		// set padding
-		if (myWave > 29 && !rePaddedA) { padding = 5.1f; rePaddedA = true; SetMinMaxX(); }
-		if (myWave > 49 && !rePaddedB) { padding = 5.8f; rePaddedB = true; SetMinMaxX(); }
-		if (myWave > 69 && !rePaddedC) { padding = 6.4f; rePaddedC = true; SetMinMaxX(); }
+		if (thisWave > 29 && !rePaddedA) { padding = 5.1f; rePaddedA = true; SetMinMaxX(); }
+		if (thisWave > 49 && !rePaddedB) { padding = 5.8f; rePaddedB = true; SetMinMaxX(); }
+		if (thisWave > 69 && !rePaddedC) { padding = 6.4f; rePaddedC = true; SetMinMaxX(); }
 
 		/*	// TODO finish deceleration 
 		if (decelerate) {
@@ -96,54 +89,24 @@ public class FormationController : MonoBehaviour {
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
 		afterMatch = resetButton.activeSelf;
 		if (FormationIsFull()) {
-			yoloSpawn = false;
 			respawn = false; 
-			stRespawn = false; 
 			flash = 0; 
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
 			if (checkWave != thisWave) {
 				Debug.Log("Full Formation " + checkWave  + " @ " + Time.time.ToString());
-		//		levelManager.IncrementWaveNumber();
 			}
 		}
 
-		if (respawn && !yoloSpawn) STR_2();
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 
 		// formation !respawn debugging
-		if (FormationIsEmpty() && !afterMatch) SlowTriggerRespawn(); // this ought to fix it....? saw `respawn` was true in inspector during a hang 
+		if (FormationIsEmpty() && !afterMatch) Debug.LogError("formation is empty && !afterMatch"); 
 
 //		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
 //		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
-		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) SlowTriggerRespawn();
-	}
-
-	void SlowTriggerRespawn () {
-		Debug.Log("STR_Phase_1 ENTER");
-		if (FormationIsEmpty() && !stRespawn) {
-			stRespawn = true;
-			Invoke("STR", 2f);
-		}
-	}
-
-	// have added wave-logging to debug output for monitoring purposes; seems to keep the spawner in the proper grove now....
-	void STR () {
-		Debug.Log("STR_Phase_2 ENTER");
-		if (FormationIsEmpty()) { 
-			Debug.Log("STR_Phase_2 EXIT"); 
-			levelManager.DecrementWaveNumber();
-			TriggerRespawn(); // should this be done differently?
-		}
-	}
-
-	// have added wave-logging to debug output for monitoring purposes; seems to keep the spawner in the proper grove now....
-	void STR_2 () {
-		yoloSpawn = true;
-		Debug.Log("STR_2_Phase_2 yoloSpawn"); 
-		levelManager.DecrementWaveNumber();
-		TriggerRespawn(); // should this be done differently?
+		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) Respawn();
 	}
 
 	void FillPosition (Transform pos) {
@@ -165,7 +128,7 @@ public class FormationController : MonoBehaviour {
 		} return true;
 	}
 
-	void HideWave () { levelManager.HideWave(); }
+	void HideWaveboard () { levelManager.HideWave(); }
 
 	void OnDrawGizmos () { Gizmos.DrawWireCube(transform.position, new Vector3 (9,9,1)); }
 	
@@ -185,7 +148,7 @@ public class FormationController : MonoBehaviour {
 	void Respawn () {
 		if (flash < 6) {
 			levelManager.ShowWave();
-			Invoke ("HideWave", 2);
+			Invoke ("HideWaveboard", 2); // TODO replace this invoke cludge with timestamps after you get the formations working again
 			flash++;
 		}
 		Transform freePos = RandomFreePosition();
@@ -205,6 +168,4 @@ public class FormationController : MonoBehaviour {
 		xMax = rightBoundary.x - padding;
 		xMin = leftBoundary.x + padding;
 	}
-
-	void StopWarn () { if (decelerate) return; }
 }
