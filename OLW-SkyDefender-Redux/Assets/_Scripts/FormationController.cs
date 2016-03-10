@@ -14,10 +14,10 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right, stRespawn;
+	private bool afterMatch, decelerate, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right, stRespawn, yoloSpawn;
 
 	private ArrayList enemies;
-	private int checkWave, finalWave, flash, thisWave, myWave;
+	private int checkWave, finalWave, flash, thisWave, myWave; // how fucking silly is this? and that ^^^ 
 
 	// public function(s)
 	public void Despawner () {
@@ -39,7 +39,6 @@ public class FormationController : MonoBehaviour {
 
 	void Start () {
 		baseAcceleration = 0.10f;
-//		checkWave = 1;
 		thisWave = 1;
 		decelerate = true;
 		enemies = new ArrayList();
@@ -96,15 +95,20 @@ public class FormationController : MonoBehaviour {
 
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
 		afterMatch = resetButton.activeSelf;
-		if (FormationIsFull()) { 
+		if (FormationIsFull()) {
+			yoloSpawn = false;
 			respawn = false; 
 			stRespawn = false; 
 			flash = 0; 
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
-			if (checkWave != thisWave) Debug.Log("Full Formation " + checkWave  + " @ " + Time.time.ToString());
+			if (checkWave != thisWave) {
+				Debug.Log("Full Formation " + checkWave  + " @ " + Time.time.ToString());
+		//		levelManager.IncrementWaveNumber();
+			}
 		}
 
+		if (respawn && !yoloSpawn) STR_2();
 		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 		if (!respawn && !afterMatch && gameStarted && FormationIsEmpty()) TriggerRespawn();
 
@@ -130,10 +134,18 @@ public class FormationController : MonoBehaviour {
 		if (FormationIsEmpty()) { 
 			Debug.Log("STR_Phase_2 EXIT"); 
 			levelManager.DecrementWaveNumber();
-			TriggerRespawn();
+			TriggerRespawn(); // should this be done differently?
 		}
 	}
-	
+
+	// have added wave-logging to debug output for monitoring purposes; seems to keep the spawner in the proper grove now....
+	void STR_2 () {
+		yoloSpawn = true;
+		Debug.Log("STR_2_Phase_2 yoloSpawn"); 
+		levelManager.DecrementWaveNumber();
+		TriggerRespawn(); // should this be done differently?
+	}
+
 	void FillPosition (Transform pos) {
 		GameObject enemy = Instantiate(enemyPrefab, pos.transform.position, Quaternion.identity) as GameObject;
 		EnemyAdd(enemy);
