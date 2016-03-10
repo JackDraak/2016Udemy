@@ -10,7 +10,7 @@ public class FormationController : MonoBehaviour {
 	public float spawnDelay = 0.8f;
 
 	[SerializeField]
-	private float baseAcceleration, maxSpeed, padding, speed, xMax, xMin;
+	private float baseAcceleration, maxSpeed, padding, speed, timeWaveboard, xMax, xMin;
 	[SerializeField]
 	private bool afterMatch, gameStarted, rePaddedA, rePaddedB, rePaddedC, respawn, right;
 
@@ -49,6 +49,9 @@ public class FormationController : MonoBehaviour {
 	}
 
 	void Update () {
+		// set Waveboard visability
+		if (timeWaveboard + 0.5f < Time.time) HideWaveboard();
+
 		// test boundary, set direction
 		if (transform.position.x >= xMax) { right = !right; speed = -0.33f; maxSpeed = Mathf.Clamp(Random.Range(4f + (thisWave * 0.2f), 6f + (thisWave * 1.15f)), 4f, (thisWave/3)+6);}
 		else if (transform.position.x <= xMin) { right = !right; speed = 0.35f; maxSpeed = Mathf.Clamp(Random.Range(4f + (thisWave * 0.2f), 6f + (thisWave * 1.15f)), 4f, (thisWave/3)+6);}
@@ -148,7 +151,8 @@ public class FormationController : MonoBehaviour {
 	void Respawn () {
 		if (flash < 6) {
 			levelManager.ShowWave();
-			Invoke ("HideWaveboard", 2); // TODO replace this invoke cludge with timestamps after you get the formations working again
+			timeWaveboard = Time.time;
+		//	Invoke ("HideWaveboard", 2); // TODO replace this invoke cludge with timestamps after you get the formations working again
 			flash++;
 		}
 		Transform freePos = RandomFreePosition();
