@@ -104,13 +104,13 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	void Start () {	
-		if (instance != null && instance != this) { Destroy (gameObject); } 
+		if (instance != null && instance != this) { Destroy(gameObject); } 
 		else { instance = this; GameObject.DontDestroyOnLoad(gameObject); }
 		insane = false;
-		showFramerate = true; // TODO turn off for final relase
 		Connections();
 		SharedStart();
 		HeadStart();
+		showFramerate = true; // TODO turn to false for final relase
 	}
 
 	void Update () { 
@@ -135,7 +135,6 @@ public class LevelManager : MonoBehaviour {
 		// copnform extra ships display
 		if (priorShipCount != playerShipCount) ShowMyShips();
 		priorShipCount = playerShipCount;
-		
 
 		// conform scoreboard display
 		if (score == 0) scoreboard.text = ("Zilch");

@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour {
 		playerGun = GameObject.FindGameObjectWithTag("PlayerGun");
 			if (!playerGun) Debug.LogError ("PlayerController Start !playerGun");
 
-		playerMaxHealth = 420f;
+		playerMaxHealth = 4420f;
 		playerHitPoints = playerMaxHealth;
 
 		boostSpeed = false;
@@ -76,6 +76,9 @@ public class PlayerController : MonoBehaviour {
 
 		// conform fire control
 		if (Input.GetAxis("Fire1") > 0.9f) FireBlaster();
+
+		// testing mode autofire
+		FireBlaster();
 
 		// conform movement
 		float priorX = myPos.x;
