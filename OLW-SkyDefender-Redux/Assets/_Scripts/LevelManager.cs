@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour {
 	public Text startMessage;
 	public Text winMessage;
 
-	private bool bCredit, showFramerate;
+	private bool bCredit, inPlay, showFramerate;
 	private int bonusShipCount, playerShipCount, priorShipCount, totalFrames;
 	private float deltaTime, fps, fpsAverage, priorScore, totalFrameTime;
 	private FormationController formation;
@@ -52,6 +52,7 @@ public class LevelManager : MonoBehaviour {
 	public void ZeroEnemies () { enemiesRemaining = 0; }
 	
 	public int GetPlayerShips () { return playerShipCount; } 
+	public bool GetPlayState () { return inPlay; }
 	public void PlayerDown () { playerShipCount--; }
 	public void PlayerUp () { playerShipCount++; }
 
@@ -98,7 +99,7 @@ public class LevelManager : MonoBehaviour {
 	public void WinBattle () {
 		winMessage.gameObject.SetActive(true);
 		if (playerShip) playerShip.GetComponent<PlayerController>().Debuff();
-		else Debug.LogError("ERROR - null reference to PLayer, can't debuff");
+		else Debug.LogError("ERROR - null reference to Player, can't debuff");
 		EndBattle();
 	}
 
@@ -181,6 +182,7 @@ public class LevelManager : MonoBehaviour {
 		startOverButton.gameObject.SetActive(true);
 		music_Menu.Begin();
 		music_Game.End();
+		inPlay = false;
 		formation.Despawner();
 	}
 	
@@ -209,6 +211,7 @@ public class LevelManager : MonoBehaviour {
 		quitButton.gameObject.SetActive(false);
 		startButton.gameObject.SetActive(false);
 		startMessage.gameObject.SetActive(false);
+		inPlay = true;
 		formation.TriggerRespawn();
 	}
 

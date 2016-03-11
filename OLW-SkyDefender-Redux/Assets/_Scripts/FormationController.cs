@@ -12,7 +12,7 @@ public class FormationController : MonoBehaviour {
 	[SerializeField]
 	private float baseAcceleration, maxSpeed, padding, speed, timeWaveboard, xMax, xMin;
 	[SerializeField]
-	private bool afterMatch, rePaddedA, rePaddedB, rePaddedC, respawn, right, showWave;
+	private bool inPlay, rePaddedA, rePaddedB, rePaddedC, respawn, right, showWave;
 
 	private ArrayList enemies;
 	private int checkWave, finalWave, flash, thisWave;
@@ -82,9 +82,9 @@ public class FormationController : MonoBehaviour {
 		}
 
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
-		afterMatch = resetButton.activeSelf; // really?
+		inPlay = levelManager.GetPlayState();
+		if (FormationIsEmpty() && inPlay && !respawn) { TriggerRespawn(); }
 		if (FormationIsFull()) {
-		//	respawn = false; 
 			flash = 0; 
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
@@ -94,11 +94,10 @@ public class FormationController : MonoBehaviour {
 		}
 
 		// formation !respawn debugging
-		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) Respawn();
-		if (FormationIsEmpty() && !respawn && !afterMatch) { TriggerRespawn(); }
 //		if (FormationIsEmpty() && !afterMatch) Debug.LogError("formation is empty && !afterMatch"); 
 //		if (FormationIsEmpty() && levelManager.GetEnemies() != 0) Debug.LogError("GetEnemies != 0 but FormationEmpty");
 //		if (!FormationIsEmpty() && levelManager.GetEnemies() == 0) Debug.LogError("GetEnemies = 0 but Formation!Empty");
+		if (Input.GetKeyDown(KeyCode.R) && FormationIsEmpty()) Respawn();
 	}
 
 	void FillPosition (Transform pos) {
