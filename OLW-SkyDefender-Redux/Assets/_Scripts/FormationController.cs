@@ -81,7 +81,7 @@ public class FormationController : MonoBehaviour {
 			levelManager.WinBattle();
 		}
 
-		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
+		// formation spawn control:
 		inPlay = levelManager.GetPlayState();
 		if (FormationIsEmpty() && inPlay && !respawn) { TriggerRespawn(); }
 		if (FormationIsFull()) {
@@ -89,7 +89,7 @@ public class FormationController : MonoBehaviour {
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
 			if (checkWave != thisWave) {
-				Debug.Log("Full Formation " + checkWave  + " @ " + Time.time.ToString());
+				Debug.Log("LOG:: Full Formation -" + checkWave  + "- @ " + Time.time.ToString());
 			}
 		}
 
