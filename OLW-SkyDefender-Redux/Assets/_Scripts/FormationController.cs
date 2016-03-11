@@ -42,6 +42,7 @@ public class FormationController : MonoBehaviour {
 		flash = 0;
 		maxSpeed = Random.Range(5f, 6f);
 		padding = 4.6f;
+		respawn = false;
 		right = true;
 		speed = baseAcceleration;
 		SetMinMaxX();
@@ -81,9 +82,9 @@ public class FormationController : MonoBehaviour {
 		}
 
 		// formation spawn control: should activate respawns as required.... ~1/400 wave completions doesn't, however....
-		afterMatch = resetButton.activeSelf;
+		afterMatch = resetButton.activeSelf; // really?
 		if (FormationIsFull()) {
-			respawn = false; 
+		//	respawn = false; 
 			flash = 0; 
 			checkWave = thisWave;
 			thisWave = levelManager.GetWaveNumber();
@@ -148,7 +149,10 @@ public class FormationController : MonoBehaviour {
 			if (freePos) FillPosition(freePos);
 		}
 		if (RandomFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (FormationIsFull() && levelManager.GetWaveNumber() <= finalWave) levelManager.IncrementWaveNumber(); // can this formationcheck be leading to the zombie waves? !RandomFreePos then...
+		else if (FormationIsFull() && levelManager.GetWaveNumber() <= finalWave) {  // can this formationcheck be leading to the zombie waves? !RandomFreePos then...
+			levelManager.IncrementWaveNumber();
+			respawn = false; 
+		}
 	}
 	
 	float SetXClamps (float position) { return Mathf.Clamp(position, xMin, xMax); }
