@@ -5,14 +5,11 @@
 0.120.3 - 2016 Mar 5 - okay, seriously: fuck Unity3d scene management for failing to load scene states saved with full prefabs, et. al.  W T F... fixed splash at least....
 0.120.4 - 2016 Mar 7 - Unity3D can go to hell... more inconsistencies drove me to presently remove even the splash scene... considering new code for WebGL load delayer
 
-Development Notes: 0.120.3
+Development Notes: 0.120.4
 ==================
 things to do:
 
 @ lecture 119
-
-	consider WebGL audio warning... good idea, dont blow speakers.... !!! DO BEFORE NEXT RELEASE
-	consider adding elements for "start up load timer" to give audio time to load before menus are shown....
 
 	alternative enemy prefabs?
 	alternative enemy projectiles?

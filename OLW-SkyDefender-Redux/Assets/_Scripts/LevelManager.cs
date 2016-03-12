@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour {
 	public GameObject extra_04;
 	public ProceduralMusic music_Menu;
 	public ProceduralMusic music_Game;
+	public GameObject loadSlider;
 	public GameObject playerShip;
 	public int playerMaxShips;
 	public Text creditMessage;
@@ -109,7 +110,7 @@ public class LevelManager : MonoBehaviour {
 		insane = false;
 		Connections();
 		SharedStart();
-		HeadStart();
+		LoadSlider();
 		showFramerate = true; // TODO turn to false for final relase
 	}
 
@@ -184,8 +185,16 @@ public class LevelManager : MonoBehaviour {
 		inPlay = false;
 		formation.Despawner();
 	}
+
+	void LoadSlider () {
+		loadSlider.gameObject.SetActive(true);
+		insaneButton.gameObject.SetActive(false);
+		startButton.gameObject.SetActive(false);
+		Invoke("HeadStart", 21f);
+	}
 	
 	void HeadStart () {
+		loadSlider.gameObject.SetActive(false);
 		ShowMyShips();
 		bCredit = false;
 		creditButton.gameObject.SetActive(true);
