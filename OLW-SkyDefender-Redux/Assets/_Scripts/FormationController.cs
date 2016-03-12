@@ -38,7 +38,7 @@ public class FormationController : MonoBehaviour {
 		baseAcceleration = 0.10f;
 		thisWave = 1;
 		enemies = new ArrayList();
-		finalWave = 100;
+		finalWave = 101;
 		flash = 0;
 		maxSpeed = Random.Range(5f, 6f);
 		padding = 4.6f;
@@ -148,7 +148,7 @@ public class FormationController : MonoBehaviour {
 			if (freePos) FillPosition(freePos);
 		}
 		if (RandomFreePosition()) Invoke("Respawn", spawnDelay);
-		else if (FormationIsFull() && levelManager.GetWaveNumber() <= finalWave) {  // can this formationcheck be leading to the zombie waves? !RandomFreePos then...
+		else if (FormationIsFull() && levelManager.GetWaveNumber() <= finalWave) {
 			levelManager.IncrementWaveNumber();
 			respawn = false; 
 		}
