@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+Cave Generation tutorial, part 2
+https://www.youtube.com/watch?v=v7yyZZjF1z4&list=WL&index=2
+*/
+using UnityEngine;
 using System.Collections;
 using System;
 
@@ -15,7 +19,7 @@ public class MapGenerator : MonoBehaviour {
 
 	void Start () { GenerateMap(); }
 
-	void Update () { if (Input.GetMouseButtonDown(0)) GenerateMap(); }
+	void Update () { GenerateMap(); }// if (Input.GetMouseButtonDown(0)) GenerateMap(); }
 
 	void GenerateMap () { 
 		map = new int[width,height];
