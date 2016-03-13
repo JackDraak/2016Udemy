@@ -1,6 +1,8 @@
 ﻿/*
 Cave Generation tutorial, part 2
 https://www.youtube.com/watch?v=v7yyZZjF1z4&list=WL&index=2
+https://youtu.be/yOgIncKp0BE
+
 */
 using UnityEngine;
 using System.Collections;
@@ -27,6 +29,9 @@ public class MapGenerator : MonoBehaviour {
 		for (int i = 0; i < 5; i++) {
 			SmoothMap();
 		}
+
+		MeshGenerator meshGen = GetComponent<MeshGenerator>();
+		meshGen.GenerateMesh(map, 1);
 	}
 
 	void RandomFillMap () {
@@ -65,6 +70,7 @@ public class MapGenerator : MonoBehaviour {
 	}
 
 	void OnDrawGizmos () {
+		/*
 		if (map != null) {
 			for (int x = 0; x < width; x++) {
 				for (int y = 0; y < height; y++) {
@@ -74,5 +80,6 @@ public class MapGenerator : MonoBehaviour {
 				}
 			}
 		}
+		*/
 	}
 }
