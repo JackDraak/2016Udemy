@@ -9,7 +9,7 @@ public class LoadSlider : MonoBehaviour {
 
 	private float timeAwake;
 
-	void Awake () { float timeAwake = 0; }
+	void Awake () { timeAwake = 0; }
 
 	void Update () {
 		if (timeAwake == 0) timeAwake = Time.time;
