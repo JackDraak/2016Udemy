@@ -10,7 +10,6 @@ public class SkyLight : MonoBehaviour {
 		lightComp.color = skyColour;
         lightComp.type = LightType.Directional;
 
-//		lightComp.intensity = 1.17f;
 		lightComp.intensity = 0.86f;
 		lightComp.bounceIntensity = 1f;
 		lightComp.shadowStrength = 1f;
@@ -18,7 +17,6 @@ public class SkyLight : MonoBehaviour {
 		lightComp.shadowNormalBias = 0.4f;
 		lightComp.shadowNearPlane = 0.2f;
 		lightComp.cookieSize = 10f;
-
 
         lightGameObject.transform.position = new Vector3(0, 5, 0);
 	}

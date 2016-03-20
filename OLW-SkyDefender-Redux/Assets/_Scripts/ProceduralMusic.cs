@@ -34,9 +34,6 @@ public class ProceduralMusic : MonoBehaviour {
 		}
 	}
 
-	void Update () {
-	}
-
 	// invokations to keep the music going indefinately
 	void PlayMusic () { Invoke ("PlayChord", clipLength); }
 	void MusicStep () { Invoke ("StepMusic", clipLength); }
@@ -44,14 +41,17 @@ public class ProceduralMusic : MonoBehaviour {
 	// sans 'stepping' mode, this will repeat every clipLength
 	void PlayChord () {
 		clip = Random.Range(0, setLength -1);
+
 		if (clip == myClip) {
 	//			Debug.Log ("duplicate sequence prevention");
 			if (clip > setLength /2) clip--;
 			else if (clip < setLength /2) clip ++;
 		}
+
 		myClip = clip;
 	//		Debug.Log ("step one: " + clip);
 		AudioSource.PlayClipAtPoint (audioClip_[clip], transform.position, vol);
+
 		if (!stepping) PlayMusic();
 		else MusicStep();
 	}
@@ -60,6 +60,7 @@ public class ProceduralMusic : MonoBehaviour {
 	void StepMusic () {
 		int step = Random.Range (stepDistance, stepDistance + stepRange);
 		clip = clip +step;
+
 		if (clip >= setLength -1) clip = clip - (step + 1);
 	//		Debug.Log ("step two: " + step + " clip: " + clip);
 		AudioSource.PlayClipAtPoint (audioClip_[clip], transform.position, vol);

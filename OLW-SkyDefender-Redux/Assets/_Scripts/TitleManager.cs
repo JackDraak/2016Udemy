@@ -10,16 +10,11 @@ public class TitleManager : MonoBehaviour {
 
 	private string myTitle;
 
-	void Start () {
-		SetTitle();
-	}
+	void Start () { SetTitle(); }
+	void Update () { if (this.isActiveAndEnabled) SetTitle(); }
 
 	public void SetTitle () {
 		if (creditMessage.activeInHierarchy && buttonText.text == "Credits") buttonText.text = "Help";
 		else if (startMessage.activeInHierarchy &&  buttonText.text == "Help") buttonText.text = "Credits";
-	}
-
-	void Update () {
-		if (this.isActiveAndEnabled) SetTitle();
 	}
 }

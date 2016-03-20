@@ -41,4 +41,3 @@ public class OptionsController : MonoBehaviour {
 		trailsSlider.value = 1;
 	}
 }
-

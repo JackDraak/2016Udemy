@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class SpriteController : MonoBehaviour {
+
 	// adjust/set in inspector!
 	public Sprite[] mySprite;
 	public int frameBuffer = 1;
