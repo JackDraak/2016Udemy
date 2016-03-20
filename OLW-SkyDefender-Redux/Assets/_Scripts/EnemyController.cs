@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿	using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -76,7 +76,7 @@ public class EnemyController : MonoBehaviour {
 	void DropBomb () {
 		float progressiveDelay = fireDelay;
 		if (fireTime + progressiveDelay <= Time.time) {
-			AudioSource.PlayClipAtPoint (bombSound, transform.position);
+			AudioSource.PlayClipAtPoint (bombSound, transform.position, 0.8f);
 			GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
 			myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
 			fireTime = Time.time + (Random.Range(0.3f, 36f / (myWave * 1.3f)));
@@ -89,7 +89,7 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void TakeDamage () {
-		AudioSource.PlayClipAtPoint (damage, transform.position);
+		AudioSource.PlayClipAtPoint (damage, transform.position, 0.8f);
 		GameObject trash = Instantiate(puffMachine, puffLocation.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<ParticleSystem>().GetComponent<Renderer>().sortingLayerName = "EnemyDamage";
 		hitPoints = (hitPoints * 0.93f) - 23f;
@@ -101,7 +101,7 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void ScoreAndDestroy () {
-		AudioSource.PlayClipAtPoint (scuttle, transform.position);
+		AudioSource.PlayClipAtPoint (scuttle, transform.position, 0.8f);
 		levelManager.ChangeScore(25 * levelManager.GetWaveNumber());
 		levelManager.EnemyDown();
 		int chance = Random.Range (1,101);

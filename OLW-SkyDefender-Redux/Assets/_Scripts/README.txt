@@ -4,8 +4,9 @@
 0.120.2	- 2016 Feb 29 - now even the splash screen transition has broken... seriously annoying: all for simply tyrying to add a UI slider to said splash
 0.120.3 - 2016 Mar 5 - okay, seriously: fuck Unity3d scene management for failing to load scene states saved with full prefabs, et. al.  W T F... fixed splash at least....
 0.120.4 - 2016 Mar 7 - Unity3D can go to hell... more inconsistencies drove me to presently remove even the splash scene... considering new code for WebGL load delayer
+0.120.5 - 2016 Mar 16 - splash scene replaced... viable mini-game status achieved.
 
-Development Notes: 0.120.4
+Development Notes: 0.120.5
 ==================
 things to do:
 
@@ -15,6 +16,8 @@ things to do:
 	alternative enemy projectiles?
 	alternative enemy formations?
 	bosses? intermissions?
+
+	double-check distro audio levels
 
 	have enemies test for active player before droppping bombs? not working yet.....
 
@@ -44,3 +47,21 @@ things to do:
 // of the box."
 //
 // ^JackDraak
+
+/* explaining things to classmates:
+
+
+	public float fireDelay = 2f; // public to adjust in inspector if desired
+	private float fireTime = Time.time - fireDelay;
+
+	void Fire () {
+	if (fireTime + fireDelay <= Time.time) {
+		AudioSource.PlayClipAtPoint (bombSound, transform.position);
+		GameObject myBomb = Instantiate(bomb, transform.position,  Quaternion.identity) as GameObject;
+		myBomb.GetComponent<Rigidbody2D>().velocity += Vector2.down * bombSpeed;
+		fireTime = Time.time;
+	}
+
+
+
+*/
