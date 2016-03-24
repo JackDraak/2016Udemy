@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour {
 
 	void FireBlaster () {
 		if (fireTime + fireDelay <= Time.time) {
-			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.6f);
+			AudioSource.PlayClipAtPoint (zappySound, transform.position, 0.8f);
 			GameObject obj = GenericPooler.current.GetPooledObject();
 			obj.transform.position = playerGun.transform.position;
 			obj.transform.localRotation = Quaternion.Euler (0f, 0f, 180f);
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void ScoreAndDestroy () {
-		AudioSource.PlayClipAtPoint (scuttle, transform.position, 0.8f);
+		AudioSource.PlayClipAtPoint (scuttle, transform.position, 1f);
 		transform.gameObject.SetActive(false);
 		levelManager.ChangeScore(-100f);
 		levelManager.PlayerDown();
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour {
 	
 	void TakeDamage () {
 		playerHitPoints -= ((playerHitPoints * 0.1f) + 60f);
-		AudioSource.PlayClipAtPoint (damage, transform.position, 0.8f);
+		AudioSource.PlayClipAtPoint (damage, transform.position, 1f);
 		GameObject trash = Instantiate(smokeMachine, smokeLoc.transform.position, Quaternion.identity) as GameObject;
 		trash.GetComponent<Renderer>().sortingLayerName = "PlayerDamage";
 		if (playerHitPoints <= 0f) ScoreAndDestroy();
